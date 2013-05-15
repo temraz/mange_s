@@ -71,7 +71,7 @@
                              <select data-placeholder="Choose the chairman..." name="chairman"  class="chzn-select"  style="width:200px;" tabindex="4">
           <option value=""></option> 
           <?php if(isset($users)){foreach($users as $user){?>
-          <option value="<?php echo $user->username?>"><?php echo $user->username;?></option> 
+          <option value="<?php echo $user->id?>"><?php echo $user->username;?></option> 
 
           <?php }}?>
           

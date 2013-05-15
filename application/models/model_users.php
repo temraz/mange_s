@@ -166,7 +166,7 @@ class Model_users extends CI_Model {
 		////////////////////////////////////////////////
 		
 	function select_company($id){
-		$sql='select id,email from company where id=?';
+		$sql='select id,email,name from company where id=?';
 		 $result=$this->db->query($sql,$id);
 		 if($result->num_rows() == 1){
 			 return $result;

@@ -28,6 +28,8 @@
 </style>
 <script type="text/javascript" src="<?php echo base_url(); ?>js/jquery-1.3.2.js"></script>
 
+
+
 <script type="text/javascript">
 
             $(document).ready(function() {
@@ -55,6 +57,10 @@
 				   <?php $i++;}}?>
 				 
             });
+			
+			
+			
+			
 			
 
             function finishAjax(id, response){
@@ -122,7 +128,7 @@
                  <div class="contenttitle radiusbottom0">
                 	<h2 class="table"><span>unconfirmed employees</span></h2>
                 </div><!--contenttitle-->
-                	
+
                 <table cellpadding="0" cellspacing="0" border="0" id="table2" class="stdtable stdtablecb">
                     <colgroup>
                         <col class="con0" />
@@ -162,21 +168,29 @@
                     <?php echo form_open('company/accept_employee');?>
                     
                     <input type="hidden" name="emp_id" value="<?php echo $unconfirm->id ; ?>" />
+                    <?php	
+if($company=$this->model_employee->is_chairman($unconfirm->id)){
+	$chairman=1;
+	}
+?>
                         <tr>
                         	
                             <td class="center"><?php echo $unconfirm->firstname?> <?php echo $unconfirm->lastname?></td>
                             <td class="center"><?php echo $unconfirm->username?></td>
                             <td class="center"><?php echo $unconfirm->code?></td>
                             
-                            <td  style="margin:0px;padding:0px;"  width="10%" >  <div class="both" >
-                                                
+                            <td  style="margin:0px;padding:0px;text-align:center" class="center"  width="10%" >  <div class="both" >
+                                                 <?php if(!isset($chairman)){?>
                                                     <select name="dept" style="width:200px;margin:5px" id="search_category_id<?php echo $i;?>" required>
-                                                    <option value="" selected="selected"></option>
+                                                    <option value="" selected="selected">Select the department</option>
                                                     <?php if(isset($depts)){foreach($depts as $dept){?>
                                                     <option value="<?php echo $dept->id?>"><?php echo $dept->name;?></option> 
                                                     
                                                     <?php }}?>
-                                                    </select>		
+                                                    </select>
+                                                    	<?php }else{
+								 echo '<p style="text-align:center;">He is the chairman</p>'; 
+								}?>	
                                                     </div>
                                                     
                                                 </td>
@@ -184,9 +198,13 @@
                            
                                               
                             <td class="center">
+                      
                             <p class="stdformbutton">
+                            <?php if(!isset($chairman)){?>
                             <input type="submit" value="Confirm" class="radius3" />
-                            
+                            <?php }else{
+								 echo 'He is the chairman'; 
+								}?>
                             </p>
                            
                         </tr>

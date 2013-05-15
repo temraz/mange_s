@@ -1,9 +1,12 @@
 <?php
-
-
+if($this->session->userdata('employee_logged_in')){
 $id=$this->session->userdata('emp_id');
 $employee=$this->model_users->select_emp($id);
-
+}elseif($this->session->userdata('company_logged_in')){
+	$id=$this->session->userdata('comp_id');
+$company=$this->model_users->select_company($id);
+	
+	}
 ?>
 
 <div class="header radius3">
@@ -37,12 +40,20 @@ $employee=$this->model_users->select_emp($id);
                 </div><!--headercolumn-->
                 <div id="userPanel" class="headercolumn">
                     <a href="" class="userinfo radius2">
-                        <img src="<?php echo base_url();?>images/avatar.png" tppabs="http://themepixels.com/themes/demo/webpage/starlight/images/avatar.png" alt="" class="radius2" />
-                        <span><strong><?php if(isset($employee->row(0)->firstname,$employee->row(0)->lastname)) echo $employee->row(0)->firstname ." ".$employee->row(0)->lastname?></strong></span>
+                        <img src="<?php echo base_url();?>images/avatar.png"  alt="" class="radius2" />
+                        <span><strong><?php 
+						if( $this->session->userdata('employee_logged_in') && isset($employee->row(0)->firstname,$employee->row(0)->lastname)) {echo $employee->row(0)->firstname ." ".$employee->row(0)->lastname ;}elseif($this->session->userdata('company_logged_in') && isset($company->row(0)->name)){echo $company->row(0)->name;}?>
+                        
+                        </strong></span>
                     </a>
+                    
                     <div class="userdrop">
                         <ul>
-                            <li><a href="<?php echo base_url();?>employee/profile/<?php echo $id;?>">Profile</a></li>
+                            <li><a href="<?php if($this->session->userdata('employee_logged_in')){ echo base_url();?>employee/profile/<?php echo $id;}
+							              elseif($this->session->userdata('company_logged_in')){ echo base_url().'company/profile/'.$id;}
+						                 ?>
+                                          
+                                          ">Profile</a></li>
                             <li><a href="">Account Settings</a></li>
                             <li><a href="<?php echo base_url();?>site/logout" >Logout</a></li>
                         </ul>

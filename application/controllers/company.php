@@ -39,8 +39,8 @@ class Company extends CI_Controller {
 			
 				$this->load->model('model_users');	
 			if($this->model_users->select_company($id)){
-				$id=$this->uri->segment(3);
-				$this->load->model('model_company');
+			
+				
 			$data['pro_data']=$this->model_company->get_company_info($id);
 				$data['id']=$this->uri->segment(3);
 				$this->load->view('company',$data);

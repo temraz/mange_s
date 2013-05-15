@@ -133,6 +133,59 @@ class Model_employee extends CI_Model {
         } else {
             return false;
         }
-		}			
+		}	
+	///////////////////////////////////////
+		function emp_by_id($id){
+	$this->db->where('id',$id);
+	$result = $this->db->get('employees');
+	  return $result->result();
+			}
+	/////////////////////////////////////
+	function is_chairman($id){
+		$this->db->where('chairman',$id);
+		$result = $this->db->get('company');
+	    
+		if($result->num_rows() == 1){
+           return $result->result();
+        } else {
+            return false;
+        }
+		}	
+
+		///////////////////////////////////////////////////
+		function update_department($id,$dept_id){
+			
+			 $data = array(
+               'confirm' => 1,
+               'department_id' => $dept_id
+               
+            );
+
+			$this->db->where('id', $id);
+			$result=$this->db->update('employees', $data); 
+
+		 if($this->db->affected_rows()==1){
+			 return true;
+			 }else{
+				 return false;
+				 }
+			}
+	////////////////////////////////////////////////
+	function update_sub_dept($id,$sub_dept_id){
+		
+			 $data = array(
+                   'sub_dept_id' => $sub_dept_id
+                    );
+
+			$this->db->where('id', $id);
+			$result=$this->db->update('employees', $data); 
+
+		 if($this->db->affected_rows()==1){
+			 return true;
+			 }else{
+				 return false;
+				 }
+		}		
+	///////////////////////////////////////////////				
 }
 ?>
