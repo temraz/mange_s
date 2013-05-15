@@ -54,7 +54,13 @@ $company=$this->model_users->select_company($id);
 						                 ?>
                                           
                                           ">Profile</a></li>
-                            <li><a href="">Account Settings</a></li>
+                              <?php if($this->session->userdata('employee_logged_in')){ ?>
+                            <li><a href="">Account Settings</a></li><?php } ?>
+                              <?php if($this->session->userdata('company_logged_in')){ ?>
+                             <li><a href="<?php echo base_url();?>edit/">Account Settings</a></li>
+							<?php } ?>
+
+                            
                             <li><a href="<?php echo base_url();?>site/logout" >Logout</a></li>
                         </ul>
                     </div><!--userdrop-->

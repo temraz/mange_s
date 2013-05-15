@@ -78,7 +78,7 @@
                             <label> Dempartment Manager</label>
                             
                             <span class="field">
-                             <select data-placeholder="Choose the chairman..." name="depart_manager_<?php echo $i; ?>"  class="chzn-select"  style="width:200px;" tabindex="4">
+                             <select data-placeholder="Choose the dempartment manager..." name="depart_manager_<?php echo $i; ?>"  class="chzn-select"  style="width:200px;" tabindex="4">
           <option value=""></option> 
           <?php if(isset($users)){foreach($users as $user){?>
           <option value="<?php echo $user->id?>"><?php echo $user->username;?></option> 

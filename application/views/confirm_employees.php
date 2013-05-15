@@ -87,7 +87,7 @@
                         	
                             <th class="head1">name</th>
                             <th class="head0">username</th>
-                            <th class="head1">confirmation code</th>
+                          
                             <th class="head0">Sub Department</th>
                            
                              <th class="head0">Confirm</th>
@@ -98,7 +98,7 @@
                         	
                             <th class="head1">name</th>
                             <th class="head0">username</th>
-                            <th class="head1">confirmation code</th>
+                           
                             <th class="head0">Sub Department</th>
                           
                             <th class="head0">Confirm</th>
@@ -109,27 +109,41 @@
                     <?php $i=1;  if(isset($confirms)){  foreach($confirms as $unconfirm){?>
                     
                     <?php echo form_open('company/update_sub_dept');?>
-                    
+                               <?php	
+if($this->model_employee->is_chairman($unconfirm->id)){
+	$chairman=1;
+	}elseif($this->model_employee->is_manager($unconfirm->id)){
+		$dept_name=$this->model_employee->is_manager($unconfirm->id)->row(0)->name;
+		$manager=1;
+		}elseif($this->model_employee->is_sub_manager($unconfirm->id)){
+			$sub_dept_name=$this->model_employee->is_sub_manager($unconfirm->id)->row(0)->name;
+	 $sub_manager=1;
+	 }
+?>
                     <input type="hidden" name="emp_id" value="<?php echo $unconfirm->id ; ?>" />
                         <tr>
                         	
                             <td class="center"><?php echo $unconfirm->firstname?> <?php echo $unconfirm->lastname?></td>
                             <td class="center"><?php echo $unconfirm->username?></td>
-                            <td class="center"><?php echo $unconfirm->department_id?></td>
+                           
                             
-                            <td class="center" style="margin:0px;padding:0px;"  width="10%" >  <div class="both" >
-                            
+                            <td class="center" style="margin:0px;padding:0px;"  width="20%" >  <div class="both" >
+                                                     <?php if(isset($chairman)){echo 'He is the chairman of this company' ;}
+													 elseif(isset($manager)){echo 'The manager of <strong>"'.$dept_name.'" </strong>department';}
+													 elseif(isset($sub_manager)){echo 'The manager of <strong>"'.$sub_dept_name.'" </strong>sub department';}
+													 else{
+														 ?>
+                                                     
                                                  <?php
-												 if(!isset($unconfirm->sub_dept_id)){
+												 if(!isset($unconfirm->sub_dept_id)  ){
 												  if($this->model_users->select_sub_dept($unconfirm->company_id,$unconfirm->department_id)){
 												$sub_dept=$this->model_users->select_sub_dept($unconfirm->company_id,$unconfirm->department_id)->result();
 												?>
-                                                
+                                                  
+                                                 
 												<select name="sub_dept" style="width:200px;margin:5px" id="search_category_id" required>
                                                 <option value="" selected="selected">select sub department</option>
 												<?php	 if(isset($sub_dept)){foreach($sub_dept as $dept){?>
-                                                    
-                                                    
                                                    
                                                     <option value="<?php echo $dept->id?>"><?php echo $dept->name;?></option> 
                                                     
@@ -137,9 +151,8 @@
 													echo '</select>';
 													}}else{
 														echo 'selected before';
-														}?>
-                                                    
-                                                    		
+														} }?>
+                                                   		
                                                     </div>
                                                     
                                                 </td>
@@ -147,15 +160,27 @@
                            
                                               
                             <td class="center">
-                            <?php
-												 if(!isset($unconfirm->sub_dept_id)){?>
+                            <?php if(!isset($chairman)){
+                            	 if(!isset($manager)){
+                            	 if(!isset($sub_manager)){
+                            	 if(!isset($unconfirm->sub_dept_id)){?>
+                            
                             <p class="stdformbutton">
                             <input type="submit" value="Confirm" class="radius3" />
                             
                             </p>
                             <?php }else{
 								echo 'confirmed';
-								}?>
+								}
+                               }else{
+								echo 'confirmed';
+								}
+                                 }else{
+								echo 'confirmed';
+								}
+                                 }else{
+								echo 'confirmed';
+								}?> 
                            
                         </tr>
                          <?php echo form_close();?>

@@ -102,10 +102,10 @@
                             <label> Sub Department Manager</label>
                             <span class="field">
                             
-                             <select data-placeholder="Choose the chairman..." name="sub_depart_manager_<?php echo $k.$i; ?>"  class="chzn-select"  style="width:200px;" tabindex="4">
+                             <select data-placeholder="Choose the sub department manager ..." name="sub_depart_manager_<?php echo $k.$i; ?>"  class="chzn-select"  style="width:200px;" tabindex="4">
           <option value=""></option> 
           <?php if(isset($users)){foreach($users as $user){?>
-          <option value="<?php echo $user->username?>"><?php echo $user->username;?></option> 
+          <option value="<?php echo $user->id?>"><?php echo $user->username;?></option> 
 
           <?php }}?>
           

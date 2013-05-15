@@ -96,20 +96,20 @@ class Model_employee extends CI_Model {
 	
 	///////////////////////////////
 	function is_manager($id){
-		$sql='select id from department where depart_manager=?';
+		$sql='select * from department where depart_manager=?';
 		$result = $this->db->query($sql,array($id));
 		if($result->num_rows() == 1){
-            return true;
+            return $result;
         } else {
             return false;
         }
 		}
 	/////////////////////////////////
 	function is_sub_manager($id){
-		$sql='select id from sub_department where sub_depart_manager=?';
+		$sql='select * from sub_department where sub_depart_manager=?';
 		$result = $this->db->query($sql,array($id));
 		if($result->num_rows() == 1){
-            return true;
+            return $result;
         } else {
             return false;
         }
@@ -174,6 +174,7 @@ class Model_employee extends CI_Model {
 	function update_sub_dept($id,$sub_dept_id){
 		
 			 $data = array(
+			        'confirm' => 1,
                    'sub_dept_id' => $sub_dept_id
                     );
 
@@ -186,6 +187,22 @@ class Model_employee extends CI_Model {
 				 return false;
 				 }
 		}		
-	///////////////////////////////////////////////				
+	///////////////////////////////////////////////	
+	function confirm_chairman($id){
+		 $data = array(
+               'confirm' => 1,
+              
+               
+            );
+
+			$this->db->where('id', $id);
+			$result=$this->db->update('employees', $data); 
+
+		 if($this->db->affected_rows()==1){
+			 return true;
+			 }else{
+				 return false;
+				 }
+		}			
 }
 ?>
