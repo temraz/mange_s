@@ -21,7 +21,7 @@
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery-ui-1.8.16.custom.min.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.validate.min.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/general.js"></script>
-<script type="text/javascript" src="../js/form.js" ></script>
+<script type="text/javascript" src="<?php echo base_url();?>/js/form.js" ></script>
 <!--[if lt IE 9]>
 	<script src="css3-mediaqueries.js" tppabs="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
 <![endif]-->

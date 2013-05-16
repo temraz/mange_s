@@ -5,8 +5,10 @@ $employee=$this->model_users->select_emp($id);
 }elseif($this->session->userdata('company_logged_in')){
 	$id=$this->session->userdata('comp_id');
 $company=$this->model_users->select_company($id);
-	
 	}
+	if(isset($employee->row(0)->profile_pic)){
+		$pic=$employee->row(0)->profile_pic;
+		}
 ?>
 
 <div class="header radius3">
@@ -40,7 +42,14 @@ $company=$this->model_users->select_company($id);
                 </div><!--headercolumn-->
                 <div id="userPanel" class="headercolumn">
                     <a href="" class="userinfo radius2">
-                        <img src="<?php echo base_url();?>images/avatar.png"  alt="" class="radius2" />
+                     <?php if($this->session->userdata('employee_logged_in')){ ?>
+                        <img src="<?php echo base_url(); ?>images/profile/thumb_profile/<?php if (isset($pic)) { echo $pic;}?>" width="40" height="30" alt="" class="radius2" />
+                        <?php }?>
+                        <?php if($this->session->userdata('company_logged_in')){ ?>
+                       <!-- <img src="<?php echo base_url(); ?>images/campanies_logoss/<?php if (isset($pic)) { echo $pic;}?>" width="40" height="30" alt="" class="radius2" /> -->
+                        <?php }?>
+                        
+                        
                         <span><strong><?php 
 						if( $this->session->userdata('employee_logged_in') && isset($employee->row(0)->firstname,$employee->row(0)->lastname)) {echo $employee->row(0)->firstname ." ".$employee->row(0)->lastname ;}elseif($this->session->userdata('company_logged_in') && isset($company->row(0)->name)){echo $company->row(0)->name;}?>
                         
@@ -55,7 +64,7 @@ $company=$this->model_users->select_company($id);
                                           
                                           ">Profile</a></li>
                               <?php if($this->session->userdata('employee_logged_in')){ ?>
-                            <li><a href="">Account Settings</a></li><?php } ?>
+                            <li><a href="<?php echo base_url();?>employee/settings">Account Settings</a></li><?php } ?>
                               <?php if($this->session->userdata('company_logged_in')){ ?>
                              <li><a href="<?php echo base_url();?>edit/">Account Settings</a></li>
 							<?php } ?>
