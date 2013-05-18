@@ -5,7 +5,7 @@ if($this->model_employee->is_chairman($id)){
  elseif($this->model_employee->is_manager($id)){
  $manager=1;
  }elseif($this->model_employee->is_sub_manager($id)){
-	 $sub_manage=1;
+	 $sub_manager=1;
 	 }else{
 		 $manager=0;
 		 $sub_manager=0;

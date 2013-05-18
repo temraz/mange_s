@@ -42,61 +42,44 @@
         <div class="maincontent">
         	<div class="maincontentinner">
             	
-                <ul class="maintabmenu">
-                	<li class="current"><a href="<?php echo base_url();?>employee/dashboard/<?php echo $id;?>" ><?php if(isset($employee->row(0)->firstname,$employee->row(0)->lastname)) echo $employee->row(0)->firstname ." ".$employee->row(0)->lastname?> Dashboard</a></li>
+                  <ul class="maintabmenu">
+                	<li ><a href="<?php echo base_url();?>employee/give_task/" ><?php if(isset($employee->row(0)->firstname,$employee->row(0)->lastname)) echo $employee->row(0)->firstname ." ".$employee->row(0)->lastname?> Settings</a></li>
+                    <li class="current"><a href="<?php echo base_url();?>employee/tasks_status/" >Tasks status</a></li>
                 </ul><!--maintabmenu-->
                 
                 <div class="content">
-                	<ul class="widgetlist">
-                    	<li><a href="<?php echo base_url();?>site/calendar/"  class="events">Latest Events</a></li>
-                    	<li><a href="<?php echo base_url();?>site/chat/"  class="message">New Message</a></li>
-                        <li><a href="<?php echo base_url();?>site/editor/"  class="upload">File Editor</a></li>
-                    	<li><a href="calendar.html" class="events">Statistics</a></li>
-                    	
-                    </ul>
+                	
                     
-                    <br clear="all" /><br />
-                    <?php if(isset($manager) || isset($sub_manager)){?> 
-                    
-                     <?php if(isset($notasks)&& $notasks==1){?>
-                     <div class="widgetbox">
-                        <div class="title"><h2 class="tabbed"><span>tasks</span></h2></div>
-                        <div class="widgetcontent announcement">
+                    <br clear="all" />
+                     <?php if(isset($finish)&& $finish==1){?>
+                       <div class="notification msgsuccess">
                         
-                    <div class="notification msgalert">
-                        
-                        <p style="margin-left:70px;padding-top:15px">There is no tasks have been assigned for you until now.</p>
+                        <p >The task has been saved that the employee finish it.</p>
                         <a class="close"></a>
                     </div>
-                    </div><!--widgetcontent-->
-                    </div><!--widgetbox-->
                     <?php }?>
-                    
-                     <?php $i=1; if(isset($tasks)){foreach($tasks as $task){?>
+                   
+                    <?php $i=1; if(isset($tasks)){foreach($tasks as $task){?>
                     <div class="widgetbox">
-                        <div class="title"><h2 class="tabbed"><span>task <?php echo $i?></span>
-                      
-                        </h2></div>
+                        <div class="title"><h2 class="tabbed"><span>task <?php echo $i?></span></h2></div>
                         <div class="widgetcontent announcement">
-                    
-                          <p>
-                        <a href="<?php echo base_url();?>employee/task/<?php echo $task->id; ?>/<?php echo $task->emp_id; ?>"  > <span class="radius3" style="float:right; ">Details</span> </p></a>  
-                             
+                            <p>
+                            <span class="radius2" style="float:right">Deadline: <?php echo $task->deadline;?></span>
                             
                             
-                            
-                            
-                             <br /><p style="padding:0px;margin-top:-40px;width:80%;margin-right:5px;">
-							 
-						<a href="<?php echo base_url();?>employee/task/<?php echo $task->id; ?>/<?php echo $task->emp_id; ?>"  >
-                         <?php echo substr( $task->the_task,0,200)?></span></p></a>
+                             <br /><p style="padding:0px;margin-top:-40px;width:80%;margin-right:5px;"><?php echo $task->the_task?></span></p>
+                             <?php if($task->under_construction == 1 && $task->done == 0){ ?>
+                           <span class="radius2" style="background-color:#960;margin-right:5px;padding:5px;color:#fff">Task Statue:  under construction</span>                           <a href="<?php echo base_url();?>employee/finish_task/<?php echo $task->id ?>/<?php echo $task->emp_id ?>/" ><span class="radius3" style="background-color:#039;margin-right:5px;padding:5px;color:#fff">He/she finish it</span> </a>
+                            <?php }?>
+                            <?php if($task->done == 1){ ?>
+                            <span class="radius3" style="background-color:#0C0;margin-right:5px;padding:5px;">✓ Done</span> 
+                            <?php }?>
                             <p>
                             
                         </div><!--widgetcontent-->
                     </div><!--widgetbox-->
-                    <?php $i++;}}?>  
-                        
-                    <?php } ?>
+                    <?php $i++;}}?>    
+                    
                     
                    
                   

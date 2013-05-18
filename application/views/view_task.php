@@ -47,17 +47,17 @@
                 </ul><!--maintabmenu-->
                 
                 <div class="content">
-                	<ul class="widgetlist">
-                    	<li><a href="<?php echo base_url();?>site/calendar/"  class="events">Latest Events</a></li>
-                    	<li><a href="<?php echo base_url();?>site/chat/"  class="message">New Message</a></li>
-                        <li><a href="<?php echo base_url();?>site/editor/"  class="upload">File Editor</a></li>
-                    	<li><a href="calendar.html" class="events">Statistics</a></li>
-                    	
-                    </ul>
+                	
                     
-                    <br clear="all" /><br />
-                    <?php if(isset($manager) || isset($sub_manager)){?> 
-                    
+                    <br clear="all" />
+                    <?php if(isset($manager)||isset($sub_manager)){?> 
+                    <?php if(isset($start)&& $start==1){?>
+                       <div class="notification msgsuccess">
+                        
+                        <p >Your manager has been informed that you started working in this task.</p>
+                        <a class="close"></a>
+                    </div>
+                    <?php }?>
                      <?php if(isset($notasks)&& $notasks==1){?>
                      <div class="widgetbox">
                         <div class="title"><h2 class="tabbed"><span>tasks</span></h2></div>
@@ -72,31 +72,41 @@
                     </div><!--widgetbox-->
                     <?php }?>
                     
-                     <?php $i=1; if(isset($tasks)){foreach($tasks as $task){?>
+                     <?php  if(isset($task)){ ?>
                     <div class="widgetbox">
-                        <div class="title"><h2 class="tabbed"><span>task <?php echo $i?></span>
+                        <div class="title"><h2 class="tabbed"><span>task details</span>
                       
                         </h2></div>
                         <div class="widgetcontent announcement">
-                    
                           <p>
-                        <a href="<?php echo base_url();?>employee/task/<?php echo $task->id; ?>/<?php echo $task->emp_id; ?>"  > <span class="radius3" style="float:right; ">Details</span> </p></a>  
                              
+                             
+                             <span class="radius2" style="float:right">Deadline: <?php echo $task->row(0)->deadline;?></span>
+                            <?php if($task->row(0)->under_construction == 1 && $task->row(0)->done == 0){ ?>
                             
+                            <span class="radius3" style="background-color:#960;float:right;margin-right:5px">under construction</span> 
                             
+                            <?php }?>
+                            <?php if($task->row(0)->done == 1){ ?>
+                            <span class="radius3" style="background-color:#0C0;float:right;margin-right:5px">✓ Done</span> 
+                            <?php }?>
                             
-                            
-                             <br /><p style="padding:0px;margin-top:-40px;width:80%;margin-right:5px;">
-							 
-						<a href="<?php echo base_url();?>employee/task/<?php echo $task->id; ?>/<?php echo $task->emp_id; ?>"  >
-                         <?php echo substr( $task->the_task,0,200)?></span></p></a>
+                             <br /><p style="padding:0px;margin-top:-40px;width:80%;margin-right:5px;"><?php echo $task->row(0)->the_task?></span>
+                             <br />
+                             <br />
+                              <?php if($task->row(0)->under_construction == 0 && $task->row(0)->done == 0){ ?>
+                           <a href="<?php echo base_url();?>employee/start_task/<?php echo $task->row(0)->id ;?>/<?php echo $task->row(0)->task_owner;?>">  <span class="radius3" style="background-color:#0C0;">Start it</span> </a>
+                           <?php }?>
+                             </p>
+                             
+                             
                             <p>
                             
                         </div><!--widgetcontent-->
                     </div><!--widgetbox-->
-                    <?php $i++;}}?>  
+                    <?php }}?>  
                         
-                    <?php } ?>
+                   
                     
                    
                   

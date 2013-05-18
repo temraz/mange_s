@@ -122,7 +122,7 @@ class Model_users extends CI_Model {
 	
 	////////////////////////////////////////////////
 	function select_emp($id){
-		$sql='select id,email,firstname,lastname,department_id,sub_dept_id,phone,address,location,country,about,profile_pic from employees where id=?';
+		$sql='select id,email,firstname,lastname,company_id,department_id,sub_dept_id,phone,address,location,country,about,profile_pic from employees where id=?';
 		 $result=$this->db->query($sql,$id);
 		 if($result->num_rows() == 1){
 			 return $result;

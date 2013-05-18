@@ -214,7 +214,8 @@ class Site extends CI_Controller {
                       $email= $this->input->post('email');
                       $password= $this->input->post('password');
                       $emp=$this->model_employee->check_can_log_in($email,$password);
-                $login_data = array("employee_logged_in" => true, "emp_id" => $emp['id'], "emp_email"=> $emp['email'], "company_id"=> $emp['company_id']);
+                $login_data = array("employee_logged_in" => true, "emp_id" => $emp['id'], "emp_email"=> $emp['email'],
+				                     "company_id"=> $emp['company_id'],"department_id"=> $emp['department_id'],"username"=> $emp['username']);
                 $this->session->set_userdata($login_data);
 				$id=$emp['id'];
                 redirect('employee/dashboard/'.$id);

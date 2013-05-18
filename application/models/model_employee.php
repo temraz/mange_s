@@ -5,10 +5,11 @@ class Model_employee extends CI_Model {
     
       public function check_can_log_in($email, $password){
        
-	      $query = "select id ,company_id,email,firstname,lastname from employees where email=? and password=? and confirm=1";
+	      $query = "select id ,company_id,department_id,sub_dept_id,email,firstname,lastname,username from employees where email=? and password=? and confirm=1";
       $result=$this->db->query($query,array($email,$password));
        if ( $result) {
-          $result=array('id'=>$result->row(0)->id, 'email'=>$result->row(0)->email);
+          $result=array('id'=>$result->row(0)->id,'email'=>$result->row(0)->email,'company_id'=>$result->row(0)->company_id,
+		                'department_id'=>$result->row(0)->department_id,'sub_dept_id'=>$result->row(0)->sub_dept_id,'username'=>$result->row(0)->username);
 	   return  $result; 
         } else {
             return false;
@@ -258,8 +259,152 @@ class Model_employee extends CI_Model {
         $query_str = "update employees set profile_pic = ? where id = '{$id}' ";
         $this->db->query($query_str, $image_data['file_name']);
     }
-
+///////////////////////////////////////////////////
+function select_departments($id){
+	$sql='select * from department where company_id=?';
+		$result = $this->db->query($sql,array($id));
+		if($result->num_rows() >= 1){
+            return $result->result();
+        } else {
+            return false;
+        }
+	}
+///////////////////////////////////////////////////
+function select_sub_departments($comp_id , $dept_id){
+	$sql='select * from sub_department where company_id=? and department_id=?';
+		$result = $this->db->query($sql,array($comp_id,$dept_id));
+		if($result->num_rows() >= 1){
+            return $result->result();
+        } else {
+            return false;
+        }
+	}	
     ///////////////////////////////////////////
+	function insert_tasks($employee_id,$the_task,$deadline,$task_owner){
+		$data = array(
+            'emp_id' => $employee_id,
+            'deadline' => $deadline,
+            'the_task' => $the_task,
+			'task_owner'=>$task_owner
+            );
+        $query = $this->db->insert('tasks', $data);
+        if($this->db->affected_rows()==1){
+			$sql='select id from tasks where emp_id=? order by id desc limit 1 ';
+			$result=$this->db->query($sql,$employee_id);
+			if($result->num_rows() == 1){
+				$task_id =$result->row(0)->id;
+				$link=base_url().'employee/task/'.$task_id.'/'.$employee_id;
+			$data = array(
+            'emp_id' => $employee_id,
+            'activity' => 'Your manager assign a new task"'.substr($the_task,0,10).'..." for you.',
+			'task_id'=>$task_id,
+			'link'=>$link
+            );
+			$query = $this->db->insert('activity', $data);
+			if($this->db->affected_rows()==1){
+				return true;
+				}else{
+					return false;
+					}
+				}
+            
+			
+        } else {
+            return false;
+        }
+		
+		}
+	////////////////////////////////////////////////
+	function select_tasks($id){
+		$this->db->where('task_owner',$id);
+		$result=$this->db->get('tasks');
+		if($result->num_rows() >= 1){
+            return $result->result();
+        } else {
+            return false;
+        }
+		}
+
+	////////////////////////////////////////////////
+	function select_dashbord_tasks($id){
+		$this->db->where('emp_id',$id);
+		$result=$this->db->get('tasks');
+		if($result->num_rows() >= 1){
+            return $result->result();
+        } else {
+            return false;
+        }
+		}
+	///////////////////////////////////////////////					
+	function select_task($id){
+		$this->db->where('id',$id);
+		$result=$this->db->get('tasks');
+		if($result->num_rows() == 1){
+            return $result;
+        } else {
+            return false;
+        }
+		}
+	//////////////////////////////////////////////
+	function start_task($id,$task_owner,$username,$emp_id){
+		$this->db->where('id',$id);
+		$result=$this->db->update('tasks',array('under_construction'=>1));
+		if($this->db->affected_rows()==1){
+          $sql='select the_task,task_owner from tasks where id=? ';
+			$result=$this->db->query($sql,$id);
+			if($result->num_rows() == 1){
+				$the_task=$result->row(0)->the_task;
+				$$task_owner=$result->row(0)->task_owner;
+				$link=base_url().'employee/task/'.$id.'/'.$task_owner;
+			$data = array(
+            'emp_id' => $emp_id,
+            'activity' => $username.' start working in this"'.substr($the_task,0,10).'..." task.',
+			'task_id'=>$id,
+		    'link'=>$link
+            );
+			$query = $this->db->insert('activity', $data);
+			if($this->db->affected_rows()==1){
+				return true;
+				}else{
+					return false;
+					}
+            	
+				}
 				
+        } else {
+            return false;
+        }
+		}
+	//////////////////////////////////////////////
+	function finish_task($id,$emp_id){
+		$this->db->where('id',$id);
+		$result=$this->db->update('tasks',array('done'=>1));
+		if($this->db->affected_rows()==1){
+			$sql='select the_task from tasks where id=? ';
+			$result=$this->db->query($sql,$id);
+			if($result->num_rows() == 1){
+				$the_task=$result->row(0)->the_task;
+				$link=base_url().'employee/task/'.$id.'/'.$emp_id;
+			$data = array(
+            'emp_id' => $emp_id,
+            'activity' => 'Your manager confirm that you finish "'.substr($the_task,0,10).'..." task.',
+			'task_id'=>$id,
+		    'link'=>$link
+            );
+			$query = $this->db->insert('activity', $data);
+			if($this->db->affected_rows()==1){
+				return true;
+				}else{
+					return false;
+					}
+            	
+				}
+			
+        } else {
+            return false;
+        }
+		}
+	//////////////////////////////////////////////
+	
 }
 ?>

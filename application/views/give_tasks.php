@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="<?php echo base_url();?>css/style.css"  type="text/css" />
 
 
- 
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.flot.min.js" ></script>
 
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.flot.resize.min.js" ></script>
@@ -47,28 +47,49 @@
         	<div class="maincontentinner">
             	
                 <ul class="maintabmenu">
-                	<li class="current"><a href="<?php echo base_url();?>employee/dashboard/<?php echo $id;?>" ><?php if(isset($employee->row(0)->firstname,$employee->row(0)->lastname)) echo $employee->row(0)->firstname ." ".$employee->row(0)->lastname?> Settings</a></li>
+                	<li class="current"><a href="<?php echo base_url();?>employee/give_task/" ><?php if(isset($employee->row(0)->firstname,$employee->row(0)->lastname)) echo $employee->row(0)->firstname ." ".$employee->row(0)->lastname?> Settings</a></li>
+                    <li ><a href="<?php echo base_url();?>employee/tasks_status/" >Tasks status</a></li>
                 </ul><!--maintabmenu-->
                 
-                <div class="content" style="min-height:400px">
+                <div class="content" style="min-height:400px;" >
                 	
-             
+             <?php if(isset($insert)&& $insert==1){?>
+                	<div class="notification msgsuccess">
+                        <a class="close"></a>
+                        <p>the task delivered to the department manager successfully .</p>
+                    </div>
+                    <?php }elseif(isset($insert)&& $insert==0){?>
+                    <div class="notification msgsuccess">
+                        <a class="close"></a>
+                        <p>We Are Sorry...the task didn't delivered please try again .</p>
+                    </div>
+                    <?php }?>
                     
+                    <?php if(validation_errors()){?>
+                    <div class="notification msgerror">
+                        <a class="close"></a>
+                        <p><?php echo validation_errors()  ;   ?></p>
+                    </div>
+                    <?php }?>
                     <div class="contenttitle">
                     	<h2 class="form"><span >Settings</span></h2>
                     </div><!--contenttitle-->
                     
                     <br />
-                  
-                    <?php echo form_open('employee/task_validation',array('id'=>'form1','class'=>'stdform'));  ?>
+                  <?php if(!isset($no_employees)){?>
+                    <?php echo form_open('employee/task_validation',array('id'=>'form1','class'=>'stdform',));  ?>
                     	<p>
-                        	<label>choose the manager :</label>
+                        	<label>The manager :</label>
                             <span class="field">
                             <select data-placeholder="Choose the dempartment manager..." name="depart_manager"  class="chzn-select"  style="                             width:200px;" tabindex="4">
                             <option value=""></option> 
-                            <?php if(isset($users)){foreach($users as $user){?>
-                            <option value="<?php echo $user->id?>"><?php echo $user->username;?></option> 
-                            
+                            <?php if(isset($departments)){foreach($departments as $department){?>
+                            <?php if(isset($chairman)){?>
+                            <option value="<?php echo $department->depart_manager?>"><?php echo $department->name;?></option> 
+                            <?php }?>
+                            <?php if(isset($manager)){?>
+                            <option value="<?php echo $department->sub_depart_manager?>"><?php echo $department->name;?></option> 
+                            <?php }?>
                             <?php }}?>
                             
                             </select>
@@ -77,9 +98,9 @@
                             
                         </p>
                           <p>
-                        	<label>The task :</label>
+                        	<label>The Deadline :</label>
                             <span class="field">
-                          <input type="date" name="dedline" required />
+                          <input type="date" name="deadline" required value="<?php echo $this->input->post('deadline');?>" />
                             </span>
                             
                             
@@ -88,7 +109,7 @@
                         <p>
                         	<label>The task :</label>
                             <span class="field">
-                           <textarea name="taks"  required rows="4" cols="80"></textarea>
+                           <textarea name="task"  required style="height:60px;width:70%"><?php echo $this->input->post('task');?></textarea>
                             </span>
                             
                             
@@ -102,7 +123,13 @@
                         	<button type="submit" class="submit radius2">Apply</button>
                         </p>
                     </form>
-               
+               <?php }else{?>
+                <div class="notification msgalert">
+                        
+                        <p style="margin-left:70px;">Sorry... there is no employees under your order until now.</p>
+                        <a class="close"></a>
+                    </div>
+               <?php }?>
  
                    
                     
