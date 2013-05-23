@@ -28,7 +28,7 @@
 <body class="loggedin">
 
 	<!-- START OF HEADER -->
-	<?php include('header.php');?>
+	<?php include('header2.php');?>
     <!-- END OF HEADER -->
         
     <!-- START OF MAIN CONTENT -->
@@ -89,6 +89,9 @@
                             <?php }?>
                             <?php if(isset($manager)){?>
                             <option value="<?php echo $department->sub_depart_manager?>"><?php echo $department->name;?></option> 
+                            <?php }?>
+                             <?php if(isset($sub_manager)){?>
+                            <option value="<?php echo $department->id?>"><?php echo $department->username;?></option> 
                             <?php }?>
                             <?php }}?>
                             

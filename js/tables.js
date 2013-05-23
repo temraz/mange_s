@@ -50,7 +50,9 @@ jConfirm('Do Your Really Want to Delete it?', 'Delete', function(r) {
 				sel = true;					
 				var tr = jQuery(this).parents('tr');
 				for (var i = 0; i < tr .length; i++) {
-  var ids = tr[i].id;
+ // var ids = tr[i].id;
+ // delete_pro( tr[i].id );
+ delete_event(tr[i].id);
 }
 			//set to true if there is/are selected row
 				jQuery(this).parents('tr').fadeOut(function(){
@@ -68,7 +70,7 @@ jConfirm('Do Your Really Want to Delete it?', 'Delete', function(r) {
 	
 	function delete_pro( ids )
 	{
-		$.post("company/delete_event",{
+		$.post("http://localhost/mange_s/company/delete_event",{
 				task : "event_delete",
 				event_id : ids
 			}
@@ -78,6 +80,16 @@ jConfirm('Do Your Really Want to Delete it?', 'Delete', function(r) {
 			});
 	
 	}
+	//////////////////////////////////////////////////
+	function delete_event(ids){
+		
+        
+		$.post("http://localhost/mange_s/company/delete_event",{event_id : ids }, function(data){
+			
+			$( '#' + ids ).detach();	
+				
+			},"json");
+            }
 	
 	//delete selected row in table
 	jQuery('.deletebutton').click(function(){

@@ -16,9 +16,10 @@ $page=$this->uri->segment(2);
 $control=$this->uri->segment(1); ?>
 
             		<ul>
+                    <li class="<?php if($page == 'home'){echo "current";}?>"><a href="<?php echo base_url();?>company/home"  class="dashboard"><span>News Feed</span></a></li>
                     <li class="<?php if($segment != ''){echo "current";}?>"><a href="<?php echo base_url();?>company/profile/<?php echo $this->session->userdata('comp_id') ;?>"  class="dashboard"><span>Company Profile</span></a></li>
                     <li class="<?php if($page == '' && $control == 'edit'){echo "current";}?>"><a href="<?php echo base_url();?>edit/"  class="dashboard"><span>Update profile</span></a></li>
-                    	<li class="<?php if($page == 'tree_step1' || $page == 'step2' || $page == 'step3' || $page == 'tree' && $control == 'edit' ){echo "current";}?>"><a href="<?php echo base_url();?>company/tree_step1/"  class="dashboard"><span>Company tree</span></a></li>
+                    	<li class="<?php if($page == 'tree_step1' || $page == 'step2' || $page == 'step3' || $page == 'tree' && $control == 'company' ){echo "current";}?>"><a href="<?php echo base_url();?>company/tree/"  class="dashboard"><span>Company tree</span></a></li>
                         <li>
                        <a href="<?php echo base_url();?>company/unconfirm_employees/"  class="users"><span>Unconfirm employees
                      (<?php if(isset($unconfirm_count)) echo $unconfirm_count?>)</span></a></li> 

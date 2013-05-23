@@ -24,7 +24,7 @@
 <body class="loggedin">
 
 	<!-- START OF HEADER -->
-	<?php include('header.php');?>
+	<?php include('header2.php');?>
     <!-- END OF HEADER -->
         
     <!-- START OF MAIN CONTENT -->
@@ -97,6 +97,7 @@
                               <?php if($task->row(0)->under_construction == 0 && $task->row(0)->done == 0){ ?>
                            <a href="<?php echo base_url();?>employee/start_task/<?php echo $task->row(0)->id ;?>/<?php echo $task->row(0)->task_owner;?>">  <span class="radius3" style="background-color:#0C0;">Start it</span> </a>
                            <?php }?>
+                           
                              </p>
                              
                              

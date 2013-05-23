@@ -245,7 +245,7 @@ class Model_employee extends CI_Model {
         $result = $this->db->query($sql_select);
         if ($result->num_rows() == 1) {
             $pic_name = $result->row(0)->profile_pic;
-            if ($pic_name != 'default_pic.jpg') {
+            if ($pic_name != 'default_pic.png') {
 
                 $path1 = APPPATH . '../images/profile/' . $pic_name;
                 $path2 = APPPATH . '../images/profile/thumb_profile/' . $pic_name;
@@ -278,7 +278,18 @@ function select_sub_departments($comp_id , $dept_id){
         } else {
             return false;
         }
-	}	
+	}
+/////////////////////////////////////////////////////
+     function select_emp_giv_task($company_id,$department_id,$sub_dept_id){
+		 $sql='select id,username from employees where company_id=? and department_id=? and sub_dept_id=?';
+		$result = $this->db->query($sql,array($company_id,$department_id,$sub_dept_id));
+		if($result->num_rows() >= 1){
+            return $result->result();
+        } else {
+            return false;
+        }
+		 
+		 }		
     ///////////////////////////////////////////
 	function insert_tasks($employee_id,$the_task,$deadline,$task_owner){
 		$data = array(
@@ -355,9 +366,9 @@ function select_sub_departments($comp_id , $dept_id){
 			if($result->num_rows() == 1){
 				$the_task=$result->row(0)->the_task;
 				$$task_owner=$result->row(0)->task_owner;
-				$link=base_url().'employee/task/'.$id.'/'.$task_owner;
+				$link=base_url().'employee/task_manger/'.$id.'/'.$task_owner;
 			$data = array(
-            'emp_id' => $emp_id,
+            'emp_id' => $task_owner,
             'activity' => $username.' start working in this"'.substr($the_task,0,10).'..." task.',
 			'task_id'=>$id,
 		    'link'=>$link
@@ -405,6 +416,28 @@ function select_sub_departments($comp_id , $dept_id){
         }
 		}
 	//////////////////////////////////////////////
+	function select_avtivity($id){
+	$data=array('emp_id'=>$id,'seen'=>0);
+	$this->db->order_by("id", "desc"); 
+		$this->db->where($data);
+	$result = $this->db->get('activity',9);
+	  return $result->result();
+		}
+	///////////////////////////////////////////////////////////// employee chat ////////////////////////////////////////////////	
+	function select_dept_contacts($comp_id){
+		$sql='select e.id,e.firstname,e.lastname,e.profile_pic,e.company_id,e.department_id,e.sub_dept_id,e.online
+              from employees e 
+			  join department d on e.id=d.depart_manager and d.company_id=?';
+			  	   
+		$result=$this->db->query($sql,$comp_id);
+		if($result->num_rows() >= 1){
+            return $result;
+        } else {
+            return false;
+        }	   
+		}
 	
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 ?>

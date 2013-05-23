@@ -24,7 +24,7 @@
 <body class="loggedin">
 
 	<!-- START OF HEADER -->
-	<?php include('header.php');?>
+	<?php include('header2.php');?>
     <!-- END OF HEADER -->
         
     <!-- START OF MAIN CONTENT -->
@@ -63,14 +63,19 @@
                     <div class="widgetbox">
                         <div class="title"><h2 class="tabbed"><span>task <?php echo $i?></span></h2></div>
                         <div class="widgetcontent announcement">
+                       
+                          
                             <p>
-                            <span class="radius2" style="float:right">Deadline: <?php echo $task->deadline;?></span>
+                            <a href="<?php echo base_url();?>employee/task_manger/<?php echo $task->id; ?>/<?php echo $task->task_owner; ?>"  > <span class="radius3" style="float:right; ">Details</span> </a>
                             
                             
-                             <br /><p style="padding:0px;margin-top:-40px;width:80%;margin-right:5px;"><?php echo $task->the_task?></span></p>
-                             <?php if($task->under_construction == 1 && $task->done == 0){ ?>
-                           <span class="radius2" style="background-color:#960;margin-right:5px;padding:5px;color:#fff">Task Statue:  under construction</span>                           <a href="<?php echo base_url();?>employee/finish_task/<?php echo $task->id ?>/<?php echo $task->emp_id ?>/" ><span class="radius3" style="background-color:#039;margin-right:5px;padding:5px;color:#fff">He/she finish it</span> </a>
-                            <?php }?>
+                             <br /><p style="padding:0px;margin-top:-40px;width:80%;margin-right:5px;">
+							 <a href="<?php echo base_url();?>employee/task_manger/<?php echo $task->id; ?>/<?php echo $task->task_owner; ?>">
+							 <?php echo $task->the_task?></a>
+                             
+                             </span></p>
+                             
+                             
                             <?php if($task->done == 1){ ?>
                             <span class="radius3" style="background-color:#0C0;margin-right:5px;padding:5px;">✓ Done</span> 
                             <?php }?>

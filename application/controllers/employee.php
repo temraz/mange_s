@@ -43,7 +43,7 @@ function settings(){
 		
 		$this->load->view('employee_settings');
 		}else{
-		$this->load->view('index_employee');	
+		redirect('site/index_employee');	
 		}
 	}
 
@@ -58,7 +58,7 @@ function settings(){
 			 $data['pic']=$employee->row(0)->profile_pic;
             	$this->load->view('employee_settings',$data);
         } else {
-            $this->load->view('index_employee');	
+            redirect('site/index_employee');	
         }
     }
 	
@@ -91,7 +91,17 @@ function give_task(){
 			
 			
  }elseif($this->model_employee->is_sub_manager($emp_id)){
-	 $sub_manager=1;
+      $company_id=$this->session->userdata('company_id');
+				
+				$sub_dept_id=$this->session->userdata('sub_dept_id');
+				$department_id=$this->model_employee->is_sub_manager($emp_id)->row(0)->department_id;
+             if($this->model_employee->select_emp_giv_task($company_id,$department_id,$sub_dept_id)){
+			 $data['departments']=$this->model_employee->select_emp_giv_task($company_id,$department_id,$sub_dept_id);
+			 $this->load->view('give_tasks',$data);
+			 }else{
+				 $data['no_employees']=0;
+				 $this->load->view('give_tasks',$data);
+				 }
 	 }
 	 else{
 				 echo 'sdfsd000f';
@@ -102,7 +112,7 @@ function give_task(){
 			 
 	
 	}else{
-         $this->load->view('index_employee');	
+         redirect('site/index_employee');	
         }
 	}
 //////////////////////////////////////////////////
@@ -147,11 +157,12 @@ function task_validation(){
 				}
 		 
 	}else{
-         $this->load->view('index_employee');	
+         redirect('site/index_employee');	
         }
 	}	
 	///////////////////////////////////////////
 	function tasks_status(){
+		 if ($this->session->userdata('employee_logged_in')) {
 		$task_owner = $this->session->userdata('emp_id');
 		if($this->model_employee->select_tasks($task_owner)){
 			$data['tasks']=$this->model_employee->select_tasks($task_owner);
@@ -159,12 +170,56 @@ function task_validation(){
 			}else{
 				$this->load->view('tasks_status');
 				}
+				}else{
+         redirect('site/index_employee');	
+        }
+		}
+	/////////////////////////////////////////////
+	///////////////////////////////////////////
+	function task_manger(){
+				 if ($this->session->userdata('employee_logged_in')) {
+		if($this->uri->segment(3) != '' && $this->uri->segment(4) != ''){
+			if($this->uri->segment(5) != ''){
+				$id=$this->uri->segment(5);
+			$this->db->where('id',$id);
+		    $result=$this->db->update('activity',array('seen'=>1));
+				}
+			$task_owner=$this->uri->segment(4);
+			$emp_id = $this->session->userdata('emp_id');	
+				if($task_owner==$emp_id){
+					
+			$task_id=$this->uri->segment(3);
+			
+       		if($this->model_employee->select_task($task_id)){
+			$data['task']=$this->model_employee->select_task($task_id);
+			$this->load->view('manger_task',$data);
+				
+			}else{
+				$data['notasks']=1;
+				$this->load->view('manger_task');
+				}
+					
+					}else{
+			redirect('site/error404');
+			}
+				
+			}else{
+			redirect('site/error404');
+			}
+				}else{
+         redirect('site/index_employee');	
+        }
 		}
 	/////////////////////////////////////////////
 		///////////////////////////////////////////
 	function task(){
 		 if ($this->session->userdata('employee_logged_in')) {
 		if($this->uri->segment(3) != '' && $this->uri->segment(4) != ''){
+			if($this->uri->segment(5) != ''){
+				$id=$this->uri->segment(5);
+			$this->db->where('id',$id);
+		    $result=$this->db->update('activity',array('seen'=>1));
+				}
 			$task_owner=$this->uri->segment(4);
 			$emp_id = $this->session->userdata('emp_id');
 			if($task_owner==$emp_id){
@@ -177,7 +232,8 @@ function task_validation(){
 			
 			$this->db->where('id',$task_id);
 		    $result=$this->db->update('tasks',array('seen'=>1));
-			
+			$this->db->where('id',$task_id);
+		    $result=$this->db->update('tasks',array('seen'=>1));
 			$data['task']=$this->model_employee->select_task($task_id);
 			$this->load->view('view_task',$data);
 				
@@ -262,4 +318,66 @@ function task_validation(){
         }
 	}		
 	///////////////////////////////////////////	
+	function select_avtivity(){
+		if ($this->session->userdata('employee_logged_in')) {
+			$emp_id=$this->session->userdata('emp_id');
+			if($this->model_employee->select_avtivity($emp_id)){
+				$data['activities']=$this->model_employee->select_avtivity($emp_id);
+				$this->load->view('activities',$data);
+				}else{
+					$data['no_activity']=1;
+					$this->load->view('activities',$data);
+					}
+			
+			}else{
+         redirect('site/index_employee');	
+        }
+		}
+	/////////////////////////////////////////////
+	function count_activity(){
+		if ($this->session->userdata('employee_logged_in')) {
+			$emp_id=$this->session->userdata('emp_id');
+			if($this->model_employee->select_avtivity($emp_id)){
+			$activity_count=count($this->model_employee->select_avtivity($emp_id));
+			}else{
+				$activity_count=0;
+				}
+				echo $activity_count;
+		}else{
+         redirect('site/index_employee');	
+        }
+		}
+	////////////////////////////////////////////////////// employees chat/////////////////////////////////////
+	
+	public function chat(){
+	if ($this->session->userdata('employee_logged_in')) {
+		$my_id=$this->session->userdata('emp_id');
+		 $comp_id=$this->model_users->select_emp($my_id)->row(0)->company_id;
+		 
+		 
+	 if($this->model_employee->is_chairman($my_id)){
+	 if($this->model_employee->select_dept_contacts($comp_id)){
+     $data['contacts']=$this->model_employee->select_dept_contacts($comp_id)->result();
+	 $this->load->view('chat',$data);
+	 }else{
+		 $data['no_contacts']=1;
+		 $this->load->view('chat',$data);
+		 }
+	}
+ elseif($this->model_employee->is_manager($id)){
+ $manager=1;
+ }elseif($this->model_employee->is_sub_manager($id)){
+	 $sub_manager=1;
+	 }else{
+		 
+		 }
+		
+		
+		
+		}else{
+         redirect('site/index_employee');	
+        }
+	}
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
 }?>
