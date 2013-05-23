@@ -41,7 +41,7 @@ $country_list = array(
 		"Congo (Brazzaville)",
 		"Congo",
 		"Costa Rica",
-		"Cote d'Ivoire",
+		"Cote d Ivoire",
 		"Croatia",
 		"Cuba",
 		"Cyprus",

@@ -111,6 +111,7 @@ class Edit extends CI_Controller {
 	///////////////////
 	public function add_event()
 	{
+		
 		if($this->session->userdata('company_logged_in')){
 			$flag['inserted']=0;
 			$this->load->library('form_validation');
@@ -143,8 +144,26 @@ class Edit extends CI_Controller {
 	   'details' => $event_details,
 	   'pic'=>$photo_name
 	   );		
+	   
+	   
 					 if($this->db->insert('events',$data)){
 						 $flag['inserted']=1;
+						 $this->load->model('model_company');
+						 $event_id = $this->model_company->get_feed_id('events');
+		 foreach($event_id as $row){
+			 $event_id2 = $row->id;
+			 } 
+	   
+	   $news_feed = array (
+	   'company_id' => $company_id,
+	   'title' => $event_title ,
+	   'details' => $event_details,
+	   'logo'=>'events/'.$photo_name,
+	   'link'=>base_url().'company/event/'.$event_id2,
+	   'event_id'=>$event_id2
+	   );		
+	   $this->db->insert('news_feed',$news_feed);
+	   
 		  $this->load->view('event_insert' , $flag);
 						 }
 						
@@ -190,6 +209,23 @@ class Edit extends CI_Controller {
 	   'logo'=>$photo_name
 	   );		
 					 if($this->db->insert('products',$data)){
+						 
+						 $this->load->model('model_company');
+						 $product_id = $this->model_company->get_feed_id('products');
+		 foreach($product_id as $row){
+			 $product_id2 = $row->id;
+			 } 
+	   
+	   $news_feed = array (
+	   'company_id' => $company_id,
+	   'title' => $product_title ,
+	   'details' => $product_details,
+	   'logo'=>'products/'.$photo_name,
+	   'link'=>base_url().'company/product/'.$product_id2,
+	   'product_id'=>$product_id2
+	   );		
+	   $this->db->insert('news_feed',$news_feed);
+						 
 						 $flag['inserted']=1;
 		  $this->load->view('product_insert' , $flag);
 						 }
@@ -238,6 +274,23 @@ public function add_news()
 	   );		
 					 if($this->db->insert('news',$data)){
 						 $flag['inserted']=1;
+						 
+						  $this->load->model('model_company');
+						 $news_id = $this->model_company->get_feed_id('news');
+		 foreach($news_id as $row){
+			 $news_id2 = $row->id;
+			 } 
+	   
+	   $news_feed = array (
+	   'company_id' => $company_id,
+	   'title' => $title ,
+	   'details' => $details,
+	   'logo'=>'news/'.$photo_name,
+	   'link'=>base_url().'company/news_show/'.$news_id2,
+	   'news_id'=>$news_id2
+	   );		
+	   $this->db->insert('news_feed',$news_feed);
+						 
 		  $this->load->view('news_insert' , $flag);
 						 }
 						
@@ -279,6 +332,22 @@ public function add_job()
 	   );		
 					 if($this->db->insert('jops',$data)){
 						 $data['inserted']=1;
+						 
+						 $this->load->model('model_company');
+						 $job_id = $this->model_company->get_feed_id('jops');
+		 foreach($job_id as $row){
+			 $job_id2 = $row->id;
+			 } 
+	   
+	   $news_feed = array (
+	   'company_id' => $company_id,
+	   'title' => $name ,
+	   'details' => $description,
+	   'link'=>base_url().'company/job/'.$job_id2,
+	   'job_id'=>$job_id2
+	   );		
+	   $this->db->insert('news_feed',$news_feed);
+	   
 		  $this->load->view('job_insert' ,$data);
 		  ;
 						 }
@@ -321,6 +390,23 @@ public function add_media()
 	   );		
 					 if($this->db->insert('media',$data)){
 						 $flag['inserted']=1;
+						 
+						  $this->load->model('model_company');
+						 $pic_id = $this->model_company->get_feed_id('media');
+		 foreach($pic_id as $row){
+			 $pic_id2 = $row->id;
+			 } 
+	   
+	   $news_feed = array (
+	   'company_id' => $company_id,
+	   'title' => "New Photo Added " ,
+	   'details' => $caption,
+	   'logo'=>'company_gallery/'.$photo_name,
+	   'link'=>base_url().'company/gallery/'.$company_id,
+	   'pic_id'=>$pic_id2
+	   );		
+	   $this->db->insert('news_feed',$news_feed);
+						 
 		  $this->load->view('media_insert' , $flag);
 						 }
 						

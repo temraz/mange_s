@@ -124,6 +124,28 @@ class model_company extends CI_Model {
 					 return 0 ;
 					 }
 			 }
+			 
+			 //////////////////
+			 public function get_feed_id($table){
+     	$query="SELECT id FROM $table ORDER BY id DESC LIMIT 1 ";
+	$result=$this->db->query($query);
+	  return $result->result();
+	  }	
+	  
+	  ///////////////
+	  public function get_news_feed(){
+			 $query="SELECT * FROM news_feed ORDER BY id DESC ";
+	$result=$this->db->query($query);
+	  return $result->result();
+	  }
+	  
+	  ///////////////
+	    public function feed_by_id($id){
+			$query="SELECT * FROM news_feed WHERE company_id=$id ORDER BY id DESC ";
+	$result=$this->db->query($query);
+	  return $result->result();
+	  
+	  }
 }
 
 ?>

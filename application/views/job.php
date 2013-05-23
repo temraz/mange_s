@@ -32,8 +32,7 @@
          	
         <div class="mainleft">
           	<div class="mainleftinner">
-            
-              <?php  if($this->session->userdata('company_logged_in')){ include('left_menu_company.php'); }?>
+            <?php  if($this->session->userdata('company_logged_in')){ include('left_menu_company.php'); } elseif($this->session->userdata('user_logged_in')){include('left_menu_user.php');}?>
             	<div id="togglemenuleft"><a></a></div>
             </div><!--mainleftinner-->
         </div><!--mainleft-->
@@ -85,12 +84,7 @@
                         <div class="title"><h2 class="tabbed"><span>Recent Activity</span></h2></div>
                         <div class="widgetcontent padding0">
                             <ul class="activitylist">
-                            	<li class="message"><a href=""><strong>Temraz</strong> sent a message <span>Just now</span></a></li>
-                                <li class="user"><a href=""><strong>Al hawata</strong> added <strong>23 users</strong> <span>Yesterday</span></a></li>
-                                <li class="user"><a href=""><strong>Sheir</strong> added <strong>2 users</strong> <span>2 days ago</span></a></li>
-                                <li class="message"><a href=""><strong>Gado</strong> sent a message <span>5 days ago</span></a></li>
-                                <li class="media"><a href=""><strong>Badran</strong> uploaded <strong>2 photos</strong> <span>5 days ago</span></a></li>
-                                 <li class="media"><a href=""><strong>Mohamed Temraz</strong> uploaded <strong>2 photos</strong> <span>5 days ago</span></a></li>
+          <?php include('recent_activity.php');?>
                             </ul>
                         </div><!--widgetcontent-->
                     </div><!--widgetbox-->

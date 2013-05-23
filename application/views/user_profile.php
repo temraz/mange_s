@@ -48,84 +48,55 @@
                 
                 <div class="content">
                
-                    
-                 
-                    
-                   <div class="content"  style=" height:auto">
-                    
-                    
-                    
-                    <div class="contenttitle">
-                    	<h2 class="general"><span>Jobs in Egypt</span></h2>
-                    </div><!--contenttitle-->
-                     <div class="field" style="padding-top:40px; padding-bottom:15px; border-bottom:.1em solid #CCC">
-                     <h2><a href="#"> IT Sales Account Manager</a></h2><small style="float:right"><?php echo date("M j, Y");?></small><br />
-                     <a href="#">Talent Bay</a>&nbsp;-&nbsp;<a href="#">Cairo</a>&nbsp;-&nbsp;<a href="#">Egypt</a> <br />
-                     <p>Candidate will be requested to have an annual target, that he'll achieve by bringing new channels, get them to be our partners, train their sales people, in order to let them sell our product in diffe...</p><br />
-                    <small style="color:#AAA">Department : information technology</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small style="color:#AAA">Professional level : beginner</small>
-                      <h3 style="float:right;margin-right:60px"><a href="#">Job Details</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Apply</a></h3>
-                     </div>
-                     
-                     <div class="field" style="padding-top:40px; padding-bottom:15px; border-bottom:.1em solid #CCC">
-                     <h2><a href="#"> Medical Account Executive </a></h2><small style="float:right"><?php echo date("M j, Y");?></small><br />
-                     <a href="#">ACT Advertising</a>&nbsp;-&nbsp;<a href="#">Cairo</a>&nbsp;-&nbsp;<a href="#">Egypt</a> <br />
-                     <p>Job description; 1.	Working with account Managers to devise a campaign that meets the client's brief and budget. 2.	Providing the verbal or written copy including creating slogans, catchphrases, ...</p><br />
-                    <small style="color:#AAA" >Department : Advertising</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small style="color:#AAA">Professional level : expert</small>
-                      <h3 style="float:right;margin-right:60px"><a href="#">Job Details</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Apply</a></h3>
-                     </div>
-                     
-                    <div class="field" style="padding-top:40px; padding-bottom:15px; border-bottom:.1em solid #CCC">
-                     <h2><a href="#"> Medical Account Executive </a></h2><small style="float:right"><?php echo date("M j, Y");?></small><br />
-                     <a href="#">ACT Advertising</a>&nbsp;-&nbsp;<a href="#">Cairo</a>&nbsp;-&nbsp;<a href="#">Egypt</a> <br />
-                     <p>Job description; 1.	Working with account Managers to devise a campaign that meets the client's brief and budget. 2.	Providing the verbal or written copy including creating slogans, catchphrases, ...</p><br />
-                    <small style="color:#AAA" >Department : Advertising</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small style="color:#AAA">Professional level : expert</small>
-                      <h3 style="float:right;margin-right:60px"><a href="#">Job Details</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Apply</a></h3>
-                     </div>
-                      
-                     <div class="field" style="padding-top:40px; padding-bottom:15px; border-bottom:.1em solid #CCC">
-                     <h2><a href="#"> Medical Account Executive </a></h2><small style="float:right"><?php echo date("M j, Y");?></small><br />
-                     <a href="#">ACT Advertising</a>&nbsp;-&nbsp;<a href="#">Cairo</a>&nbsp;-&nbsp;<a href="#">Egypt</a> <br />
-                     <p>Job description; 1.	Working with account Managers to devise a campaign that meets the client's brief and budget. 2.	Providing the verbal or written copy including creating slogans, catchphrases, ...</p><br />
-                    <small style="color:#AAA" >Department : Advertising</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small style="color:#AAA">Professional level : expert</small>
-                      <h3 style="float:right;margin-right:60px"><a href="#">Job Details</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Apply</a></h3>
-                     </div>
-                     
-                     <div class="field" style="padding-top:40px; padding-bottom:15px; border-bottom:.1em solid #CCC">
-                     <h2><a href="#"> Medical Account Executive </a></h2><small style="float:right"><?php echo date("M j, Y");?></small><br />
-                     <a href="#">ACT Advertising</a>&nbsp;-&nbsp;<a href="#">Cairo</a>&nbsp;-&nbsp;<a href="#">Egypt</a> <br />
-                     <p>Job description; 1.	Working with account Managers to devise a campaign that meets the client's brief and budget. 2.	Providing the verbal or written copy including creating slogans, catchphrases, ...</p><br />
-                    <small style="color:#AAA" >Department : Advertising</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small style="color:#AAA">Professional level : expert</small>
-                      <h3 style="float:right;margin-right:60px"><a href="#">Job Details</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Apply</a></h3>
-                     </div>
-                     
-                     <ul class="pagination" style="padding-top:40px ">
-                    	<li class="first"><a href="" class="disable">&laquo;</a></li>
-                        <li class="previous"><a href="" class="disable">&lsaquo;</a></li>
-                    	<li><a href="" class="current">1</a></li>
-                        <li><a href="">2</a></li>
-                        <li><a href="">3</a></li>
-                        <li><a href="">4</a></li>
-                        <li><a href="">5</a></li>
-                        <li class="next"><a href="">&rsaquo;</a></li>
-                        <li class="last"><a href="">&raquo;</a></li>
-                    </ul>
-                     
-                   
-                    </div>
-                </div><!--content-->
+                     <?php 
+				if(isset($user_data)){
+				foreach($user_data as $row){
+					$name = $row->name;
+					$about = $row->about;
+					$username = $row->username;
+					$about= $row->about;
+					$pic = $row->pic;
+					$age = $row->age;
+					$country = $row->country;
+					$address = $row->address;
+					 $gender = $row->gender;
+					 ?>
                 
-                        
+                	<div class="one_half" style="width:100%">
+                    	<h1> <strong style="color:#096"> <?php echo $username; ?> </strong> Personnal Information</h1>
+                        <br />
+                    	<p style="margin:10px"><img src="<?php echo base_url();?>images/profile/<?php if(isset($pic)){ echo $pic;}elseif($pic == NULL && $gender == 'female'){ echo "female.gif";}elseif($pic == NULL && $gender == 'male'){echo "male.gif";}
+							 ?>" height="10%" width="20%" style="float:left ; border:1px solid #c1c1c1 ; margin:10px ; padding:3px "/><p style="margin-right:5px">
+                       <br />
+                       <?php if($name && $age && $country && $address){?>
+                       <p ><strong style="font-weight:bold ; font-size:15px"><?php echo $name; ?></strong><span style="color:#e1e1e1 ; font-size:10px">  (Name)</span>
+                       </p>
+                        <br />
+                        <p ><strong style="font-weight:bold ; font-size:15px"><?php echo $age; ?></strong><span style="color:#e1e1e1 ; font-size:10px">  (Age)</span>
+                       </p>
+                       </p>
+                       <br />
+                       <p ><strong style="font-weight:bold ; font-size:15px"><?php echo $country." - ".$address; ?></strong><span style="color:#e1e1e1 ; font-size:10px">  (Address)</span>
+                       </p>
+                       
+                        <?php }else { ?>
+                        <br>
+                            <center style="margin:10px"><span> There is not <a href="<?php echo base_url(); ?>user/edit">Update</a> Yet.</span></center>
+								<?php } ?></p>
+                    </div>
                     
+                    <br clear="all" /><br />
                     
-                   
-                  
+                    <div class="one_half" style="width:100%">
+                    	<h1>About <strong style="color:#096"><?php echo $username; ?></strong></h1>
+                        <br />
+                    	<p><?php if(isset($about)){echo $about; }else { ?>
+                            <span> There is not <a href="<?php echo base_url(); ?>user/edit">Update</a> Yet.</span>
+								<?php } ?> </p>
+                    </div>
+                    <br clear="all" /> 
                     
-                    
-                    
-                   
-                 
-                   
-                    
+                    <?php }}?>
                     
                 </div><!--content-->
                 

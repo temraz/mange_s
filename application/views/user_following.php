@@ -4,6 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Dashboard |Business Linkage</title>
+<link rel="shortcut icon" href="<?php echo base_url();?>images/head.png" type="image/x-icon"/>
 <link rel="stylesheet" href="<?php echo base_url();?>css/style.css"  type="text/css" />
 
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery-1.7.min.js"></script>
@@ -32,7 +33,8 @@
          	
         <div class="mainleft">
           	<div class="mainleftinner">
-            <?php  if($this->session->userdata('company_logged_in')){ include('left_menu_company.php'); } elseif($this->session->userdata('user_logged_in')){include('left_menu_user.php');}?>
+            
+              	<?php include('left_menu_user.php');?>
             	<div id="togglemenuleft"><a></a></div>
             </div><!--mainleftinner-->
         </div><!--mainleft-->
@@ -40,28 +42,40 @@
         <div class="maincontent">
         	<div class="maincontentinner">
             	
+                <ul class="maintabmenu">
+                	<li class="current"><a href="<?php echo base_url();?>user/profile/" >profile</a></li>
+                </ul><!--maintabmenu-->
                 
                 <div class="content">
-                           <?php 
-						if(isset($product)){
-				foreach ($product as $row){
-					$id=$row->id;
-					$name=$row->name;
-					$date=$row->date_release;
-					$details=$row->product_desc;
-					$pic=$row->logo;
-				}}
-						   ?>
-                           <h1><?php echo $name ?></h1>
-                            <h3 style="float:right ; color:#c1c1c1"><?php echo $date ?></h3>
-                           <br class="all"/>
-                     <div class="one_half" style="width:100%">
-                    	<p><img src="<?php echo base_url();?>images/products/<?php echo $pic; ?>" height="200" width="270" style="float:left; border:1px solid #c1c1c1 ; margin:10px ; padding:3px "/><p><?php echo $details; ?></p></p>
-                    <br clear="all" />
-                    <h3 style="float:right;margin-right:60px"><button class="stdbtn btn_black">Add to Card</button>&nbsp;&nbsp;&nbsp;&nbsp;<button class="stdbtn">Add to my list</button></h3>
-                    </div>
-                    <br clear="all" />
-                      
+                    
+                    <div class="one_half " style="width:100%">
+                    	<h1>Following</h1>
+                                       <br />
+                        <div class="widgetcontent announcement">
+                        <?php if(isset($following) && count($following) != 0){
+						foreach ($following as $row){
+							$company_id=$row->company_id;
+							$this->load->model('model_company');
+							$company_info = $this->model_company->get_company_info($company_id);
+							foreach ($company_info as $r){
+							$id = $r ->id;	
+							$name = $r->name;
+							$field = $r->field;
+							$logo = $r->logo;
+							$about = $r->about;
+							}
+							?>
+                            <p>
+                  <img src="<?php echo base_url();?>images/campanies_logo/<?php echo $logo;?>" width="70" height="50" style="float:left ; border:1px solid #c1c1c1 ; padding:2px ; margin:0 10px 0 10px " /> <a href="<?php echo base_url();?>company/profile/<?php echo $id; ?>" ><?php echo $name;?></a> <span class="radius2" style="float:right"><?php echo $field;?></span> <br /><?php echo substr($about,0,90);?></p>
+                  <br />
+                            <?php }}else{?>
+                    <center><h1 style="color:#c1c1c1">There Are Not Following Companies Yet</h1></center><br />
+                    <?php } ?>
+                            </div>
+                            </div>
+                            <br clear="all" />
+                            
+                    
                 </div><!--content-->
                 
             </div><!--maincontentinner-->
@@ -82,8 +96,13 @@
                         <div class="title"><h2 class="tabbed"><span>Recent Activity</span></h2></div>
                         <div class="widgetcontent padding0">
                             <ul class="activitylist">
-            <?php include('recent_activity.php');?>
-                             </ul>
+                            	<li class="message"><a href=""><strong>Temraz</strong> sent a message <span>Just now</span></a></li>
+                                <li class="user"><a href=""><strong>Al hawata</strong> added <strong>23 users</strong> <span>Yesterday</span></a></li>
+                                <li class="user"><a href=""><strong>Sheir</strong> added <strong>2 users</strong> <span>2 days ago</span></a></li>
+                                <li class="message"><a href=""><strong>Gado</strong> sent a message <span>5 days ago</span></a></li>
+                                <li class="media"><a href=""><strong>Badran</strong> uploaded <strong>2 photos</strong> <span>5 days ago</span></a></li>
+                                 <li class="media"><a href=""><strong>Mohamed Temraz</strong> uploaded <strong>2 photos</strong> <span>5 days ago</span></a></li>
+                            </ul>
                         </div><!--widgetcontent-->
                     </div><!--widgetbox-->
                  <div class="widgetbox">

@@ -1,32 +1,22 @@
 <div class="leftmenu">
+<?php 
+$page=$this->uri->segment(2);
+$control=$this->uri->segment(1); ?>
             		<ul>
-                    	<li class="current"><a href="<?php echo base_url();?>user/profile/"  class="dashboard"><span>Profile</span></a></li>
-                        
-                        
-                       
-                        
-                       
-                        <li><a href="<?php echo base_url();?>site/meetings/" class="buttons" ><span>Meetings</span></a></li>
-                        <li><a href="<?php echo base_url();?>site/editor/" class="media" ><span>File Editor</span></a></li>
+                    	<li class="<?php if($control == 'user' && $page=='news_feed'){echo "current";}?>"><a href="<?php echo base_url();?>user/news_feed/" class="buttons" ><span>News Feed</span></a></li>
+                    	<li class="<?php if($control == 'user' && $page=='profile'){echo "current";}?>"><a href="<?php echo base_url();?>user/profile/<?php echo $this->session->userdata('user_id'); ?>"  class="dashboard"><span>Profile</span></a></li>
+                        <li class="<?php if($control == 'user' && $page=='edit'){echo "current";}?>"><a href="<?php echo base_url();?>user/edit/"  class="dashboard"><span>Update Profile</span></a></li>
+                        <li><a href="<?php echo base_url();?>site/media/" class="media"><span>Messages</span></a></li>
+                        <li class="<?php if($control == 'user' && $page=='following'){echo "current";}?>"><a href="<?php echo base_url();?>user/following/" class="dashboard" ><span>Following</span></a></li>
+                        <li><a href="<?php echo base_url();?>user/cv_edit/" class="media" ><span>CV</span></a></li>
                        
                      
                        
-                        <li><a href="<?php echo base_url();?>site/calendar/" class="calendar"><span>Calendar</span></a></li>
+                        <li><a href="<?php echo base_url();?>site/calendar/" class="calendar"><span>Applied Jobs</span></a></li>
                        
-                        <li><a href="<?php echo base_url();?>site/chat/"  class="chat"><span>Messages</span></a></li>
+                        <li><a href="<?php echo base_url();?>site/chat/"  class="chat"><span>Buied Products</span></a></li>
                         
-                        <li><a href="<?php echo base_url();?>site/media/" class="media"><span>companies followers</span></a></li>
                         
-                        <li>
-                            <?php
-                            if($this->session->userdata('company_id') == NULL){
-                               echo '<a href="http://localhost/mange/site/company" class="media"><span>Create Company</span></a>';
-                                }  else {
-                               echo '<a href="http://localhost/mange/company" class="media"><span>'.$this->session->userdata('company_name') .'</span></a>';    
-                            }
-                            ?>
-                            
-                        </li>
                        
                     </ul>
                         

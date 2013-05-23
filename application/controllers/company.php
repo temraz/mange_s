@@ -36,7 +36,7 @@ class Company extends CI_Controller {
 				
 			$this->load->model('model_company');
 			$data['pro_data']=$this->model_company->get_company_info($id);
-			
+			$data['feed_segment']=$this->model_company->feed_by_id($this->uri->segment(3));
 				$this->load->model('model_users');	
 			if($this->model_users->select_company($id)){
 			
@@ -160,7 +160,7 @@ class Company extends CI_Controller {
 	}
 	
 	public function step2(){
-		 $id = $this->session->userdata('company_id');
+		 $id = $this->session->userdata('comp_id');
 		$this->load->model('model_company');
 		$data['depart_no'] = $this->model_company->get_department_number($id);
 		$this->load->model('model_users');
@@ -201,13 +201,13 @@ public function step2_validation()
 				
 				}
 		}else {
-			if($this->model_company->is_company_valid($this->session->userdata('company_id'),'department')){
-				 $this->db->where('company_id',$this->session->userdata('company_id'));
+			if($this->model_company->is_company_valid($this->session->userdata('comp_id'),'department')){
+				 $this->db->where('company_id',$this->session->userdata('comp_id'));
 				$this->db->delete('department');
 				}
 			for ($i=1 ; $i<=$depart_number ; $i++ ) {
 			$data= array(
-		"company_id"=>$this->session->userdata('company_id') , 
+		"company_id"=>$this->session->userdata('comp_id') , 
 		"name" => $depart_name[$i],
 		"depart_manager" => $depart_manager[$i],
 		"sub_depart_num" => $sub_depart_number[$i],
@@ -221,11 +221,11 @@ public function step2_validation()
 	}
 	
 	public function step3(){
-		$id = $this->session->userdata('company_id');
+		$id = $this->session->userdata('comp_id');
 		$this->load->model('model_company');
 		$this->load->model('model_employee');
 		$data['depart_no'] = $this->model_company->get_department_number($id);
-		$data['depart_info'] = $this->model_company->get_department_info($this->session->userdata('company_id'));
+		$data['depart_info'] = $this->model_company->get_department_info($this->session->userdata('comp_id'));
 		$this->load->model('model_users');
 		if($this->model_users->select_all_emp()){
 			$data['users']=$this->model_users->select_all_emp()->result();
@@ -248,7 +248,7 @@ public function step2_validation()
 		$depart_id_array;
 		$depart_number = $this->session->userdata('depart_number');
 		$this->load->library('form_validation');
-		$depart_id = $this->model_company->get_department_info($this->session->userdata('company_id'));
+		$depart_id = $this->model_company->get_department_info($this->session->userdata('comp_id'));
 		$x=1;
 		foreach($depart_id as $row){
 			$depart_id_array[$x]=$row->id;
@@ -268,8 +268,8 @@ public function step2_validation()
 		}
 		}
 			 if ($this->form_validation->run() == false) {
-				 $data['depart_no'] = $this->model_company->get_department_number($this->session->userdata('company_id'));
-		$data['depart_info'] = $this->model_company->get_department_info($this->session->userdata('company_id'));
+				 $data['depart_no'] = $this->model_company->get_department_number($this->session->userdata('comp_id'));
+		$data['depart_info'] = $this->model_company->get_department_info($this->session->userdata('comp_id'));
 			$this->load->model('model_users');
 		if($this->model_users->select_all_emp()){
 			$data['users']=$this->model_users->select_all_emp()->result();
@@ -278,8 +278,8 @@ public function step2_validation()
 				
 				}
 		}else {
-			if($this->model_company->is_company_valid($this->session->userdata('company_id'),'sub_department')){
-				 $this->db->where('company_id',$this->session->userdata('company_id'));
+			if($this->model_company->is_company_valid($this->session->userdata('comp_id'),'sub_department')){
+				 $this->db->where('company_id',$this->session->userdata('comp_id'));
 				$this->db->delete('sub_department');
 				}
 				
@@ -289,7 +289,7 @@ public function step2_validation()
 					continue;
 				}else{
 			$data= array(
-		"company_id"=>$this->session->userdata('company_id') , 
+		"company_id"=>$this->session->userdata('comp_id') , 
 		"department_id"=> $depart_ids[$k][$i] , 
 		"name" => $sub_depart_name[$k][$i],
 		"sub_depart_manager" => $sub_depart_manager[$k][$i],
@@ -564,6 +564,40 @@ public function step2_validation()
             }	
 			}
 	///////////////////////////////////////////////////////
-	
+		function home(){
+			$this->load->model('model_company');
+			$data['news_feed']=$this->model_company->get_news_feed();
+			$this->load->view('home', $data);
+			}
+	//////////////////////////
+	function loading(){
+
+$query="SELECT * FROM news_feed ORDER BY id DESC LIMIT 4 ";
+$result=$this->db->query($query);
+
+foreach($result as $row) {
+	$data['company_id'] = $row->company_id;
+				  $data['title'] = $row->title;
+				  $data['date'] = $row->date;
+				  $data['details'] = $row->details;
+				  $data['logo'] = $row->logo;
+				  $data['link'] = $row->link;
+	$company_info = $this->model_company->get_company_info($row->company_id);
+				 foreach($company_info as $r){
+					 $data['company_name'] = $r->name;
+					 $data['company_logo'] = $r->logo;
+					 }
+	echo json_encode ($data);	
 }
+		}
+
+public function delete_event(){
+	
+			$event_id = $this->input->post('ids');
+			$this->db->where('id',$event_id);
+			 $this->db->delete('events'); 
+
+	}
+}
+
 ?>

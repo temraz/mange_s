@@ -14,16 +14,18 @@
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.flot.resize.min.js" ></script>
 
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery-ui-1.8.16.custom.min.js"></script>
-
+<script type="text/javascript" src="<?php echo base_url();?>js/jquery.colorbox-min.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/general.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/colorpicker.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/dashboard.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.jgrowl.js" ></script>
+<script type="text/javascript" src="<?php echo base_url();?>js/media.js" ></script>
+
+<script type="text/javascript" src="<?php echo base_url();?>js/elements.js" ></script>
+
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.alerts.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/tables.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.dataTables.min.js" ></script>
-<script type="text/javascript" src="<?php echo base_url();?>js/elements.js" ></script>
-
 <style>
 .follow  {float:right;margin-right:50px;margin-top:-20px; border-radius:3px; font-family:Verdana, Geneva, sans-serif }
 .follow button {width:80px}

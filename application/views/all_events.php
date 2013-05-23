@@ -20,6 +20,9 @@
 <script type="text/javascript" src="<?php echo base_url();?>js/dashboard.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.jgrowl.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.alerts.js" ></script>
+<script type="text/javascript" >
+var base_url = <?php echo base_url(); ?>;
+</script>
 <script type="text/javascript" src="<?php echo base_url();?>js/tables.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.dataTables.min.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/elements.js" ></script>

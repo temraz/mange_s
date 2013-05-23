@@ -59,10 +59,12 @@
                 <div class="content">
                 
                 
-                 <form id="form1" class="stdform" method="post" action="<?php base_url();?>company">
-                 <?php echo validation_errors(); ?>
+                 <center><h3 style="color:#aaa ;;padding:5px ; border-radius:5px ; word-spacing:1px">This is Your Company Tree .. <a href="<?php echo base_url();?>company" style="text-decoration:underline">Back</a> To your Profile.
+                 You also Can <a href="<?php echo base_url();?>company/tree_step1" style="text-decoration:underline">Edit</a> Your Company Tree.</h3></center>
+                 <br /><br />
                  
-                 <?php 
+                 
+                 <?php if(count($depart_info) != 0){
 				  foreach ($depart_info as $row){
 					 $depart_id = $row->id;
 					 $depart_name = $row->name;
@@ -124,14 +126,14 @@
                         <hr />
                         <?php 
 				 }
+				 }else{ ?>
+							<center style="margin-top:30px"><h1>Tree is not <a href="<?php echo base_url();?>company/tree_step1">Build</a> Yet.</h1></center>
+							<?php }
 				 ?>
                         
                         <br clear="all" />  
                         
-                        <p class="stdformbutton">
-                        	<button class="submit radius2">Finish</button>
-                        </p>
-                    </form>
+                        
                     
                 
                                   

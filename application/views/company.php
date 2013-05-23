@@ -42,7 +42,7 @@
         <div class="mainleft">
           	<div class="mainleftinner">
             
-              	<?php  if($this->session->userdata('company_logged_in')){ include('left_menu_company.php'); }?>
+              	<?php  if($this->session->userdata('company_logged_in')){ include('left_menu_company.php'); } elseif($this->session->userdata('user_logged_in')){include('left_menu_user.php');}?>
             	<div id="togglemenuleft"><a></a></div>
             </div><!--mainleftinner-->
         </div><!--mainleft-->
@@ -63,9 +63,18 @@
 					 ?>
                 
                 	<div class="one_half" style="width:100%">
-                    	<h1> What About <?php echo $name; ?> ?</h1><div class="follow"><button class="stdbtn btn_red">Follow</button>&nbsp;&nbsp;&nbsp;<button class="stdbtn btn_yellow">Contact</button></div>
+                    	<h1> What About <?php echo $name; ?> ?</h1>
+                        <?php if($this->session->userdata('user_logged_in')){ 
+						$this->load->model('model_users');
+						$user_id = $this->session->userdata('user_id');
+						$company_id = $this->uri->segment(3);
+						 ?>
+                        <div class="follow"><a href="<?php echo base_url();?>user/<?php if(!$this->model_users->is_follow($company_id,$user_id)){ echo 'follow';}else{ echo 'unfollow';}?>/<?php echo $user_id;?>/<?php echo $company_id; ?>" class="stdbtn <?php if(!$this->model_users->is_follow($company_id,$user_id)){ echo 'btn_blue';}else{ echo 'btn_red';}?>"><?php if(!$this->model_users->is_follow($company_id,$user_id)){ echo 'Follow';}else{ echo 'Unfollow';}?></a>&nbsp;&nbsp;&nbsp;<button class="stdbtn btn_yellow">Contact</button></div>
+                        <?php  } ?>
                         <br />
-                    	<p><img src="<?php echo base_url();?>images/campanies_logo/<?php echo $logo; ?>" height="200" width="270" style="float:left ; border:1px solid #c1c1c1 ; margin:10px ; padding:3px "/><p style="margin-right:5px"><?php echo $about; ?></p></p>
+                    	<p><img src="<?php echo base_url();?>images/campanies_logo/<?php echo $logo; ?>" height="200" width="270" style="float:left ; border:1px solid #c1c1c1 ; margin:10px ; padding:3px "/><p style="margin-right:5px"><?php if(isset($about)){echo $about; }else { ?>
+                            <center style="margin:10px"><span> There is not <a href="<?php echo base_url(); ?>edit">Update</a> Yet.</span></center>
+								<?php } ?></p>
                     </div>
                     
                     <br clear="all" /><br />
@@ -73,17 +82,27 @@
                     <div class="one_half">
                     	<h1><?php echo $name; ?>'s Products </h1>
                         <br />
-                    	<p><?php echo $about_product; ?></p>
+                    	<p><?php if(isset($about_product)){echo $about_product; }else { ?>
+                            <span> There is not <a href="<?php echo base_url(); ?>edit">Update</a> Yet.</span>
+								<?php } ?> </p>
                     </div>
                     
                      <div class="one_half last">
                     	<h1>Latest Announcement</h1>
                                        <br />
                         <div class="widgetcontent announcement">
+                        <?php if(count($feed_segment) != 0){
+							foreach($feed_segment as $row){
+							$title = $row->title;
+							$date = $row->date;
+							$link = $row->link;
+							 ?>
                             <p>
-                            <span class="radius2">Jan 19, 2012</span> <br />Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium.</p>
-                            <p>
-                            <span class="radius2">Jan 18, 2012</span> <br />Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo.</p>
+                            <span class="radius2"><?php echo $date; ?></span> <br /><a href="<?php echo $link; ?>"><?php echo $title; ?></a></p>
+                            <?php  }}else { ?>
+                            <span> There are not Announcements Yet.</span>
+								<?php } ?>
+                           
                         </div>
                     </div>
                                    <br clear="all" /><br />
@@ -134,7 +153,9 @@
                     	<h1>Related Links </h1>
                         <br />
                     	 <p>
-                            <?php echo $website; ?></p>
+                           <?php if(isset($website)){echo $website; }else { ?>
+                            <span> There is not <a href="<?php echo base_url(); ?>edit">Update</a> Yet.</span>
+								<?php } ?></p>
                     </div>
                                   
                                   <br clear="all" />     
@@ -160,12 +181,7 @@
                         <div class="title"><h2 class="tabbed"><span>Recent Activity</span></h2></div>
                         <div class="widgetcontent padding0">
                             <ul class="activitylist">
-                            	<li class="message"><a href=""><strong>Temraz</strong> sent a message <span>Just now</span></a></li>
-                                <li class="user"><a href=""><strong>Al hawata</strong> added <strong>23 users</strong> <span>Yesterday</span></a></li>
-                                <li class="user"><a href=""><strong>Sheir</strong> added <strong>2 users</strong> <span>2 days ago</span></a></li>
-                                <li class="message"><a href=""><strong>Gado</strong> sent a message <span>5 days ago</span></a></li>
-                                <li class="media"><a href=""><strong>Badran</strong> uploaded <strong>2 photos</strong> <span>5 days ago</span></a></li>
-                                 <li class="media"><a href=""><strong>Mohamed Temraz</strong> uploaded <strong>2 photos</strong> <span>5 days ago</span></a></li>
+                            <?php include('recent_activity.php');?>
                             </ul>
                         </div><!--widgetcontent-->
                     </div><!--widgetbox-->

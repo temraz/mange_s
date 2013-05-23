@@ -166,10 +166,10 @@ class Model_users extends CI_Model {
 		////////////////////////////////////////////////
 		
 	function select_company($id){
-		$sql='select id,email,name from company where id=?';
+		$sql='select * from company where id=?';
 		 $result=$this->db->query($sql,$id);
 		 if($result->num_rows() == 1){
-			 return $result;
+			 return $result->result();
 			 }else{
 				 return false;
 				 }
@@ -237,5 +237,27 @@ class Model_users extends CI_Model {
 				 }
 		}		
 	///////////////////////////////////////////////	
+	public function is_follow($company_id , $user_id){
+		$sql='select * from follow where company_id='.$company_id.' and user_id='.$user_id.'';
+		 $result=$this->db->query($sql);
+		 if($result->num_rows() == 1){
+			 return true;
+			 }else{
+				 return false;
+				 }
+		}
+	/////////////////////////////////////////
+	public function get_user_info($id){
+	 $this->db->where('id',$id);
+			 $query= $this->db->get('users');
+				 return $query->result();
+	  }	
+	  
+	  //////////////////////////
+	  public function get_following($id){
+	 $this->db->where('user_id',$id);
+			 $query= $this->db->get('follow');
+				 return $query->result();
+	  }	
 }
 ?>
