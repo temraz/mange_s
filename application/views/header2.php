@@ -13,13 +13,6 @@ var base_url=" <?php echo base_url();?>";
 </script>
 
 <script src="<?php echo base_url();?>js/activity.js" type="text/javascript" ></script>
- <script type="text/javascript">
-$(function(){  
-  $('<audio id="chatAudio" ><source src="<?php echo base_url();?>images/sounds/notify.ogg" type="audio/ogg"><source src="<?php echo base_url();?>images/sounds/notify.mp3" type="audio/mpeg"><source src="<?php echo base_url();?>images/sounds/notify.wav" type="audio/wav"></audio>').appendTo('body');
-   
-});
-
-</script>
 
 <div class="header radius3">
     	<div class="headerinner">
@@ -38,11 +31,12 @@ $(function(){
                 </div><!--headercolumn-->
             	<div id="notiPanel" class="headercolumn">
                     <div class="notiwrapper">
-                        <a href="<?php echo base_url();?>site/messages/"  class="notialert radius2"> <div class="sum"></div></a>
+                        <a href="<?php echo base_url();?>employee/select_unseen_messages/"  class="notialert radius2"> <div class="sum"></div></a>
                         <div class="notibox">
                             <ul class="tabmenu">
-                                <li class="current"><a href="<?php echo base_url();?>site/messages/" class="msg">Messages (2)</a></li>
-                                <li><a href="<?php echo base_url();?>employee/select_avtivity/"  class="act">Recent Activity (<span class="sum"> </span>)</a></li>
+                                <li class="current"><a href="<?php echo base_url();?>employee/select_unseen_messages/" class="msg">Messages
+                                 (<span class="mess"> </span>)</a></li>
+                                <li><a href="<?php echo base_url();?>employee/select_avtivity/"  class="act">Recent Activity (<span class="activity"> </span>)</a></li>
                             </ul>
                             <br clear="all" />
                             <div class="loader"><img src="<?php echo base_url();?>images/loader3.gif"  alt="Loading Icon" /> Loading...</div>

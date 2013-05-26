@@ -111,12 +111,7 @@ class Site extends CI_Controller {
                 $this->load->view('index_company');
             }
 		   }
-       /////////////////////////////// 
-	   
-	public function login()
-	{
-		//$this->load->view('index_login');
-	}
+
         
         //////////////////////////////
         
@@ -243,7 +238,7 @@ class Site extends CI_Controller {
 
         }
         
-        ///////////////////////////////////
+        ////////////////////////////////////////////////////////////////
         
         public function login_validation(){
             $this->load->library('form_validation');
@@ -252,7 +247,7 @@ class Site extends CI_Controller {
 	    $this->form_validation->set_rules('password','Password','required|md5|xss_clean|trim');
             
             if($this->form_validation->run() == FALSE){
-                 		$data['login']="hi";
+                 		$data['login']=1;
                 $this->load->view('index',$data);
                 
             }else{
@@ -277,7 +272,7 @@ class Site extends CI_Controller {
             
         }
         
-        /////////////////////////////////
+        ///////////////////////////////////////////////////////
         
         public function validate_credentials(){
             $this->load->model('model_users');
@@ -475,7 +470,12 @@ class Site extends CI_Controller {
 	     }
         ////////////////////////////////
         function logout() {
-
+        if ($this->session->userdata('employee_logged_in')) {
+			$emp_id=$this->session->userdata('emp_id');
+			$this->model_employee->update_offline($emp_id);
+			$this->session->sess_destroy();
+            $this->index();
+			}
         $this->session->sess_destroy();
        $this->index();
     }

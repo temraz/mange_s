@@ -50,7 +50,7 @@
                 	
                     
                     <br clear="all" />
-                    <?php if(isset($manager)||isset($sub_manager)){?> 
+                    <?php if(!isset($chairman)){?> 
                     <?php if(isset($start)&& $start==1){?>
                        <div class="notification msgsuccess">
                         

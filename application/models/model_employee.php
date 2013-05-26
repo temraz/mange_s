@@ -10,6 +10,9 @@ class Model_employee extends CI_Model {
        if ( $result) {
           $result=array('id'=>$result->row(0)->id,'email'=>$result->row(0)->email,'company_id'=>$result->row(0)->company_id,
 		                'department_id'=>$result->row(0)->department_id,'sub_dept_id'=>$result->row(0)->sub_dept_id,'username'=>$result->row(0)->username);
+						
+					
+						
 	   return  $result; 
         } else {
             return false;
@@ -17,7 +20,39 @@ class Model_employee extends CI_Model {
         
     }
     ////////////////////////////////////////
+      function update_online($id){
+		  //////////////////////////emlopyee online//////////////////////			
+			 $data = array(
+               'online' => 1,
+            );
 
+			$this->db->where('id', $id);
+			$this->db->update('employees', $data); 
+
+		 if($this->db->affected_rows()==1){
+			 return true;
+			 }else{
+				 return false;
+				 }
+
+		  }
+		  //////////////////////////emlopyee offline //////////////////////			
+		     function update_offline($id){
+		  
+			 $data = array(
+               'online' => 0,
+            );
+
+			$this->db->where('id', $id);
+			$this->db->update('employees', $data); 
+
+		 if($this->db->affected_rows()==1){
+			 return true;
+			 }else{
+				 return false;
+				 }
+			//////////////////////////////////////////////////////////////	
+		  }
 	 //////////////////////////////////////////////
     
     public function can_log_in(){
@@ -436,8 +471,143 @@ function select_sub_departments($comp_id , $dept_id){
             return false;
         }	   
 		}
+	////////////////////////////////////////////////////
+	 function select_contacts_sub_departments($company_id,$department_id){
+		$sql='select e.id,e.firstname,e.lastname,e.profile_pic,e.company_id,e.department_id,e.sub_dept_id,e.online
+              from employees e 
+			  join sub_department d on e.id=d.sub_depart_manager and d.company_id=? and d.department_id=? ';
+			  	   
+		$result=$this->db->query($sql,array($company_id,$department_id));
+		if($result->num_rows() >= 1){
+            return $result;
+        } else {
+            return false;
+        }	   
+		}
+	/////////////////////////////////////////////////////
 	
+	 function select_my_manager($company_id,$department_id){
+		$sql='select e.id,e.firstname,e.lastname,e.profile_pic,e.company_id,e.department_id,e.sub_dept_id,e.online
+              from employees e 
+			  join department d on e.id=d.depart_manager and d.company_id=? and d.id=? ';
+			  	   
+		$result=$this->db->query($sql,array($company_id,$department_id));
+		if($result->num_rows() == 1){
+            return $result;
+        } else {
+            return false;
+        }	   
+		}
+		/////////////////////////////////////////////////////
 	
+	 function select_my_sub_manager($company_id,$department_id,$sub_dept_id){
+		$sql='select e.id,e.firstname,e.lastname,e.profile_pic,e.company_id,e.department_id,e.sub_dept_id,e.online
+              from employees e 
+			  join sub_department s on e.id=s.sub_depart_manager and s.company_id=? and s.department_id=? and s.id=?';
+			  	   
+		$result=$this->db->query($sql,array($company_id,$department_id,$sub_dept_id));
+		if($result->num_rows() == 1){
+            return $result;
+        } else {
+            return false;
+        }	   
+		}	
+	/////////////////////////////////////////////////////
+	
+	 function select_my_chairman($company_id){
+		$sql='select e.id,e.firstname,e.lastname,e.profile_pic,e.company_id,e.department_id,e.sub_dept_id,e.online
+              from employees e 
+			  join company c on e.id=c.chairman and c.id=?';
+			  	   
+		$result=$this->db->query($sql,array($company_id));
+		if($result->num_rows() == 1){
+            return $result;
+        } else {
+            return false;
+        }	   
+		}
+		
+	////////////////////////////////////////////////////
+	function select_emp_contacts($company_id,$department_id,$sub_dept_id){
+		$sql='select id,firstname,lastname,profile_pic,company_id,department_id,sub_dept_id,online
+              from employees  where company_id=? and department_id=? and sub_dept_id=?';
+			  	   
+		$result=$this->db->query($sql,array($company_id,$department_id,$sub_dept_id));
+		if($result->num_rows() >= 1){
+            return $result;
+        } else {
+            return false;
+        }
+		
+		}
+	//////////////////////////////////////////////////////	
+	function add_chat_message($from_id , $to_id, $chat_message_content){
+		$data = array(
+            'from' => $from_id,
+            'to' => $to_id,
+            'message' => $chat_message_content,
+			
+            );
+        $query = $this->db->insert('employee_chat', $data);
+        if($this->db->affected_rows()==1){
+			 
+			return true;
+			}else{
+				return false;
+				}		
+		        }
+	////////////////////////////////////////////////			
+	function get_chat_messages($from_id ,$to_id){
+	$sql='select * from employee_chat where `from`=? and `to`=? or `from`=? and `to`=? order by message_date ASC';
+	$result=$this->db->query($sql,array($from_id,$to_id,$to_id,$from_id));
+	if($result->num_rows() >= 1){
+	
+            return $result;
+        } else {
+            return false;
+        }	
+		}
+		
+	
+/////////////////////////////////////////////////////////
+function get_chat_messages_last_one($from_id ,$to_id){
+	$sql='select * from employee_chat where `from`=? and `to`=? or `from`=? and `to`=?  order by id desc limit 1 ';
+	$result=$this->db->query($sql,array($from_id,$to_id,$to_id,$from_id));
+	if($result->num_rows() == 1){
+	
+            return $result;
+        } else {
+            return false;
+        }
+	
+	}	
+	////////////////////////////////////////////////
+	function update_message_seen($from_id ,$to_id){
+		$sql='update employee_chat set to_seen=1 where `from`=? and `to`=? or `from`=? and `to`=?';
+		$result=$this->db->query($sql,array($from_id,$to_id,$to_id,$from_id));
+           if($this->db->affected_rows()==1){
+			 
+			return true;
+			}else{
+				return false;
+				}
+		}
+	/////////////////////////////////////////////////////////
+	function select_unseen_messages($id){
+		$sql='select * from employee_chat where to_seen=0 and `to`=?';
+		$result=$this->db->query($sql,$id);
+		if($result->num_rows() >= 1){
+	
+            return $result;
+			
+        } else {
+            return false;
+        }
+		}
+	///////////////////////////////////////////////////////////
+		
+					
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
 }
 ?>

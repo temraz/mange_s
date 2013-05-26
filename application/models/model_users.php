@@ -28,6 +28,8 @@ class Model_users extends CI_Model {
       $result=$this->db->query($query,array($email,$password));
        if ( $result) {
           $result=array('id'=>$result->row(0)->id, 'email'=>$result->row(0)->email);
+		  //////////// update online //////////////
+		  /////////////////////////
 	   return  $result; 
         } else {
             return false;

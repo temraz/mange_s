@@ -57,7 +57,7 @@
                     </ul>
                     
                     <br clear="all" /><br />
-                    <?php if(isset($manager) || isset($sub_manager)){?> 
+                    <?php if(!isset($chairman)){?> 
                     
                      <?php if(isset($notasks)&& $notasks==1){?>
                      <div class="widgetbox">

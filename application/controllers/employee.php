@@ -16,6 +16,7 @@ function dashboard(){
 				 $this->load->model('model_users');
 				 if($this->model_users->select_emp($id)){
 					 $id=$this->model_users->select_emp($id)->row(0)->id;
+					 $this->model_employee->update_online($id);
 					 $data['id']=$this->uri->segment(3);
 					 $data['employee']=$this->model_users->select_emp($id);
 					 $task_owner = $this->session->userdata('emp_id');
@@ -79,6 +80,7 @@ function give_task(){
 				 }
 	         }
             elseif($this->model_employee->is_manager($emp_id)){
+				
 				$company_id=$this->session->userdata('company_id');
 				$department_id=$this->session->userdata('department_id');
              if($this->model_employee->select_sub_departments($company_id,$department_id)){
@@ -351,6 +353,9 @@ function task_validation(){
 	
 	public function chat(){
 	if ($this->session->userdata('employee_logged_in')) {
+	     	 
+		
+		 
 		$my_id=$this->session->userdata('emp_id');
 		 $comp_id=$this->model_users->select_emp($my_id)->row(0)->company_id;
 		 
@@ -364,20 +369,185 @@ function task_validation(){
 		 $this->load->view('chat',$data);
 		 }
 	}
- elseif($this->model_employee->is_manager($id)){
- $manager=1;
- }elseif($this->model_employee->is_sub_manager($id)){
-	 $sub_manager=1;
+ elseif($this->model_employee->is_manager($my_id)){
+               $company_id=$this->session->userdata('company_id');
+				$department_id=$this->session->userdata('department_id');
+				
+             if($this->model_employee->select_contacts_sub_departments($company_id,$department_id)){
+			 $data['contacts']=$this->model_employee->select_contacts_sub_departments($company_id,$department_id)->result();
+			  $data['my_chairman']=$this->model_employee->select_my_chairman($company_id);
+			 $this->load->view('chat',$data);
+			 }else{
+				 $data['no_contacts']=1;
+		         $this->load->view('chat',$data);
+				 }
+			
+  
+  
+  
+ }elseif($this->model_employee->is_sub_manager($my_id)){
+	            $company_id=$this->session->userdata('company_id');
+				
+				$sub_dept_id=$this->session->userdata('sub_dept_id');
+				$department_id=$this->model_employee->is_sub_manager($my_id)->row(0)->department_id;
+				
+             if($this->model_employee->select_emp_contacts($company_id,$department_id,$sub_dept_id)){
+			 $data['contacts']=$this->model_employee->select_emp_contacts($company_id,$department_id,$sub_dept_id)->result();
+			 $data['my_manager']=$this->model_employee->select_my_manager($company_id,$department_id);
+			 $this->load->view('chat',$data);
+			 }else{
+				$data['no_contacts']=1;
+		         $this->load->view('chat',$data);
+				 }
 	 }else{
 		 
+		
+		  $company_id=$this->session->userdata('company_id');
+		  $department_id=$this->session->userdata('department_id');
+		  $sub_dept_id=$this->session->userdata('sub_dept_id');
+		   if($this->model_employee->select_emp_contacts($company_id,$department_id,$sub_dept_id)){
+			    
+			 $data['contacts']=$this->model_employee->select_emp_contacts($company_id,$department_id,$sub_dept_id)->result();
+			  $data['my_sub_manager']=$this->model_employee->select_my_sub_manager($company_id,$department_id,$sub_dept_id);
+			 $this->load->view('chat',$data);
+			   }else{
+				 $data['no_contacts']=1;
+		         $this->load->view('chat',$data);
+				   }
 		 }
 		
+		
+	
+		}else{
+         redirect('site/index_employee');	
+        }
+	}
+	///////////////////////////////////////////////////////////////////////
+	public function ajax_add_chat(){
+		if ($this->session->userdata('employee_logged_in')) {
+	  
+        
+		$from_id=$this->input->post('from_id');
+		$to_id=$this->input->post('to_id');
+        $chat_message_content=$this->input->post("msg", true);
+		
+		
+		if($this->model_employee->add_chat_message($from_id , $to_id, $chat_message_content)){
+			            $result=array('status'=>'ok');
+						
+						return $result;
+					
+						}else{
+							 $result=array('status'=>'no');
+						
+						return $result;
+					
+						
+							}
 		
 		
 		}else{
          redirect('site/index_employee');	
         }
-	}
+		}
+	//////////////////////////////////////////////////////////////
+		 function ajax_get_chat_messages(){
+			 $from_id=$this->input->post('from_id');
+		     $to_id=$this->input->post('to_id');
+			 echo $this->_get_chat_messages($from_id ,$to_id);
+			 }
+		 
+		 
+		 function _get_chat_messages($from_id ,$to_id){
+			 		
+					$chat_messages=$this->model_employee->get_chat_messages($from_id ,$to_id)->result();
+					if(isset($chat_messages)){
+						//we have some messages
+                             $chat_message_html='<span>';
+						
+						foreach($chat_messages as $chat_message){
+							
+								
+						    $seder_firtname=$this->model_users->select_emp($chat_message->from)->row(0)->firstname;
+							$seder_lastname=$this->model_users->select_emp($chat_message->from)->row(0)->lastname;
+							$seder_pic=$this->model_users->select_emp($chat_message->from)->row(0)->profile_pic;
+							
+							
+							$chat_message_html.='<p>
+							<span id="date">'.$chat_message->message_date.'</span> 
+							<img src='.base_url().'images/profile/thumb_profile/'.$seder_pic.' width="35" height="30" />
+							<span id="message" ><strong>'.$seder_firtname.' '.$seder_lastname.' :</strong>
+							                   '.$chat_message->message.'</span></p>';
+							
+							}
+						$chat_message_html.='</span>';
+						
+						
+						$result=array('status'=>'ok' ,'content'=>$chat_message_html);
+						return json_encode($result);
+						exit();
+						}else{
+							//no chat return
+						$result=array('status'=>'no' ,'content'=>'there is know');
+						return json_encode($result);
+							exit();
+							}
+					
+			 }
+		///////////////////////////////////////////////////////////////
+		function ajax_select_last_message(){
+			 $from_id=$this->input->post('from_id');
+		     $to_id=$this->input->post('to_id');
+			 echo $this->_ajax_select_last_message($from_id ,$to_id);
+			 }
+			 
+		 function _ajax_select_last_message($from_id ,$to_id){
+			 		 $my_id=$this->session->userdata('emp_id');
+					$chat_messages=$this->model_employee->get_chat_messages_last_one($from_id ,$to_id);
+					if(isset($chat_messages)){
+	
+						$result=$chat_messages->row(0)->to;
+						if($my_id==$result){
+							$this->model_employee->update_message_seen($from_id,$to_id);
+							}
+						
+						}else{
+							//no chat return
+						$result=array('status'=>'no' ,'content'=>'there is know');
+						return json_encode($result);
+							exit();
+							}
+					
+			 }
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	function select_unseen_messages(){
+	
+			$id=$this->session->userdata('emp_id');
+			if($this->model_employee->select_unseen_messages($id)){
+				$data['messages']=$this->model_employee->select_unseen_messages($id)->result();
+				$this->load->view('messages',$data);
+			
+				}else{
+					$data['no_messages']=1;
+					$this->load->view('messages',$data);
+					}
+			
+		
+		
+		
+		}
+	///////////////////////////////////////////////////
+	function select_count_messages(){
+		$id=$this->session->userdata('emp_id');
+			if($this->model_employee->select_unseen_messages($id)){
+				echo count($this->model_employee->select_unseen_messages($id)->result());
+				
+			
+				}else{
+					echo '0';
+					}
+		}		
+		
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 }?>

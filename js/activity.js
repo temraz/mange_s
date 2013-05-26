@@ -3,7 +3,7 @@ jQuery(document).ready(function($){
 
 
 
-setInterval(function(){get_chat_messages();},1000);
+setInterval(function(){get_activites();},1000);
 
 	
 	var agent_id=1;
@@ -12,29 +12,31 @@ setInterval(function(){get_chat_messages();},1000);
 			
 		////////////////////////////////////////
 		
-		function get_chat_messages(){
+		function get_activites(){
 		
         
-		$.post(base_url +"employee/count_activity",{agent_id : agent_id }, function(data){
+		$.post(base_url +"employee/count_activity",{agent_id : agent_id }, function(data2){
 			
-				$(".sum").html(data);
-				$('#chatAudio')[0].play();
-				
+				$(".activity").html(data2);
+			    $.post(base_url +"employee/select_count_messages",{agent_id : agent_id }, function(data){
+               $(".mess").html(data);
+			   var sum=data+data2;
+			  $(".sum").html(sum);	
+			 
 			},"json");
 			
+			},"json");
+			 
+				
 			
 	
 	
 		}
 		
-		/////////////////////////////////////////////
-		
-		///////////////////////////////////////////////
-		
 		
 		
 		///////////////////////////////////////////
-		get_chat_messages();
+		get_activites();
 		
 	
 		

@@ -1,36 +1,22 @@
 <html><ul class="msglist">
-	<li class="message new">
-        <div class="msg">
-            From: <a href="">Benjamiin Buttons</a> <span>40m ago</span>
-            <a href="" class="subject">Getting Started on Starlight Template</a>
-            <p>Vitae dicta sunt explicabo. Nemo enim</p>
-        </div>
-    </li>
-    <li class="message new">
-        <div class="msg">
-            From: <a href="">ThemePixels Team</a> <span>2 hours ago</span>
-            <a href="" class="subject">Thank you for using StarLight Template</a>
-            <p>Hi,Eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-        </div>
-    </li>
+    
+	<?php if(isset($messages)){foreach($messages as $message){
+		$seder_firtname=$this->model_users->select_emp($message->from)->row(0)->firstname;
+        $seder_lastname=$this->model_users->select_emp($message->from)->row(0)->lastname;
+    ?>
+   
     <li class="message">
+     
         <div class="msg">
-            From: <a href="">Katherine Kate</a> <span>40m ago</span>
-            <p>Lorem ipsum dolor sit amet...</p>
+            From:<?php echo $seder_firtname.' '.$seder_lastname ?></a> <span><?php echo $message->message_date;?></span>
+            <p><a href="<?php echo base_url();?>employee/chat/<?php echo $message->from ?>"><?php echo substr($message->message,0,30)?>...</a></p>
         </div>
+       
     </li>
-    <li class="message">
-        <div class="msg">
-            From: <a href="">ThemePixels Team</a> <span>Yesterday</span>
-            <a href="" class="subject">Events for the next month</a>
-            <p>Hi,Eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-        </div>
-    </li>
-    <li class="message">
-        <div class="msg">
-            From: <a href="">Katherine Kate</a> <span>2 days ago</span>
-            <p>Lorem ipsum dolor sit amet...</p>
-        </div>
-    </li>
+     
+   <?php }}elseif(isset($no_messages)){?>
+   <p style="text-align:center">There are no new messages </p>
+   <?php }?>
+    
 </ul>
-<div class="msgmore"><a href="">See All Messages</a></div>
+<div class="msgmore"><a href="<?php echo base_url();?>employee/chat/">See All Messages</a></div>
