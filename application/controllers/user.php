@@ -11,13 +11,18 @@ class User extends CI_Controller {
         if($this->session->userdata('user_logged_in')){            ///////////////////////////else if he is a normal user
 				if( $this->uri->segment(3) != ''){
 				$id=$this->uri->segment(3);   
-                 
+                 $this->load->model('model_company');
 				
 				 $this->load->model('model_users');
 				 if($this->model_users->select_user($id)){
 					 $id=$this->model_users->select_user($id)->row(0)->id;
 				     $data['id']=$id;
 					 $data['user_data']=$this->model_users->get_user_info($id);
+					 $data['cv']=$this->model_users->get_cv($id);
+					$data['cv_edu']=$this->model_users->get_cv_edu($id);
+					$data['cv_exper']=$this->model_users->get_cv_exper($id);
+					$data['cv_skills']=$this->model_users->get_cv_skills($id);
+					$data['following']=$this->model_users->get_following($id);
                     $this->load->view('user_profile',$data);
 					 }else{
 				      redirect('site/error404');	 
@@ -289,5 +294,32 @@ class User extends CI_Controller {
 					redirect('site');
 					}	
 }
+////////////////////////////////////
+		public function cv(){
+			if($this->session->userdata('user_logged_in')){
+				if($this->uri->segment(3)=='' ){
+					$user_id = $this->session->userdata('user_id');
+					$this->load->model('model_users');
+					$data['cv']=$this->model_users->get_cv($user_id);
+					$data['cv_edu']=$this->model_users->get_cv_edu($user_id);
+					$data['cv_exper']=$this->model_users->get_cv_exper($user_id);
+					$data['cv_skills']=$this->model_users->get_cv_skills($user_id);
+						$this->load->view('cv',$data);
+					}elseif($this->uri->segment(3)==$this->session->userdata('user_id')){
+						$user_id = $this->uri->segment(3);
+					$this->load->model('model_users');
+					$data['cv']=$this->model_users->get_cv($user_id);
+					$data['cv_edu']=$this->model_users->get_cv_edu($user_id);
+					$data['cv_exper']=$this->model_users->get_cv_exper($user_id);
+					$data['cv_skills']=$this->model_users->get_cv_skills($user_id);
+						$this->load->view('cv',$data);
+						}else{
+							redirect('user/cv'.$this->session->userdata('user_id'));
+							}
+				}else{
+					redirect('site');
+					}
+			}
+///////////////////////////			
 }
 ?>

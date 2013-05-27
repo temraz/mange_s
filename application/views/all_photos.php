@@ -24,6 +24,9 @@
 <script type="text/javascript" src="<?php echo base_url();?>js/elements.js" ></script>
 
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.alerts.js" ></script>
+<script type="text/javascript" >
+var base_url = "<?php echo base_url(); ?>";
+</script>
 <script type="text/javascript" src="<?php echo base_url();?>js/tables.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.dataTables.min.js" ></script>
 <style>
@@ -63,7 +66,7 @@
                 </div><!--contenttitle-->
                 <div class="tableoptions">
                 <?php if(count($picx) != 0){ ?>
-                	<button class="delete_item radius3" title="table1">Delete Selected</button> &nbsp;
+                	<button class="radius3 delete_item" id="media" title="table1">Delete Selected</button> &nbsp;
                     <?php }?>
                     <button class="new_photo" title="table1" onclick="window.location = '<?php echo base_url();?>edit/media'">New Photo</button> &nbsp;
                 </div><!--tableoptions-->	
@@ -94,7 +97,7 @@
 					$pic=$row->pic;
 					$caption=$row->caption;
 					 ?>
-                        <tr>
+                        <tr id="<?php echo $id; ?>">
                         	<td class="center"><input type="checkbox" /></td>
                             <td class="center"><?php echo $counter ; ?></td>
                             <td class="center"><img src="<?php echo base_url(); ?>images/company_gallery/<?php echo $pic ; ?>"  width="60" height="50" style="border:1px solid #1c1c1c"/></td>

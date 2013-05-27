@@ -19,20 +19,6 @@
 
 <script type="text/javascript" src="<?php echo base_url();?>js/dashboard.js" ></script>
 
-
-
- <script>
-jQuery(document).ready(function() {
-  jQuery(".following_items").hide();
-  //toggle the componenet with class msg_body
-  jQuery(".show_content").click(function()
-  {
-    jQuery(".following_items").slideToggle(500);
-	$('.following_items').focus();
-  });
-});
-
-    </script>
 </head>
 
 <body class="loggedin">
@@ -62,57 +48,7 @@ jQuery(document).ready(function() {
                 
                 <div class="content">
                
-                     <?php 
-				if(isset($user_data)){
-				foreach($user_data as $row){
-					$name = $row->name;
-					$about = $row->about;
-					$username = $row->username;
-					$about= $row->about;
-					$pic = $row->pic;
-					$age = $row->age;
-					$country = $row->country;
-					$address = $row->address;
-					 $gender = $row->gender;
-					 ?>
-                
-                	<div class="one_half" style="width:100%">
-                    	<h1> <strong style="color:#096"> <?php echo $username; ?> </strong> Personnal Information</h1>
-                        <br />
-                    	<p style="margin:10px"><img src="<?php echo base_url();?>images/profile/<?php if(isset($pic)){ echo $pic;}elseif($pic == NULL && $gender == 'female'){ echo "female.gif";}elseif($pic == NULL && $gender == 'male'){echo "male.gif";}
-							 ?>" height="10%" width="20%" style="float:left ; border:1px solid #c1c1c1 ; margin:10px ; padding:3px "/><p style="margin-right:5px">
-                       <br />
-                       <?php if($name && $age && $country && $address){?>
-                       <p ><strong style="font-weight:bold ; font-size:15px"><?php echo $name; ?></strong><span style="color:#e1e1e1 ; font-size:10px">  (Name)</span>
-                       </p>
-                        <br />
-                        <p ><strong style="font-weight:bold ; font-size:15px"><?php echo $age; ?></strong><span style="color:#e1e1e1 ; font-size:10px">  (Age)</span>
-                       </p>
-                       </p>
-                       <br />
-                       <p ><strong style="font-weight:bold ; font-size:15px"><?php echo $country." - ".$address; ?></strong><span style="color:#e1e1e1 ; font-size:10px">  (Address)</span>
-                       </p>
-                       
-                        <?php }else { ?>
-                        <br>
-                            <center style="margin:10px"><span> There is not <a href="<?php echo base_url(); ?>user/edit">Update</a> Yet.</span></center>
-								<?php } ?></p>
-                    </div>
-                    
-                    <br clear="all" /><br />
-                    
-                    <div class="one_half" style="width:100%; padding-bottom:10px">
-                    	<h1>About <strong style="color:#096"><?php echo $username; ?></strong></h1>
-                        <br />
-                    	<p><?php if(isset($about)){echo $about; }else { ?>
-                            <span> There is not <a href="<?php echo base_url(); ?>user/edit">Update</a> Yet.</span>
-								<?php } ?> </p>
-                    </div>
-                    <br clear="all" /> 
-                    
-                    <?php }}?>
-                    
-                    <?php 
+                <?php 
 					if(isset($cv)){
 						foreach($cv as $row){
 							$summary = $row->summary;
@@ -208,33 +144,8 @@ jQuery(document).ready(function() {
                         </div>
                        <?php $counter++; }}?>
                     </div>
- 
-					<div class="one_half" style="width:100% ; border-top:1px dashed #e1e1e1 ; padding:15px 0 10px 0" >
-                    	<h1><strong style="color:#096">Following</strong><p style="float:right;cursor:pointer;font-size:13px; font-family:Arial, Helvetica, sans-serif; " class="show_content">Show All</p></h1>
-                                       <br />
-                        <div class="widgetcontent announcement following_items" >
-                        <?php if(isset($following) && count($following) != 0){
-						foreach ($following as $row){
-							$company_id=$row->company_id;
-							$company_info = $this->model_company->get_company_info($company_id);
-							foreach ($company_info as $r){
-							$id = $r ->id;	
-							$name = $r->name;
-							$field = $r->field;
-							$logo = $r->logo;
-							$about = $r->about;
-							}
-							?>
-                            <p>
-                  <img src="<?php echo base_url();?>images/campanies_logo/<?php echo $logo;?>" width="70" height="50" style="float:left ; border:1px solid #c1c1c1 ; padding:2px ; margin:0 10px 0 10px " /> <a href="<?php echo base_url();?>company/profile/<?php echo $id; ?>" ><?php echo $name;?></a> <span class="radius2" style="float:right"><?php echo $field;?></span> <br /><?php echo substr($about,0,90);?></p>
-                  <br />
-                            <?php }}else{?>
-                    <center><h1 style="color:#c1c1c1">There Are Not Following Companies Yet</h1></center><br />
-                    <?php } ?>
-                            </div>
-                            </div>        
-                    <br clear="all"/>
-                   
+                     <br clear="all" />
+                    
                 </div><!--content-->
                 
             </div><!--maincontentinner-->
@@ -319,6 +230,7 @@ jQuery(document).ready(function() {
      	</div><!--mainwrapperinner-->
     </div><!--mainwrapper-->
 	<!-- END OF MAIN CONTENT -->
-   
+    
+
 </body>
 </html>

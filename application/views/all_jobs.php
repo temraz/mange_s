@@ -20,6 +20,9 @@
 <script type="text/javascript" src="<?php echo base_url();?>js/dashboard.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.jgrowl.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.alerts.js" ></script>
+<script type="text/javascript" >
+var base_url = "<?php echo base_url(); ?>";
+</script>
 <script type="text/javascript" src="<?php echo base_url();?>js/tables.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.dataTables.min.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/elements.js" ></script>
@@ -60,7 +63,7 @@
                 </div><!--contenttitle-->
                 <div class="tableoptions">
                 <?php if(count($jobs) != 0){ ?>
-                	<button class="delete_item radius3 " title="table1">Delete Selected</button> &nbsp;
+                	<button class="radius3 delete_item" id="jops" title="table1">Delete Selected</button> &nbsp;
                     <?php } ?>
                     <button class="new_Job" title="table1" onclick="window.location = '<?php echo base_url();?>edit/job'">New Job</button> &nbsp;
                 </div><!--tableoptions-->	
@@ -98,7 +101,7 @@
 					$details=$row->description;
 					
 					 ?>
-                        <tr>
+                       <tr id="<?php echo $id; ?>">
                         	<td class="center"><input type="checkbox" /></td>
                             <td class="center"><?php echo $counter ; ?></td>
                             <td class="center"><?php echo $name ; ?></td>

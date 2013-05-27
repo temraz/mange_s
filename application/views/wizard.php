@@ -45,7 +45,7 @@
 <body class="loggedin">
 
 	<!-- START OF HEADER -->
-	<?php include('header.php');?>
+	<?php include('header2.php');?>
     <!-- END OF HEADER -->
         
     <!-- START OF MAIN CONTENT -->

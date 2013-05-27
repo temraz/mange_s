@@ -26,20 +26,20 @@ jQuery(document).ready(function() {
 								
 	jQuery('#wysiwyg').wysiwyg({
 		controls: {
-			indent: { visible: false },
-			outdent: { visible: false },
-			subscript: { visible: false },
-			superscript: { visible: false },
-			redo: { visible: false },
-			undo: { visible: false },
-			insertOrderedList: { visible: false },
-			insertUnorderedList: { visible: false },
-			insertHorizontalRule: { visible: false },
-			insertTable: { visible: false },
-			code: { visible: false },
-			removeFormat: { visible: false },
-			strikethrough: { visible: false },
-			strikeThrough: { visible: false },
+			indent: { visible: true },
+			outdent: { visible: true },
+			subscript: { visible: true },
+			superscript: { visible: true },
+			redo: { visible: true },
+			undo: { visible: true },
+			insertOrderedList: { visible: true },
+			insertUnorderedList: { visible: true },
+			insertHorizontalRule: { visible: true },
+			insertTable: { visible: true },
+			code: { visible: true },
+			removeFormat: { visible: true },
+			strikethrough: { visible: true },
+			strikeThrough: { visible: true },
 		}
 	});
 	
@@ -58,7 +58,7 @@ jQuery(document).ready(function() {
 <body class="loggedin">
 
 	<!-- START OF HEADER -->
-	<?php include('header.php');?>
+	<?php include('header2.php');?>
     <!-- END OF HEADER -->
         
     <!-- START OF MAIN CONTENT -->

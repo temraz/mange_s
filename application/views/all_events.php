@@ -21,7 +21,7 @@
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.jgrowl.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.alerts.js" ></script>
 <script type="text/javascript" >
-var base_url = <?php echo base_url(); ?>;
+var base_url = "<?php echo base_url(); ?>";
 </script>
 <script type="text/javascript" src="<?php echo base_url();?>js/tables.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.dataTables.min.js" ></script>
@@ -63,7 +63,7 @@ var base_url = <?php echo base_url(); ?>;
                 </div><!--contenttitle-->
                 <div class="tableoptions">
                 <?php if(count($events) != 0){ ?>
-                	<button class="radius3 delete_item" title="table1">Delete Selected</button> &nbsp;
+                	<button class="radius3 delete_item" id="events" title="table1">Delete Selected</button> &nbsp;
                     <?php }?>
                     <button class="new_event" title="table1" onclick="window.location = '<?php echo base_url();?>edit/event'">New Event</button> &nbsp;
                 </div><!--tableoptions-->	

@@ -28,8 +28,6 @@ class Model_users extends CI_Model {
       $result=$this->db->query($query,array($email,$password));
        if ( $result) {
           $result=array('id'=>$result->row(0)->id, 'email'=>$result->row(0)->email);
-		  //////////// update online //////////////
-		  /////////////////////////
 	   return  $result; 
         } else {
             return false;
@@ -259,6 +257,30 @@ class Model_users extends CI_Model {
 	  public function get_following($id){
 	 $this->db->where('user_id',$id);
 			 $query= $this->db->get('follow');
+				 return $query->result();
+	  }	
+	  /////////////////////////////////////////
+	public function get_cv($id){
+	 $this->db->where('user_id',$id);
+			 $query= $this->db->get('cv');
+				 return $query->result();
+	  }	
+	  /////////////////////////////////////////
+	public function get_cv_edu($id){
+	 $this->db->where('user_id',$id);
+			 $query= $this->db->get('cv_edu');
+				 return $query->result();
+	  }	
+	  /////////////////////////////////////////
+	public function get_cv_exper($id){
+	 $this->db->where('user_id',$id);
+			 $query= $this->db->get('cv_exper');
+				 return $query->result();
+	  }	
+	  /////////////////////////////////////////
+	public function get_cv_skills($id){
+	 $this->db->where('user_id',$id);
+			 $query= $this->db->get('cv_skills');
 				 return $query->result();
 	  }	
 }

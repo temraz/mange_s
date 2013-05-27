@@ -101,9 +101,11 @@ jQuery(function(){
                     	
                         <?php if(isset($chairman)){?>
                         
-                    	<div class="chatsearch">
+                    	<!--<!--<div class="chatsearch">
                         	<input type="text" name="" value="Search" />
-                        </div>
+                        </div>-->
+
+
                         <ul class="contactlist">
                          <?php if(isset($contacts)){foreach($contacts as $contact){?>
                         	<li <?php  if($contact->online == 1){ ?> class="online new" <?php }?> >
@@ -120,9 +122,10 @@ jQuery(function(){
                             
                            <?php }}}elseif(isset($manager)){?>
                     
-                    	<div class="chatsearch">
+                    	<!--<div class="chatsearch">
                         	<input type="text" name="" value="Search" />
-                        </div>
+                        </div>-->
+
                         <ul class="contactlist">
                          <?php if(isset($contacts)){foreach($contacts as $contact){?>
                         	<li <?php  if($contact->online == 1){ ?> class="online new" <?php }if($contact->id == $to_id){ ?> id="active" <?php }?>>
@@ -154,9 +157,10 @@ jQuery(function(){
                              <?php }?>
 						   <?php }elseif(isset($sub_manager)){?>
                         
-                    	<div class="chatsearch">
+                    	<!--<!--<div class="chatsearch">
                         	<input type="text" name="" value="Search" />
-                        </div>
+                        </div>-->
+
                         <ul class="contactlist">
                          <?php if(isset($contacts)){foreach($contacts as $contact){?>
                         	<li   <?php  if($contact->online == 1){ ?> class="online new"  <?php }if($contact->id == $to_id){ ?> id="active" <?php }?> >
@@ -188,9 +192,11 @@ jQuery(function(){
                             </li>
                              <?php }?>
 						   <?php }elseif(!isset($manager,$chairman,$sub_manager)){ ?>
-                        <div class="chatsearch">
+                        <!--<!--<div class="chatsearch">
                         	<input type="text" name="" value="Search" />
-                        </div>
+                        </div>-->
+
+
                         <ul class="contactlist">
 							   <?php if(isset($contacts)){foreach($contacts as $contact){ if($id != $contact->id ){?>
                                

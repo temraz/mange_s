@@ -17,7 +17,7 @@
 <body class="loggedin">
 
 	<!-- START OF HEADER -->
-	<?php include('header.php');?>
+	<?php include('header2.php');?>
     <!-- END OF HEADER -->
         
     <!-- START OF MAIN CONTENT -->
@@ -56,7 +56,7 @@
             <?php include('footer.php');?>
             
         </div><!--maincontent-->
-        
+        <?php $to_id=$this->uri->segment(3);?>
         <div class="mainright">
         	<div class="mainrightinner">
             	
@@ -67,15 +67,143 @@
                         	<input type="text" name="" value="Search" />
                         </div>
                     	<ul class="contactlist">
-                        	<li class="online new"><a href=""><img src="<?php echo base_url();?>images/avatar.png"  alt="" /> <span>Moahmed Temraz</span></a></li>
-                            <li><a href=""><img src="<?php echo base_url();?>images/avatar.png" alt="" /> <span> Moahmed Gado</span></a></li>
-                            <li class="online"><a href=""><img src="<?php echo base_url();?>images/av1.png"  alt="" /> <span>Ahmed  al hawata</span></a></li>
-                            <li class="online"><a href=""><img src="<?php echo base_url();?>images/avatar.png"  alt="" /> <span>Ahmed al_naqaa</span></a></li>
-                            <li class="online new"><a href=""><img src="<?php echo base_url();?>images/av2.png"  alt="" /> <span>Mohamed saamy</span></a></li>
-                            <li><a href=""><img src="<?php echo base_url();?>images/av3.png" alt="" /> <span>Mostafa Badran</span></a></li>
-                            <li><a href=""><img src="<?php echo base_url();?>images/av4.png"  alt="" /> <span>Ahmed Atia</span></a></li>
-                            <li class="online"><a href=""><img src="<?php echo base_url();?>images/avatar.png"  alt="" /> <span>Mostafa Helal</span></a></li>
+                        	 <?php if(isset($chairman)){?>
+                        
+                    	<!--<!--<div class="chatsearch">
+                        	<input type="text" name="" value="Search" />
+                        </div>-->
+
+
+                        <ul class="contactlist">
+                         <?php if(isset($contacts)){foreach($contacts as $contact){?>
+                        	<li <?php  if($contact->online == 1){ ?> class="online new" <?php }?> >
+                            
+                            <a href="<?php echo base_url(); ?>employee/chat/<?php echo $contact->id ?>">
+                            
+                            <img src="<?php echo base_url(); ?>images/profile/thumb_profile/<?php echo $contact->profile_pic ?>" width="35" height="30"   alt="" />
+                            
+                            <span><?php echo $contact->firstname ?> <?php echo $contact->lastname ?></span></a>
+                            
+                            <!--  <span class="msgcount">3</span> -->
+                            
+                            </li>
+                            
+                           <?php }}}elseif(isset($manager)){?>
+                    
+                    	<!--<div class="chatsearch">
+                        	<input type="text" name="" value="Search" />
+                        </div>-->
+
+                        <ul class="contactlist">
+                         <?php if(isset($contacts)){foreach($contacts as $contact){?>
+                        	<li <?php  if($contact->online == 1){ ?> class="online new" <?php }if($contact->id == $to_id){ ?> id="active" <?php }?>>
+                            
+                            <a href="<?php echo base_url(); ?>employee/chat/<?php echo $contact->id ?>">
+                            
+                            <img src="<?php echo base_url(); ?>images/profile/thumb_profile/<?php echo $contact->profile_pic ?>" width="35" height="30"  alt="" />
+                            
+                            <span><?php echo $contact->firstname ?> <?php echo $contact->lastname ?></span></a>
+                            
+                          <!--  <span class="msgcount">3</span> -->
+                            
+                            </li>
+                            
+                           <?php }} ?>
+						   <?php if(isset($my_chairman)){?>
+                             
+                            <li <?php  if($my_chairman->row(0)->online == 1){ ?> class="online new" <?php }if($my_chairman->row(0)->id == $to_id){ ?> id="active" <?php }?>>
+                            
+                            <a href="<?php echo base_url(); ?>employee/chat/<?php echo $my_chairman->row(0)->id; ?>">
+                            
+                            <img src="<?php echo base_url(); ?>images/profile/thumb_profile/<?php echo $my_chairman->row(0)->profile_pic; ?>" width="35" height="30"  alt="" />
+                            
+                            <span><?php echo $my_chairman->row(0)->firstname; ?> <?php echo $my_chairman->row(0)->lastname; ?></span></a>
+                            
+                            <!--  <span class="msgcount">3</span> -->
+                            
+                            </li>
+                             <?php }?>
+						   <?php }elseif(isset($sub_manager)){?>
+                        
+                    	<!--<!--<div class="chatsearch">
+                        	<input type="text" name="" value="Search" />
+                        </div>-->
+
+                        <ul class="contactlist">
+                         <?php if(isset($contacts)){foreach($contacts as $contact){?>
+                        	<li   <?php  if($contact->online == 1){ ?> class="online new"  <?php }if($contact->id == $to_id){ ?> id="active" <?php }?> >
+                            
+                            <a href="<?php echo base_url(); ?>employee/chat/<?php echo $contact->id ?>">
+                            
+                            <img src="<?php echo base_url(); ?>images/profile/thumb_profile/<?php echo $contact->profile_pic ?>" width="35" height="30"  alt="" />
+                            
+                            <span><?php echo $contact->firstname ?> <?php echo $contact->lastname ?></span></a>
+                            
+                            <!--  <span class="msgcount">3</span> -->
+                            
+                            </li>
+                            
+                             
+                           <?php }} ?>
+						   <?php if(isset($my_manager)){?>
+                             
+                            <li <?php  if($my_manager->row(0)->online == 1){ ?> class="online new" <?php }if($my_manager->row(0)->id == $to_id){ ?> id="active" <?php }?>>
+                            
+                            <a href="<?php echo base_url(); ?>employee/chat/<?php echo $my_manager->row(0)->id; ?>">
+                            
+                            <img src="<?php echo base_url(); ?>images/profile/thumb_profile/<?php echo $my_manager->row(0)->profile_pic; ?>" width="35" height="30"  alt="" />
+                            
+                            <span><?php echo $my_manager->row(0)->firstname; ?> <?php echo $my_manager->row(0)->lastname; ?></span></a>
+                            
+                            <!--  <span class="msgcount">3</span> -->
+                            
+                            </li>
+                             <?php }?>
+						   <?php }elseif(!isset($manager,$chairman,$sub_manager)){ ?>
+                        <!--<!--<div class="chatsearch">
+                        	<input type="text" name="" value="Search" />
+                        </div>-->
+
+
+                        <ul class="contactlist">
+							   <?php if(isset($contacts)){foreach($contacts as $contact){ if($id != $contact->id ){?>
+                               
+                        	<li <?php  if($contact->online == 1){ ?> class="online new" <?php }if($contact->id == $to_id){ ?> id="active" <?php }?>>
+                            
+                            <a href="<?php echo base_url(); ?>employee/chat/<?php echo $contact->id ?>">
+                            
+                            <img src="<?php echo base_url(); ?>images/profile/thumb_profile/<?php echo $contact->profile_pic ?>" width="35" height="30"  alt="" />
+                            
+                            <span><?php echo $contact->firstname ?> <?php echo $contact->lastname ?></span></a>
+                            
+                            <!--  <span class="msgcount">3</span> -->
+                            
+                            </li>
+							 <?php }}} }?> 
+                             
+                              <?php if(isset($my_sub_manager)){?>
+                             
+                            <li <?php  if($my_sub_manager->row(0)->online == 1){ ?> class="online new" <?php }if($my_sub_manager->row(0)->id == $to_id){ ?> id="active" <?php }?>>
+                            
+                            <a href="<?php echo base_url(); ?>employee/chat/<?php echo $my_sub_manager->row(0)->id; ?>">
+                            
+                            <img src="<?php echo base_url(); ?>images/profile/thumb_profile/<?php echo $my_sub_manager->row(0)->profile_pic; ?>" width="35" height="30"  alt="" />
+                            
+                            <span><?php echo $my_sub_manager->row(0)->firstname; ?> <?php echo $my_sub_manager->row(0)->lastname; ?></span></a>
+                            
+                            <!--  <span class="msgcount">3</span> -->
+                            
+                            </li>
+                             <?php }?>
+                       
                         </ul>
+                         <?php if(isset($no_contacts)){?>
+                        <div class="notification msgalert">
+                        
+                        <p>There are no contacts .</p>
+                        <a class="close"></a>
+                    </div>
+                        <?php }?>
                         <div class="chatbottom">
                         	<a href="">+ Add Contact</a>
                         </div>

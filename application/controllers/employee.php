@@ -550,4 +550,79 @@ function task_validation(){
 		
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
+	function mettings(){
+	if ($this->session->userdata('employee_logged_in')) {
+	     	 
+		
+		 
+		$my_id=$this->session->userdata('emp_id');
+		 $comp_id=$this->model_users->select_emp($my_id)->row(0)->company_id;
+		 
+		 
+	 if($this->model_employee->is_chairman($my_id)){
+	 if($this->model_employee->select_dept_contacts($comp_id)){
+     $data['contacts']=$this->model_employee->select_dept_contacts($comp_id)->result();
+	 $this->load->view('meetings',$data);
+	 }else{
+		 $data['no_contacts']=1;
+		 $this->load->view('meetings',$data);
+		 }
+	}
+ elseif($this->model_employee->is_manager($my_id)){
+               $company_id=$this->session->userdata('company_id');
+				$department_id=$this->session->userdata('department_id');
+				
+             if($this->model_employee->select_contacts_sub_departments($company_id,$department_id)){
+			 $data['contacts']=$this->model_employee->select_contacts_sub_departments($company_id,$department_id)->result();
+			  $data['my_chairman']=$this->model_employee->select_my_chairman($company_id);
+			 $this->load->view('meetings',$data);
+			 }else{
+				 $data['no_contacts']=1;
+		         $this->load->view('meetings',$data);
+				 }
+			
+  
+  
+  
+ }elseif($this->model_employee->is_sub_manager($my_id)){
+	            $company_id=$this->session->userdata('company_id');
+				
+				$sub_dept_id=$this->session->userdata('sub_dept_id');
+				$department_id=$this->model_employee->is_sub_manager($my_id)->row(0)->department_id;
+				
+             if($this->model_employee->select_emp_contacts($company_id,$department_id,$sub_dept_id)){
+			 $data['contacts']=$this->model_employee->select_emp_contacts($company_id,$department_id,$sub_dept_id)->result();
+			 $data['my_manager']=$this->model_employee->select_my_manager($company_id,$department_id);
+			 $this->load->view('meetings',$data);
+			 }else{
+				$data['no_contacts']=1;
+		         $this->load->view('meetings',$data);
+				 }
+	 }else{
+		 
+		
+		  $company_id=$this->session->userdata('company_id');
+		  $department_id=$this->session->userdata('department_id');
+		  $sub_dept_id=$this->session->userdata('sub_dept_id');
+		   if($this->model_employee->select_emp_contacts($company_id,$department_id,$sub_dept_id)){
+			    
+			 $data['contacts']=$this->model_employee->select_emp_contacts($company_id,$department_id,$sub_dept_id)->result();
+			  $data['my_sub_manager']=$this->model_employee->select_my_sub_manager($company_id,$department_id,$sub_dept_id);
+			 $this->load->view('meetings',$data);
+			   }else{
+				 $data['no_contacts']=1;
+		         $this->load->view('meetings',$data);
+				   }
+		 }
+		
+		
+	
+		}else{
+         redirect('site/index_employee');	
+        }
+	}
+	///////////////////////////////////////////////////////////////////////	
+		
+		
+	
 }?>

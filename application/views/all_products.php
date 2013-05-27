@@ -20,6 +20,9 @@
 <script type="text/javascript" src="<?php echo base_url();?>js/dashboard.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.jgrowl.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.alerts.js" ></script>
+<script type="text/javascript" >
+var base_url = "<?php echo base_url(); ?>";
+</script>
 <script type="text/javascript" src="<?php echo base_url();?>js/tables.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.dataTables.min.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/elements.js" ></script>
@@ -60,7 +63,7 @@
                 </div><!--contenttitle-->
                 <div class="tableoptions">
                 <?php if(count($products) != 0){ ?>
-                	<button class="radius3 delete_item" onclick= title="table1">Delete Selected</button> &nbsp;
+                	<button class="radius3 delete_item" id="products" title="table1">Delete Selected</button> &nbsp;
                     <?php }?>
                     <button class="new_product"  onclick="window.location = '<?php echo base_url();?>edit/product'">New Product</button> &nbsp;
                 </div><!--tableoptions-->	
@@ -96,7 +99,7 @@
 					$pic=$row->logo;
 					
 					 ?>
-                        <tr>
+                        <tr id="<?php echo $id; ?>">
                         	<td class="center"><input type="checkbox" /></td>
                             <td class="center"><?php echo $counter ; ?></td>
                             <td class="center"><img src="<?php echo base_url(); ?>images/products/<?php echo $pic ; ?>"  width="60" height="50" style="border:1px solid #1c1c1c"/></td>

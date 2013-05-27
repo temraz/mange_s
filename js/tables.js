@@ -67,10 +67,12 @@ jConfirm('Do Your Really Want to Delete it?', 'Delete', function(r) {
 		return false;
 		});
 		
+
+
 	
 	function delete_pro( ids )
 	{
-		$.post("http://localhost/mange_s/company/delete_event",{
+		jQuery.post("http://localhost/mange_s/company/delete_event",{
 				task : "event_delete",
 				event_id : ids
 			}
@@ -90,44 +92,43 @@ jConfirm('Do Your Really Want to Delete it?', 'Delete', function(r) {
 				
 			},"json");
             }
+
 	
 	//delete selected row in table
-	jQuery('.deletebutton').click(function(){
-		var tb = jQuery(this).attr('title');							// get target id of table								   
+	jQuery('.delete_item').click(function(){
+		var table = this.id;
+jConfirm('Do Your Really Want to Delete it?', 'Delete', function(r) {
+                    if( r ){
+							// get target id of table								   
 		var sel = false;											//initialize to false as no selected row
-		var ch = jQuery('#'+tb).find('tbody input[type=checkbox]');		//get each checkbox in a table
-		
+		var ch = jQuery('#table1').find('tbody input[type=checkbox]');		//get each checkbox in a table
 		//check if there is/are selected row in table
 		ch.each(function(){
 			if(jQuery(this).is(':checked')) {
-				sel = true;											//set to true if there is/are selected row
-				jQuery(this).parents('tr').fadeOut(function(){
-					jQuery(this).remove();							//remove row when animation is finished
-				});
-			}
-		});
-		
-		if(!sel) alert('No data selected');							//alert to no data selected
-	});
+				sel = true;					
+				var tr = jQuery(this).parents('tr');
+				for (var i = 0; i < tr .length; i++) {
+  var ids = tr[i].id;
+  console.log( ids );
+  jQuery.post("http://localhost/mange_s/company/delete_item" ,{ ids : tr[i].id , table : table }, function(data){
+		},"json");
 	
-	function delete_item(){
-		var tb = jQuery(this).attr('title');							// get target id of table								   
-		var sel = false;											//initialize to false as no selected row
-		var ch = jQuery('#'+tb).find('tbody input[type=checkbox]');		//get each checkbox in a table
-		
-		//check if there is/are selected row in table
-		ch.each(function(){
-			if(jQuery(this).is(':checked')) {
-				sel = true;											//set to true if there is/are selected row
+}
+			//set to true if there is/are selected row
 				jQuery(this).parents('tr').fadeOut(function(){
 					jQuery(this).remove();							//remove row when animation is finished
 				});
 			}
 		});
 		
-		if(!sel) alert('No data selected');	
+		if(!sel) jAlert('Please Select at Least one Index to Delete ');	
+            }
+		});
+		return false;
+		});
 		
-		}
+	
+	
 	
 	
 	//delete individual row

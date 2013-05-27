@@ -20,7 +20,7 @@
 
 
 	<!-- START OF HEADER -->
-	<?php include('header.php');?>
+	<?php include('header2.php');?>
     <!-- END OF HEADER -->
         
     <!-- START OF MAIN CONTENT -->
@@ -39,7 +39,7 @@
         	<div class="maincontentinner">
             	
                 <ul class="maintabmenu">
-                	<li class="current"><a href="dashboard.html" tppabs="http://themepixels.com/themes/demo/webpage/starlight/dashboard.html">Calendar</a></li>
+                	<li class="current"><a href="#" >Calendar</a></li>
                 </ul><!--maintabmenu-->
                 
                 <div class="content">

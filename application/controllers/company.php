@@ -591,11 +591,12 @@ foreach($result as $row) {
 }
 		}
 
-public function delete_event(){
+public function delete_item(){
 	
-			$event_id = $this->input->post('ids');
-			$this->db->where('id',$event_id);
-			 $this->db->delete('events'); 
+			$item_id = $this->input->post('ids');
+			$table = $this->input->post('table');
+			$this->db->where('id',$item_id);
+			 $this->db->delete($table); 
 
 	}
 }
