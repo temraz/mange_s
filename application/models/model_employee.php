@@ -296,7 +296,9 @@ class Model_employee extends CI_Model {
     }
 ///////////////////////////////////////////////////
 function select_departments($id){
-	$sql='select * from department where company_id=?';
+	$sql='select e.id,e.firstname,e.lastname,e.profile_pic,e.company_id,e.department_id,e.sub_dept_id,e.online,d.depart_manager
+              from employees e 
+			  join department d on e.id=d.depart_manager and d.company_id=?';
 		$result = $this->db->query($sql,array($id));
 		if($result->num_rows() >= 1){
             return $result->result();
@@ -306,7 +308,9 @@ function select_departments($id){
 	}
 ///////////////////////////////////////////////////
 function select_sub_departments($comp_id , $dept_id){
-	$sql='select * from sub_department where company_id=? and department_id=?';
+	$sql='select e.id,e.firstname,e.lastname,e.profile_pic,e.company_id,e.department_id,e.sub_dept_id,e.online,d.sub_depart_manager
+              from employees e 
+			  join sub_department d on e.id=d.sub_depart_manager and d.company_id=? and d.department_id=?';
 		$result = $this->db->query($sql,array($comp_id,$dept_id));
 		if($result->num_rows() >= 1){
             return $result->result();
@@ -316,7 +320,7 @@ function select_sub_departments($comp_id , $dept_id){
 	}
 /////////////////////////////////////////////////////
      function select_emp_giv_task($company_id,$department_id,$sub_dept_id){
-		 $sql='select id,username from employees where company_id=? and department_id=? and sub_dept_id=?';
+		 $sql='select id,username,firstname,lastname from employees where company_id=? and department_id=? and sub_dept_id=?';
 		$result = $this->db->query($sql,array($company_id,$department_id,$sub_dept_id));
 		if($result->num_rows() >= 1){
             return $result->result();
@@ -605,9 +609,145 @@ function get_chat_messages_last_one($from_id ,$to_id){
         }
 		}
 	///////////////////////////////////////////////////////////
-		
+	function insert_report($emp_id,$reason,$sender_id,$company_id){
+		$type='legal';
+		    $sql='select * from department where company_id=? and type=?';
+			$result2=$this->db->query($sql,array($company_id,$type));
+			$to_id=$result2->row(0)->depart_manager;
+		if($result2->num_rows() == 1){
+	
+            $data = array(
+            'emp_id' => $emp_id ,
+            'the_reason'=>$reason,
+			'sender_id'=>$sender_id,
+			'company_id'=>$company_id,
+			'to_id'=>$result2->row(0)->depart_manager
+            );
+        $query = $this->db->insert('report_employee', $data);
+        if($this->db->affected_rows()==1){
+			
+			$sql='select id from report_employee where to_id=? order by id desc limit 1 ';
+			$result=$this->db->query($sql,$to_id);
+			if($result->num_rows() == 1){
+				$report_id =$result->row(0)->id;
+				$link=base_url().'employee/report_details/'.$report_id.'/'.$to_id;
+			$data = array(
+            'emp_id' => $to_id,
+            'activity' => 'there is a new report check it"'.substr($reason,0,10).'..." ',
+			
+			'link'=>$link
+            );
+			$query = $this->db->insert('activity', $data);
+			if($this->db->affected_rows()==1){
+				return true;
+				}else{
+					return false;
+					}
+				}
+			
+			return true;
+			}else{
+				return false;
+				}
+			
+        } else {
+            return false;
+        }
+			
+		}	
 					
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////      for the sub department manager
+	function sector_type_sub_manger($id){
+		$sql='select d.company_id,d.name as dept_name,d.depart_manager,d.sub_depart_num,d.type,s.name as sub_dept_name
+              from department d 
+			  join sub_department s on d.id=s.department_id and s.sub_depart_manager=?';
+			  $result=$this->db->query($sql,$id);
+		if($result->num_rows() == 1){
+	
+            return $result;
+			
+        } else {
+            return false;
+        }
+		}
+	
+	///////////////////////////////////////////////////////////////////   take employee_id for the sector manager and tthe employee
+	
+	function sector_type_employee($id){
+		$sql='select e.id,d.depart_manager,d.type
+              from employees e 
+			  join department d on e.department_id=d.id and e.id=?';
+			  $result=$this->db->query($sql,$id);
+		if($result->num_rows() == 1){
+	
+            return $result;
+			
+        } else {
+            return false;
+        }
+		}		
+	///////////////////////////////////////////////////////////////////
+	function show_reports($to_id){
+		$sql='select e.id,e.firstname,e.lastname,e.profile_pic,e.company_id,e.department_id,e.sub_dept_id,e.online,r.sender_id,r.the_reason,r.report_date,r.id as report_id,r.to_id
+              from employees e 
+			  join report_employee r on e.id=r.sender_id and r.to_id=?';
+			  
+	    $result=$this->db->query($sql,$to_id);
+		if($result->num_rows() >= 1){
+	
+            return $result;
+			
+        } else {
+            return false;
+        } 
+		}
+	///////////////////////////////////////////////////
 		
+	function show_unseen_reports($to_id){
+		$sql='select e.id,e.firstname,e.lastname,e.profile_pic,e.company_id,e.department_id,e.sub_dept_id,e.online,r.sender_id,r.the_reason,r.report_date,r.id as report_id
+              from employees e 
+			  join report_employee r on e.id=r.sender_id and r.to_id=? and seen=?';
+			  
+	    $result=$this->db->query($sql,array($to_id,0));
+		if($result->num_rows() > 0){
+	
+            return $result;
+			
+        } else {
+            return false;
+        } 
+		}
+	///////////////////////////////////////////////////////////////////
+	function select_deaprtment($id){
+		$sql="select * from department where id=?";
+		 $result=$this->db->query($sql,$id);
+		if($result->num_rows() == 1){
+	
+            return $result;
+			
+        } else {
+            return false;
+        } 
+		}
+	/////////////////////////////////////////////////////
+	function select_report_details($id){
+		$sql='select e.id,e.firstname,e.lastname,e.profile_pic,e.company_id,e.department_id,e.sub_dept_id,e.online,r.sender_id,r.the_reason,r.report_date,r.id as report_id,r.emp_id as the_gelty
+              from employees e 
+			  join report_employee r on e.id=r.sender_id and r.id=?';
+			$result=$this->db->query($sql,$id);
+		if($result->num_rows() == 1){
+	       $data = array(
+               'seen' => 1,
+            );
+
+			$this->db->where('id', $id);
+			$this->db->update('report_employee', $data); 
+            return $result;
+			
+        } else {
+            return false;
+        }   
+		
+		}		
 }
 ?>

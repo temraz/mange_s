@@ -99,21 +99,17 @@
                         	<label>Department Field</label>
                             <span class="field"><select name="field_<?php echo $i; ?>">
                             <option value="">Select</option>
-                            <option value="Services">Services</option>
-                            <option value=" Marketing">Marketing</option>
-                            <option value="Human Resources">Human Resources</option>
-                            <option value="Financial">Financial</option>
-                            <option value="Purchasing">Purchasing</option>
-                            <option value="Sales">Sales</option>
-                            <option value="IT">IT</option>
-                            <option value="Inventory">Inventory</option>
-                            <option value="Insurance">Insurance</option>
-                            <option value="Licenses">Licenses</option>
-                            <option value="Operational">Operational</option>
-                            <option value="Customers">Customers</option>
-                            <option value="Staff">Staff</option>
-                            <option value="Customer Service">Customer Service</option>
-                            <option value="Organizational">Organizational</option>
+                            
+                            <option value="marketing">Marketing</option>
+                            <option value="financial">Financial</option>
+                            <option value="inventory">Legal</option>
+                            <option value="purchasing">Purchasing</option>
+                            <option value="sales">Sales</option>
+                            <option value="iT">IT</option>
+                            <option value="insurance">Insurance</option>
+                            <option value="customer">Customer Service</option>
+                              
+                           
                   </select></span>
                         </p>
                         

@@ -8,17 +8,58 @@
 <link rel="stylesheet" href="<?php echo base_url();?>css/style.css"  type="text/css" />
 
 
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-<script type="text/javascript" src="<?php echo base_url();?>js/jquery.flot.min.js" ></script>
+<script type="text/javascript" src="<?php echo base_url();?>js/jquery-1.7.min.js" ></script>
+
+<script type="text/javascript" src="<?php echo base_url();?>js/jquery-ui-1.8.16.custom.min.js"></script>
+ 
+ <script type="text/javascript" src="<?php echo base_url();?>js/jquery.flot.min.js" ></script>
 
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.flot.resize.min.js" ></script>
 
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery-ui-1.8.16.custom.min.js"></script>
-
-<script type="text/javascript" src="<?php echo base_url();?>js/general.js" ></script>
-
 <script type="text/javascript" src="<?php echo base_url();?>js/dashboard.js" ></script>
 
+<script type="text/javascript" src="<?php echo base_url();?>js/general.js"></script>
+ 
+<script type="text/javascript" src="<?php echo base_url();?>js/jquery.wysiwyg.js"></script>
+ 
+<script type="text/javascript" src="<?php echo base_url();?>js/wysiwyg.image.js"></script>
+ 
+<script type="text/javascript" src="<?php echo base_url();?>js/wysiwyg.link.js" ></script>
+
+<script type="text/javascript" src="<?php echo base_url();?>js/wysiwyg.table.js"></script>
+ 
+<script type="text/javascript">
+jQuery(document).ready(function() {
+								
+	jQuery('#wysiwyg').wysiwyg({
+		controls: {
+			indent: { visible: true },
+			outdent: { visible: true },
+			subscript: { visible: true },
+			superscript: { visible: true },
+			redo: { visible: true },
+			undo: { visible: true },
+			insertOrderedList: { visible: true },
+			insertUnorderedList: { visible: true },
+			insertHorizontalRule: { visible: true },
+			insertTable: { visible: true },
+			code: { visible: true },
+			removeFormat: { visible: true },
+			strikethrough: { visible: true },
+			strikeThrough: { visible: true },
+		}
+	});
+	
+	jQuery('#wysiwyg2').wysiwyg({
+		controls: { 
+			cut: {visible: true },
+			copy: { visible: true },
+			paste: { visible: true }
+		}
+	});
+});
+</script>
 <link rel="stylesheet" href="<?php echo base_url();?>css/chosen.css" />
 
 
@@ -47,7 +88,7 @@
         	<div class="maincontentinner">
             	
                 <ul class="maintabmenu">
-                	<li class="current"><a href="<?php echo base_url();?>employee/give_task/" ><?php if(isset($employee->row(0)->firstname,$employee->row(0)->lastname)) echo $employee->row(0)->firstname ." ".$employee->row(0)->lastname?> Settings</a></li>
+                	<li class="current"><a href="<?php echo base_url();?>employee/give_task/" >assign a new task</a></li>
                     <li ><a href="<?php echo base_url();?>employee/tasks_status/" >Tasks status</a></li>
                 </ul><!--maintabmenu-->
                 
@@ -77,22 +118,26 @@
                     
                     <br />
                   <?php if(!isset($no_employees)){?>
-                    <?php echo form_open('employee/task_validation',array('id'=>'form1','class'=>'stdform',));  ?>
+                    <?php echo form_open('employee/task_validation',array('id'=>'form2','class'=>'stdform stdform2'));  ?>
                     	<p>
-                        	<label>The manager :</label>
+                        	<label>The employee :</label>
                             <span class="field">
                             <select data-placeholder="Choose the dempartment manager..." name="depart_manager"  class="chzn-select"  style="                             width:200px;" tabindex="4">
-                            <option value=""></option> 
+                            <option value="">select the employee</option> 
+                            
                             <?php if(isset($departments)){foreach($departments as $department){?>
                             <?php if(isset($chairman)){?>
-                            <option value="<?php echo $department->depart_manager?>"><?php echo $department->name;?></option> 
+                            <option value="<?php echo $department->depart_manager?>"><?php echo $department->firstname.' '.$department->lastname;?></option> 
                             <?php }?>
+                            
                             <?php if(isset($manager)){?>
-                            <option value="<?php echo $department->sub_depart_manager?>"><?php echo $department->name;?></option> 
+                            <option value="<?php echo $department->sub_depart_manager?>"><?php echo $department->firstname.' '.$department->lastname;?></option> 
                             <?php }?>
+                            
                              <?php if(isset($sub_manager)){?>
                             <option value="<?php echo $department->id?>"><?php echo $department->username;?></option> 
                             <?php }?>
+                            
                             <?php }}?>
                             
                             </select>
@@ -112,7 +157,8 @@
                         <p>
                         	<label>The task :</label>
                             <span class="field">
-                           <textarea name="task"  required style="height:60px;width:70%"><?php echo $this->input->post('task');?></textarea>
+                              <textarea id="wysiwyg2" name="task" cols="" rows="17"><?php echo $this->input->post('task');?></textarea>  
+                           
                             </span>
                             
                             
@@ -144,12 +190,12 @@
            <?php include('footer.php');?>
             
         </div><!--maincontent-->
-    
+    <?php include('right_div.php')?>   
      
      	</div><!--mainwrapperinner-->
     </div><!--mainwrapper-->
 	<!-- END OF MAIN CONTENT -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+ 
   <script src="<?php echo base_url();?>js/chosen.jquery.js" type="text/javascript"></script>
   <script type="text/javascript"> 
     var config = {

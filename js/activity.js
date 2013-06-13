@@ -3,7 +3,7 @@ jQuery(document).ready(function($){
 
 
 
-setInterval(function(){get_activites();},1000);
+setInterval(function(){get_activites();},20000);
 
 	
 	var agent_id=1;
