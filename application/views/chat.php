@@ -32,6 +32,7 @@ var my_id="<?php echo $this->session->userdata('emp_id') ;?>"
 </script>
 
 
+
     <script type="text/javascript">
 jQuery(function(){  
   jQuery('<audio id="chatAudio" ><source src="<?php echo base_url();?>images/sounds/notify.ogg" type="audio/ogg"><source src="<?php echo base_url();?>images/sounds/notify.mp3" type="audio/mpeg"><source src="<?php echo base_url();?>images/sounds/notify.wav" type="audio/wav"></audio>').appendTo('body');
@@ -68,22 +69,53 @@ jQuery(function(){
         
         <div class="maincontent">
         	<div class="maincontentinner">
-            	
+            	<?php if(isset($first,$last)){?>
                 <ul class="maintabmenu">
-                	<li class="current"><a href="dashboard.html" >Chat</a></li>
+                	<li class="current"><a href="#">Chating with <span style="color:#369"> <?php echo $first.' '.$last ;?></span></a></li>
+                    
                 </ul><!--maintabmenu-->
+               
                 
-                <div class="content chatcontent">
+                <div class="content chatcontent" style="height:600px;">
                    
-                   <div id="chatmessage" class="chatmessage">
+                   <div id="chatmessage" class="chatmessage" style="height:530px;">
                    		<div id="chatmessageinner"></div><!--chatmessageinner-->
                    </div><!--chatmessage-->
                    	
                    <div class="messagebox">
-                   		<input type="text" id="msgbox" name="msgbox"  />
-                        <button>Send</button>
+                   <?php if(isset($video)){?>
+                    <li  style="border:none;list-style:none;float:right;padding-right:10px;">
+                    <a href="<?php echo base_url(); ?>employee/report_metting/<?php echo $this->uri->segment(3);?>"
+                     class="btn  btn_chat" id="video_call"><span>Video call</span></a></li>
+                   	
+                     	<input type="text" style="width:68%" id="msgbox" name="msgbox"  />
+                        <button>Send</button>  
+                      <?php }else{?>
+						  
+						  <input type="text" id="msgbox" name="msgbox"  />
+                            <button>Send</button> 
+                            
+						  <?php }?>
                    </div>
-                    
+                   
+                    <?php }else{?>
+						 <ul class="maintabmenu">
+                	<li class="current"><a href="#">Chating</a></li>
+                </ul><!--maintabmenu-->
+                
+                <div class="content chatcontent" style="height:600px;">
+                   
+                   <div id="chatmessage" class="chatmessage" style="height:530px;">
+                   		<div id="chatmessageinne"><h2 style="text-align:center;color:#369;margin-top:230px">Select on of your contacts to <br />start conversation</h2></div><!--chatmessageinner-->
+                   </div><!--chatmessage-->
+                   	
+                   <div class="messagebox">
+                   	
+                        	<input type="text" id="msgbox" name="msgbox"  readonly />
+                            <button>Send</button> 
+                            
+                   </div>
+						<?php }?>
                 </div><!--content-->
                 
             </div><!--maincontentinner-->
@@ -217,11 +249,27 @@ jQuery(function(){
                              
                             <li <?php  if($my_sub_manager->row(0)->online == 1){ ?> class="online new" <?php }if($my_sub_manager->row(0)->id == $to_id){ ?> id="active" <?php }?>>
                             
+                            
                             <a href="<?php echo base_url(); ?>employee/chat/<?php echo $my_sub_manager->row(0)->id; ?>">
                             
                             <img src="<?php echo base_url(); ?>images/profile/thumb_profile/<?php echo $my_sub_manager->row(0)->profile_pic; ?>" width="35" height="30"  alt="" />
                             
                             <span><?php echo $my_sub_manager->row(0)->firstname; ?> <?php echo $my_sub_manager->row(0)->lastname; ?></span></a>
+                            
+                            <!--  <span class="msgcount">3</span> -->
+                            
+                            </li>
+                             <?php }?>
+                             
+                             <?php if(isset($my_manager)){?>
+                             
+                            <li <?php  if($my_manager->row(0)->online == 1){ ?> class="online new" <?php }if($my_manager->row(0)->id == $to_id){ ?> id="active" <?php }?>>
+                            
+                            <a href="<?php echo base_url(); ?>employee/chat/<?php echo $my_manager->row(0)->id; ?>">
+                            
+                            <img src="<?php echo base_url(); ?>images/profile/thumb_profile/<?php echo $my_manager->row(0)->profile_pic; ?>" width="35" height="30"  alt="" />
+                            
+                            <span><?php echo $my_manager->row(0)->firstname; ?> <?php echo $my_manager->row(0)->lastname; ?></span></a>
                             
                             <!--  <span class="msgcount">3</span> -->
                             

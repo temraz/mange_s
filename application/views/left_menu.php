@@ -7,21 +7,54 @@ if($this->model_employee->is_chairman($id)){
 	
  $manager=1;
   $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
-  if($sector_type=='legal'){
-	  if($this->model_employee->show_unseen_reports($id)){
-	  $reports_count=count($this->model_employee->show_unseen_reports($id)->result());
-	  }else{
-		  $reports_count=0;
-		  }
-	  }
+
  }elseif($this->model_employee->is_sub_manager($id)){
 	 $sub_manager=1;
 	 $sector_type=$this->model_employee->sector_type_sub_manger($id)->row(0)->type;
 	 }else{
-		 $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+		  $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
 		 }
-	
-		 
+///////////////////////////////////////////////////////		 
+	  if(isset($sector_type) && $sector_type=='legal'){
+		  if(isset($manager)){
+	  if($this->model_employee->show_unseen_reports($id)){
+	  $reports_count=count($this->model_employee->show_unseen_reports($id)->result());
+	  }else{
+		  $reports_count=0;
+		  } 
+		}else{
+		if($this->model_employee->show_unseen_reports_not_manager($id)){
+	  $reports_count=count($this->model_employee->show_unseen_reports_not_manager($id)->result());
+	  }else{
+		  $reports_count=0;
+		  }
+			}
+	 
+	  }
+////////////////////////////////////////////////////////////
+	 if(isset($sector_type) && $sector_type=='financial'){
+		  if(isset($manager)){
+	  if($this->model_employee->show_result_report_mang($id)){
+	  $reports_results_count=count($this->model_employee->show_result_report_mang($id)->result());
+	  }else{
+		  $reports_results_count=0;
+		  } 
+		}elseif(isset($sub_manager)){
+		if($this->model_employee->show_result_report_sub($id)){
+	  $reports_results_count=count($this->model_employee->show_result_report_sub($id)->result());
+	  }else{
+		  $reports_results_count=0;
+		  }
+			}else{
+				if($this->model_employee->show_result_report_emp($id)){
+	  $reports_results_count=count($this->model_employee->show_result_report_emp($id)->result());
+	  }else{
+		  $reports_results_count=0;
+		  }
+				
+				}
+	 
+	  }	 
 	
 ?>
 <div class="leftmenu">
@@ -50,6 +83,9 @@ if($this->model_employee->is_chairman($id)){
                         <li><a href="<?php echo base_url();?>employee/mettings/" class="chat" ><span>Online conversation</span></a></li>
                         <?php if(isset($sector_type) && $sector_type=='legal'){?>
                          <li><a href="<?php echo base_url();?>employee/show_reports/" class="media" ><span>Reported employees (<?php if(isset($reports_count)){echo $reports_count;}?>)</span></a></li>
+                        <?php }?>
+                        <?php if(isset($sector_type) && $sector_type=='financial'){?>
+                         <li><a href="<?php echo base_url();?>employee/show_result_reports/" class="media" ><span>Reportes results (<?php if(isset($reports_results_count)){echo $reports_results_count;}?>)</span></a></li>
                         <?php }?>
                      <!--   <li><a href="<?php echo base_url();?>site/editor/" class="media" ><span>File Editor</span></a></li> -->
                        

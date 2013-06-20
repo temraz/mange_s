@@ -24,6 +24,7 @@
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.alerts.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/general.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/elements.js" ></script>
+ <link rel="stylesheet" href="<?php echo base_url();?>css/default.css" type="text/css" media="screen" />
 <!--[if lt IE 9]>
 	<script src="css3-mediaqueries.js" tppabs="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
 <![endif]-->

@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="<?php echo base_url();?>css/style.css"  type="text/css" />
 
 
-<script type="text/javascript" src="<?php echo base_url();?>js/jquery-1.7.min.js" ></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js" type="text/javascript"></script>
 
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery-ui-1.8.16.custom.min.js"></script>
  
@@ -122,7 +122,7 @@ jQuery(document).ready(function() {
                     	<p>
                         	<label>The employee :</label>
                             <span class="field">
-                            <select data-placeholder="Choose the dempartment manager..." name="depart_manager"  class="chzn-select"  style="                             width:200px;" tabindex="4">
+                            <select data-placeholder="Choose the dempartment manager..." name="depart_manager"  class="chzn-select"  style="                             width:100%;" tabindex="4">
                             <option value="">select the employee</option> 
                             
                             <?php if(isset($departments)){foreach($departments as $department){?>
@@ -148,7 +148,7 @@ jQuery(document).ready(function() {
                           <p>
                         	<label>The Deadline :</label>
                             <span class="field">
-                          <input type="date" name="deadline" required value="<?php echo $this->input->post('deadline');?>" />
+                          <input type="date" name="deadline"  style="width:97%;" required value="<?php echo $this->input->post('deadline');?>" />
                             </span>
                             
                             
@@ -157,7 +157,7 @@ jQuery(document).ready(function() {
                         <p>
                         	<label>The task :</label>
                             <span class="field">
-                              <textarea id="wysiwyg2" name="task" cols="" rows="17"><?php echo $this->input->post('task');?></textarea>  
+                              <textarea id="wysiwyg2" style="width:98%"  name="task" cols="" rows="17"><?php echo $this->input->post('task');?></textarea>  
                            
                             </span>
                             
@@ -190,12 +190,21 @@ jQuery(document).ready(function() {
            <?php include('footer.php');?>
             
         </div><!--maincontent-->
-    <?php include('right_div.php')?>   
+    <?php include('right_div2.php')?>   
      
      	</div><!--mainwrapperinner-->
     </div><!--mainwrapper-->
 	<!-- END OF MAIN CONTENT -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js" type="text/javascript"></script>
+ <script type="text/javascript">
+var base_url=" <?php echo base_url();?>";
+</script>
+
+<script type="text/javascript" src="<?php echo base_url();?>js/jquery-ui-1.8.16.custom.min.js"></script>
  
+
+<script src="<?php echo base_url();?>js/activity.js" type="text/javascript" ></script>
+
   <script src="<?php echo base_url();?>js/chosen.jquery.js" type="text/javascript"></script>
   <script type="text/javascript"> 
     var config = {

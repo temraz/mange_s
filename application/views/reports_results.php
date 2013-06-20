@@ -70,11 +70,10 @@
                                         <span style="font-weight:bold">Department: <?php
 										 echo $this->model_employee->select_deaprtment($report->department_id)->row(0)->type; ?></span> <br />
                                         
-                        <?php echo substr($report->the_reason,0,200).'...' ; ?><a href="<?php echo base_url(); ?>employee/report_details/<?php echo  $report->report_id ; if(isset($manager)){ ?>/<?php echo  $report->to_id ;}?>/<?php  if(isset($report->lawer_id)){echo $report->lawer_id;}?>">Details</a><br />                        
+                        <?php echo substr($report->result,0,200).'...' ; ?><a href="<?php echo base_url(); ?>employee/report_result_details/<?php echo  $report->result_id ;  ?>/<?php if(isset($manager)){ echo  $report->to_id ;}elseif(isset($sub_manager)){ echo $report->forward_sub_id ; }else{ echo $report->forward_emp_id ;}?>">Details</a><br />
                                         
                                         
-                                        
-                                        <br /> <a href="<?php echo base_url(); ?>employee/report_details/<?php echo  $report->report_id ?>/<?php echo  $report->to_id?>" style="float:right ; color:#c1c1c1"><?php echo $report->report_date; ?></a>
+                                        <br /> <a href="<?php echo base_url(); ?>employee/report_details/<?php echo  $report->report_id ?>/<?php echo  $report->to_id?>" style="float:right ; color:#c1c1c1"><?php echo $report->date_result; ?></a>
                                         <br clear="all" />
                                     </div><!--info-->
                                 </li>

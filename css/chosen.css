@@ -36,9 +36,7 @@
   background-image: -moz-linear-gradient(top, #ffffff 20%, #f6f6f6 50%, #eeeeee 52%, #f4f4f4 100%);
   background-image: -o-linear-gradient(top, #ffffff 20%, #f6f6f6 50%, #eeeeee 52%, #f4f4f4 100%);
   background-image: linear-gradient(#ffffff 20%, #f6f6f6 50%, #eeeeee 52%, #f4f4f4 100%); 
-  -webkit-border-radius: 5px;
-  -moz-border-radius   : 5px;
-  border-radius        : 5px;
+ 
   -moz-background-clip   : padding;
   -webkit-background-clip: padding-box;
   background-clip        : padding-box;
@@ -55,6 +53,7 @@
   padding: 0 0 0 8px;
   color: #444444;
   text-decoration: none;
+
 }
 .chzn-container-single .chzn-default {
   color: #999;
@@ -310,7 +309,7 @@
   margin: 0 4px;
   position: absolute;
   text-align: center;
-  width: 321px; /* This should by dynamic with js */
+  width: 100%; /* This should by dynamic with js */
   z-index: 1;
 }
 .chzn-container .chzn-results-scroll span {

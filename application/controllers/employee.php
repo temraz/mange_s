@@ -366,7 +366,15 @@ function task_validation(){
 		$my_id=$this->session->userdata('emp_id');
 		 $comp_id=$this->model_users->select_emp($my_id)->row(0)->company_id;
 		 
-		 
+		 if($this->uri->segment(3) != ''){
+					$my_id=$this->uri->segment(3);
+					$data['first']=$this->model_users->select_emp($my_id)->row(0)->firstname;
+					$data['last']=$this->model_users->select_emp($my_id)->row(0)->lastname;
+					}
+		if($this->uri->segment(4) != '' && $this->uri->segment(4)=='investigation' ){
+					$data['video']=1;
+					}			
+					
 	 if($this->model_employee->is_chairman($my_id)){
 	 if($this->model_employee->select_dept_contacts($comp_id)){
      $data['contacts']=$this->model_employee->select_dept_contacts($comp_id)->result();
@@ -415,7 +423,13 @@ function task_validation(){
 		   if($this->model_employee->select_emp_contacts($company_id,$department_id,$sub_dept_id)){
 			    
 			 $data['contacts']=$this->model_employee->select_emp_contacts($company_id,$department_id,$sub_dept_id)->result();
-			  $data['my_sub_manager']=$this->model_employee->select_my_sub_manager($company_id,$department_id,$sub_dept_id);
+			$sector_type=$this->model_employee->sector_type_employee($my_id)->row(0)->type;
+	 if($sector_type !='legal'){
+			  $data['my_sub_manager']=$this->model_employee->select_my_sub_manager($company_id,$department_id,$sub_dept_id); 
+		 }elseif($sector_type== 'legal'){
+			  $data['my_manager']=$this->model_employee->select_my_manager($company_id,$department_id);
+			 }
+		
 			 $this->load->view('chat',$data);
 			   }else{
 				 $data['no_contacts']=1;
@@ -478,15 +492,26 @@ function task_validation(){
 						    $seder_firtname=$this->model_users->select_emp($chat_message->from)->row(0)->firstname;
 							$seder_lastname=$this->model_users->select_emp($chat_message->from)->row(0)->lastname;
 							$seder_pic=$this->model_users->select_emp($chat_message->from)->row(0)->profile_pic;
+							$department=$this->model_users->select_emp($chat_message->from)->row(0)->department_id;
 							
-							
-							$chat_message_html.='<p>
-							<span id="date">'.$chat_message->message_date.'</span> 
-							<img src='.base_url().'images/profile/thumb_profile/'.$seder_pic.' width="35" height="30" />
-							<span id="message" ><strong>'.$seder_firtname.' '.$seder_lastname.' :</strong>
-							                   '.$chat_message->message.'</span></p>';
+							$chat_message_html.='
+							<li style="padding:5px;border-bottom: 1px dashed #ddd;;list-style:none">
+                               <div class="avatar" style="padding: 2px; border: 1px solid #eee;width:50px"><img src="'.base_url().'images/profile/thumb_profile/'.$seder_pic.'" width="50" height="45" /></div>
+                                <div class="info" style="margin-left:60px;margin-top:-54px;">
+                                    	<a href="'.base_url().'employee/chat/" title="chat with the reporter">'.$seder_firtname.' '.$seder_lastname.' </a> 
+                                       <br/>
+                                       
+                                         '.$chat_message->message.'
+                                         <span style="float:right;color:#369;margin-top:10px">'.$chat_message->message_date.'</span>
+                                        <br clear="all" />
+                                    </div><!--info-->
+                                </li>
+							   
+							';
 							
 							}
+							
+							
 						$chat_message_html.='</span>';
 						
 						
@@ -495,7 +520,7 @@ function task_validation(){
 						exit();
 						}else{
 							//no chat return
-						$result=array('status'=>'no' ,'content'=>'there is know');
+						$result=array('status'=>'no' ,'content'=>'لا يوجد راسائل بينكم حتي الان');
 						return json_encode($result);
 							exit();
 							}
@@ -614,7 +639,107 @@ function task_validation(){
 		   if($this->model_employee->select_emp_contacts($company_id,$department_id,$sub_dept_id)){
 			    
 			 $data['contacts']=$this->model_employee->select_emp_contacts($company_id,$department_id,$sub_dept_id)->result();
-			  $data['my_sub_manager']=$this->model_employee->select_my_sub_manager($company_id,$department_id,$sub_dept_id);
+				$sector_type=$this->model_employee->sector_type_employee($my_id)->row(0)->type;
+	 if($sector_type !='legal'){
+			  $data['my_sub_manager']=$this->model_employee->select_my_sub_manager($company_id,$department_id,$sub_dept_id); 
+		 }elseif($sector_type== 'legal'){
+			  $data['my_manager']=$this->model_employee->select_my_manager($company_id,$department_id);
+			 }
+			 $this->load->view('meetings',$data);
+			   }else{
+				 $data['no_contacts']=1;
+		         $this->load->view('meetings',$data);
+				   }
+		 }
+		
+		
+	
+		}else{
+         redirect('site/index_employee');	
+        }
+	}
+	///////////////////////////////////////////////////////////////////////
+	function report_metting(){
+	if ($this->session->userdata('employee_logged_in') &&  $this->uri->segment(3) != '') {
+	     	 
+		
+		$to_id= $this->uri->segment(3);
+		
+		$my_id=$this->session->userdata('emp_id');
+	
+					$first=$this->model_users->select_emp($my_id)->row(0)->firstname;
+					$last=$this->model_users->select_emp($my_id)->row(0)->lastname;
+		$link=base_url().'employee/report_metting/'.$my_id;
+			$data = array(
+            'emp_id' => $to_id,
+            'activity' => ''.$first.' '.$last.' Invites you to sart a video call ',
+			
+		    'link'=>$link
+            );
+			$query = $this->db->insert('activity', $data);
+			
+					
+		 $comp_id=$this->model_users->select_emp($my_id)->row(0)->company_id;
+		  if($this->uri->segment(3) != ''){
+					$my_id=$this->uri->segment(3);
+					$data['first']=$this->model_users->select_emp($my_id)->row(0)->firstname;
+					$data['last']=$this->model_users->select_emp($my_id)->row(0)->lastname;
+					}
+		 
+	 if($this->model_employee->is_chairman($my_id)){
+	 if($this->model_employee->select_dept_contacts($comp_id)){
+     $data['contacts']=$this->model_employee->select_dept_contacts($comp_id)->result();
+	 $this->load->view('meetings',$data);
+	 }else{
+		 $data['no_contacts']=1;
+		 $this->load->view('meetings',$data);
+		 }
+	}
+ elseif($this->model_employee->is_manager($my_id)){
+               $company_id=$this->session->userdata('company_id');
+				$department_id=$this->session->userdata('department_id');
+				
+             if($this->model_employee->select_contacts_sub_departments($company_id,$department_id)){
+			 $data['contacts']=$this->model_employee->select_contacts_sub_departments($company_id,$department_id)->result();
+			  $data['my_chairman']=$this->model_employee->select_my_chairman($company_id);
+			 $this->load->view('meetings',$data);
+			 }else{
+				 $data['no_contacts']=1;
+		         $this->load->view('meetings',$data);
+				 }
+			
+  
+  
+  
+ }elseif($this->model_employee->is_sub_manager($my_id)){
+	            $company_id=$this->session->userdata('company_id');
+				
+				$sub_dept_id=$this->session->userdata('sub_dept_id');
+				$department_id=$this->model_employee->is_sub_manager($my_id)->row(0)->department_id;
+				
+             if($this->model_employee->select_emp_contacts($company_id,$department_id,$sub_dept_id)){
+			 $data['contacts']=$this->model_employee->select_emp_contacts($company_id,$department_id,$sub_dept_id)->result();
+			 $data['my_manager']=$this->model_employee->select_my_manager($company_id,$department_id);
+			 $this->load->view('meetings',$data);
+			 }else{
+				$data['no_contacts']=1;
+		         $this->load->view('meetings',$data);
+				 }
+	 }else{
+		 
+		
+		  $company_id=$this->session->userdata('company_id');
+		  $department_id=$this->session->userdata('department_id');
+		  $sub_dept_id=$this->session->userdata('sub_dept_id');
+		   if($this->model_employee->select_emp_contacts($company_id,$department_id,$sub_dept_id)){
+			    
+			 $data['contacts']=$this->model_employee->select_emp_contacts($company_id,$department_id,$sub_dept_id)->result();
+				$sector_type=$this->model_employee->sector_type_employee($my_id)->row(0)->type;
+	 if($sector_type !='legal'){
+			  $data['my_sub_manager']=$this->model_employee->select_my_sub_manager($company_id,$department_id,$sub_dept_id); 
+		 }elseif($sector_type== 'legal'){
+			  $data['my_manager']=$this->model_employee->select_my_manager($company_id,$department_id);
+			 }
 			 $this->load->view('meetings',$data);
 			   }else{
 				 $data['no_contacts']=1;
@@ -632,8 +757,11 @@ function task_validation(){
 	function report(){
 		 if ($this->session->userdata('employee_logged_in')) {
 			 $emp_id = $this->session->userdata('emp_id');
+		 $my_id = $this->session->userdata('emp_id');
 		
-		       
+		         $company_id=$this->session->userdata('company_id');
+		  $department_id=$this->session->userdata('department_id');
+		  $sub_dept_id=$this->session->userdata('sub_dept_id');
 		 $id=$this->model_users->select_emp($emp_id)->row(0)->company_id;
 		 
 		 
@@ -646,39 +774,63 @@ function task_validation(){
 				 $this->load->view('report_employee',$data);
 				 }
 	         }
-            elseif($this->model_employee->is_manager($emp_id)){
-				
-				$company_id=$this->session->userdata('company_id');
+          elseif($this->model_employee->is_manager($my_id)){
+               $company_id=$this->session->userdata('company_id');
 				$department_id=$this->session->userdata('department_id');
-             if($this->model_employee->select_sub_departments($company_id,$department_id)){
-			 $data['departments']=$this->model_employee->select_sub_departments($company_id,$department_id);
+				
+             if($this->model_employee->select_contacts_sub_departments($company_id,$department_id)){
+			 $data['departments']=$this->model_employee->select_contacts_sub_departments($company_id,$department_id)->result();
+			  $data['my_chairman']=$this->model_employee->select_my_chairman($company_id);
 			 $this->load->view('report_employee',$data);
 			 }else{
-				 $data['no_employees']=0;
-				 $this->load->view('report_employee',$data);
+				 $data['no_employees']=1;
+		         $this->load->view('report_employee',$data);
 				 }
 			
-			
- }elseif($this->model_employee->is_sub_manager($emp_id)){
-      $company_id=$this->session->userdata('company_id');
+  
+  
+  
+ }elseif($this->model_employee->is_sub_manager($my_id)){
+	            $company_id=$this->session->userdata('company_id');
 				
 				$sub_dept_id=$this->session->userdata('sub_dept_id');
-				$department_id=$this->model_employee->is_sub_manager($emp_id)->row(0)->department_id;
-             if($this->model_employee->select_emp_giv_task($company_id,$department_id,$sub_dept_id)){
-			 $data['departments']=$this->model_employee->select_emp_giv_task($company_id,$department_id,$sub_dept_id);
-			 
+				$department_id=$this->model_employee->is_sub_manager($my_id)->row(0)->department_id;
+				
+             if($this->model_employee->select_emp_contacts($company_id,$department_id,$sub_dept_id)){
+			 $data['departments']=$this->model_employee->select_emp_contacts($company_id,$department_id,$sub_dept_id)->result();
+			 $data['my_manager']=$this->model_employee->select_my_manager($company_id,$department_id);
 			 $this->load->view('report_employee',$data);
 			 }else{
-				 $data['no_employees']=0;
-				 $this->load->view('report_employee',$data);
+				$data['no_employees']=1;
+		         $this->load->view('report_employee',$data);
 				 }
-	
+	 }else{
+		 
 		
-				 }
-	             else{
-				redirect('site/error404');
-				 }
-				}else{
+		  $company_id=$this->session->userdata('company_id');
+		  $department_id=$this->session->userdata('department_id');
+		  $sub_dept_id=$this->session->userdata('sub_dept_id');
+		   if($this->model_employee->select_emp_contacts($company_id,$department_id,$sub_dept_id)){
+			    
+			 $data['departments']=$this->model_employee->select_emp_contacts($company_id,$department_id,$sub_dept_id)->result();
+			 
+			 $sector_type=$this->model_employee->sector_type_employee($my_id)->row(0)->type;
+	 if($sector_type !='legal'){
+			  $data['my_sub_manager']=$this->model_employee->select_my_sub_manager($company_id,$department_id,$sub_dept_id); 
+		 }elseif($sector_type== 'legal'){
+			  $data['my_manager']=$this->model_employee->select_my_manager($company_id,$department_id);
+			 }
+		
+	
+			 $this->load->view('report_employee',$data);
+			   }else{
+				 $data['no_employees']=1;
+		         $this->load->view('report_employee',$data);
+				   }
+		 }
+		
+
+		  	}else{
            redirect('site/index_employee');	
         }
 		
@@ -725,9 +877,11 @@ function task_validation(){
 		 $id = $this->session->userdata('emp_id');
 if($this->model_employee->is_manager($id)){
   $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
- }else{
+ }elseif($this->model_employee->is_sub_manager($id)){
 	 $sector_type=$this->model_employee->sector_type_sub_manger($id)->row(0)->type;
-	 }
+	 }else{
+		  $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+		 }
 	 if(isset($sector_type) && $sector_type=='legal'){   /// start 
 		 if($this->model_employee->is_manager($id)){
 			 if($this->model_employee->show_reports($id)){
@@ -738,8 +892,14 @@ if($this->model_employee->is_manager($id)){
 				 $this->load->view('show_reports',$data);					
 					 }
 			 }else{
-			redirect('site/error404');	 
+			       if($this->model_employee->show_reports_emp($id)){
+				 $data['reports']=$this->model_employee->show_reports_emp($id)->result();
+				 $this->load->view('show_reports',$data);
+				 }else{
+					 $data['no_reports']=1;
+				 $this->load->view('show_reports',$data);					
 				 }
+			 }
 		 
 		 }else{
 			 redirect('site/error404');
@@ -752,6 +912,7 @@ if($this->model_employee->is_manager($id)){
 	function report_details(){
 		 if ($this->session->userdata('employee_logged_in') || $this->uri->segment(3) != ''|| $this->uri->segment(4) != '') {
 			$id = $this->session->userdata('emp_id');
+			$comany_id=$this->session->userdata('company_id');
 			if($id ==$this->uri->segment(4)){
 				
 				if($this->uri->segment(5) != ''){
@@ -762,35 +923,397 @@ if($this->model_employee->is_manager($id)){
 				
 if($this->model_employee->is_manager($id)){ 
 			 $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
- }else{
-	 $sector_type=$this->model_employee->sector_type_sub_manger($id)->row(0)->type;
+ }elseif($this->model_employee->is_sub_manager($id)){
+	  $sector_type=$this->model_employee->sector_type_sub_manger($id)->row(0)->type;
 	 }
+ 
+ else{
+	  $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+	 }
+	 
 	 if(isset($sector_type) && $sector_type=='legal'){   /// start 
 		 if($this->model_employee->is_manager($id)){
 			
 				$report_id=$this->uri->segment(3);
 				if($this->model_employee->select_report_details($report_id)){
 					$data['report']=$this->model_employee->select_report_details($report_id);
+						 if($this->model_employee->legel_sector_emp($comany_id)){
+               		$data['lawyers']=$this->model_employee->legel_sector_emp($comany_id)->result();
+						 }
+
 					$this->load->view('report_details',$data);
 					}else{
 						 $data['no_reports']=1;
 					$this->load->view('report_details',$data);	
 						}
-			
-			
-			
 			 }else{
-			 redirect('site/error404');
+			 $report_id=$this->uri->segment(3);
+				if($this->model_employee->select_report_details($report_id)){
+					//update lawyer seen
+			$data2=array(
+			'report_id'=>$report_id,
+			'emp_id'=>$id
+			);
+			$this->db->where($data2);
+		    $result=$this->db->update('forward_reports',array('seen'=>1));
+			//////////////////////////
+					$data['report']=$this->model_employee->select_report_details($report_id);
+					$data['lawyer']=1;	 
+					$this->load->view('report_details',$data);
+					}else{
+						 $data['no_reports']=1;
+					$this->load->view('report_details',$data);	
+						}
 			 } 
 			 }else{
 			 redirect('site/error404');
 			 } 
 			 }else{
-			 redirect('site/error404');
+			redirect('site/error404');
 			 } 
 			}else{
            redirect('site/index_employee');	
         }  
 		}	
+	///////////////////////////////////////////////
+	function select_lawyer(){
+		 if ($this->session->userdata('employee_logged_in') || $this->uri->segment(3) != ''|| $this->uri->segment(4) != '') {
+			 $id = $this->session->userdata('emp_id');
+			 if($this->model_employee->is_manager($id)){ 
+			 $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+ }elseif($this->model_employee->is_submanager($id)){
+	 $sector_type=$this->model_employee->sector_type_sub_manger($id)->row(0)->type;
+	 }else{
+		  $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+		 }
+	 if(isset($sector_type) && $sector_type=='legal'){ 
+	 $comany_id=$this->session->userdata('company_id');
+	$search_key=$this->input->post('search_term', true); 
+				
+	 if($this->model_employee->legel_sector_emp($search_key,$comany_id)){
+		$data['lawyers']=$this->model_employee->legel_sector_emp($search_key,$comany_id)->result();
+
+		
+		 }else{
+			 echo 'There is no lawyer in this sector until now';
+			 }
+		}else{
+			 redirect('site/error404');
+			 } 
+
+		}else{
+           redirect('site/index_employee');	
+        }  
+		}	
+/////////////////////////////////////////////////////////////
+function ajax_forward_report(){
+	 if ($this->session->userdata('employee_logged_in') || $this->uri->segment(3) != ''|| $this->uri->segment(4) != '') {
+
+		    $this->load->library('form_validation');
+        $this->form_validation->set_rules('for_id', 'The employee', 'required|trim|max_length[100]|numeric|xss_clean');
+		$this->form_validation->set_rules('report_id', 'the manager', 'required|trim|xss_clean|numeric');
+		$this->form_validation->set_rules('reason', 'the manager', 'required|trim|xss_clean');
 	
+       
+		
+        if ($this->form_validation->run() == false) {
+			    echo 'no';
+		}else{
+			 $for_id=$this->input->post('for_id');
+		     $report_id=$this->input->post('report_id');
+		     $reason=$this->input->post('reason');			
+			  
+			if($this->model_employee->forward_report($for_id,$report_id,$reason)){
+				
+              echo 'ok';
+				}else{
+					 
+                echo 'no';
+					}
+			
+			
+			}
+		 
+		}else{
+           redirect('site/index_employee');	
+        }  
+	}	
+	///////////////////////////////////////////////////////////////////////
+	
+	
+	function ajax_insert_archive(){
+	 if ($this->session->userdata('employee_logged_in') || $this->uri->segment(3) != ''|| $this->uri->segment(4) != '') {
+
+		    $this->load->library('form_validation');
+       $this->form_validation->set_rules('report_id', 'the manager', 'required|trim|xss_clean|numeric');
+		
+	
+       
+		
+        if ($this->form_validation->run() == false) {
+			    echo 'no1';
+		}else{
+			 
+		     $report=$this->input->post('report_id');
+		     
+			  
+			if($this->model_employee->update_archive($report)){
+				
+              echo 'ok';
+				}else{
+					 
+                echo 'no2';
+					}
+			
+			
+			}
+		 
+		}else{
+           redirect('site/index_employee');	
+        }  
+	}
+	//////////////////////////////////////////////
+	function ajax_result_report(){
+		 if ($this->session->userdata('employee_logged_in') || $this->uri->segment(3) != ''|| $this->uri->segment(4) != '') {
+		 $this->load->library('form_validation');
+       $this->form_validation->set_rules('report_id', 'the manager', 'required|trim|xss_clean|numeric');
+	   $this->form_validation->set_rules('reason', 'the manager', 'required|trim|xss_clean');
+		
+	
+       
+		
+        if ($this->form_validation->run() == false) {
+			    echo 'no1';
+		}else{
+			 
+		     $report_id=$this->input->post('report_id');
+			 $result=$this->input->post('reason');
+		     $my_id=$this->session->userdata('emp_id');
+		     $comp_id=$this->model_users->select_emp($my_id)->row(0)->company_id;
+			  
+			if($this->model_employee->add_result_report($report_id,$result,$comp_id,$my_id)){
+				
+              echo 'ok';
+				}else{
+					 
+                echo 'no2';
+					}
+			
+			
+			}
+		 
+		}else{
+           redirect('site/index_employee');	
+        } 
+		}
+	////////////////////////////////////////////
+	function show_result_reports(){
+		if ($this->session->userdata('employee_logged_in')){
+			 $id=$this->session->userdata('emp_id');
+	if($this->model_employee->is_manager($id)){ 
+			 $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+ }elseif($this->model_employee->is_sub_manager($id)){
+	  $sector_type=$this->model_employee->sector_type_sub_manger($id)->row(0)->type;
+	 }
+ 
+ else{
+	  $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+	 }
+	 
+	 if(isset($sector_type) && $sector_type=='financial'){   /// start 
+		 if($this->model_employee->is_manager($id)){
+          // is manager
+		  if($this->model_employee->show_result_report_mang($id)){
+		  $data['reports']=$this->model_employee->show_result_report_mang($id)->result();
+		  $this->load->view('reports_results',$data);	
+		  }else{
+			   $data['no_reports']=1;
+			   $this->load->view('reports_results',$data);	
+			  }
+		 }elseif($this->model_employee->is_sub_manager($id)){
+	     // is sub manager
+		  if($this->model_employee->show_result_report_sub($id)){
+		  $data['reports']=$this->model_employee->show_result_report_sub($id)->result();
+		  $this->load->view('reports_results',$data);	
+		  }else{
+			   $data['no_reports']=1;
+			   $this->load->view('reports_results',$data);	
+			  }
+			}else{
+		//is an employee
+				 if($this->model_employee->show_result_report_emp($id)){
+		  $data['reports']=$this->model_employee->show_result_report_emp($id)->result();
+		  $this->load->view('reports_results',$data);	
+		  }else{
+			   $data['no_reports']=1;
+			   $this->load->view('reports_results',$data);	
+			  }
+				}
+			//////////////////// not finanical	
+			}else{
+			 redirect('site/error404');
+			}
+			}else{
+				 redirect('site/index_employee');	
+				}
+		
+		}
+	//////////////////////////////////////////////
+	function report_result_details(){
+		if ($this->session->userdata('employee_logged_in') || $this->uri->segment(3) != ''|| $this->uri->segment(4) != ''){
+			 $id=$this->session->userdata('emp_id');
+			 if($id ==  $this->uri->segment(4)){
+				 if($this->model_employee->is_manager($id)){ 
+			 $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+ }elseif($this->model_employee->is_sub_manager($id)){
+	  $sector_type=$this->model_employee->sector_type_sub_manger($id)->row(0)->type;
+	 }
+ 
+ else{
+	  $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+	 }
+	
+	 if(isset($sector_type) && $sector_type=='financial'){   /// start
+	 
+	      if($this->model_employee->is_manager($id)){
+			  //manager
+			  $result_id= $this->uri->segment(3);
+			  if($this->model_employee->result_report_details($result_id)){
+				 $data['report']=$this->model_employee->result_report_details($result_id);  
+				/////////////////////////////////////////////////
+				$company_id=$this->session->userdata('company_id');
+				$department_id=$this->session->userdata('department_id');
+				if($this->model_employee->select_sub_departments($company_id,$department_id)){
+	          $data['employees']=$this->model_employee->select_sub_departments($company_id,$department_id);
+				  $this->load->view('result_details',$data);	
+			 }else{
+				 // no emplloyees
+				 $data['no_employees']=1;
+				  $this->load->view('result_details',$data);	
+				 }
+				
+			  }else{
+				  //no report
+				  $data['no_reports']=1;
+			   $this->load->view('reports_results',$data);	
+				  }
+			  }elseif($this->model_employee->is_sub_manager($id)){
+				 //sub manager
+				$result_id= $this->uri->segment(3);
+			  if($this->model_employee->result_report_details($result_id)){
+				 $data['report']=$this->model_employee->result_report_details($result_id);  
+				/////////////////////////////////////////////////
+               $company_id=$this->session->userdata('company_id');
+				
+				$sub_dept_id=$this->session->userdata('sub_dept_id');
+				$department_id=$this->model_employee->is_sub_manager($id)->row(0)->department_id;
+           
+			 $data['employees']=$this->model_employee->select_emp_giv_task($company_id,$department_id,$sub_dept_id);
+			 $this->load->view('result_details',$data);	
+			
+		  //////////////////////////////////////////////////
+
+		  }else{
+			   $data['no_reports']=1;
+			   $this->load->view('reports_results',$data);	
+			  }
+
+				 
+				  }else{
+					  ///employee
+			  $result_id= $this->uri->segment(3);
+			  if($this->model_employee->result_report_details($result_id)){
+				 $data['report']=$this->model_employee->result_report_details($result_id);  
+				/////////////////////////////////////////////////
+				 $this->load->view('result_details',$data);	
+			  }else{
+			   $data['no_reports']=1;
+			   $this->load->view('reports_results',$data);	
+			  }
+			  
+			 }
+ 
+	         
+	 }else{
+		 redirect('site/error404');
+		 }
+				 }else{
+					 redirect('site/error404');
+					 }
+			
+			}else{
+				 redirect('site/index_employee');	
+				}
+		}
+	////////////////////////////////////////////////////////////
+	function ajax_forward_report_result(){
+			if ($this->session->userdata('employee_logged_in') || $this->uri->segment(3) != ''|| $this->uri->segment(4) != ''){
+				 $this->load->library('form_validation');
+       $this->form_validation->set_rules('result_id', 'the manager', 'required|trim|xss_clean|numeric');
+	   $this->form_validation->set_rules('for_id', 'the manager', 'required|trim|xss_clean|numeric');
+		
+	
+       
+		
+        if ($this->form_validation->run() == false) {
+			    echo 'no1';
+		}else{
+			 $emp_id=$this->session->userdata('emp_id');
+		     $result_id=$this->input->post('result_id');
+			 $for_id=$this->input->post('for_id');
+		    if($this->model_employee->is_manager($emp_id)){
+				if($this->model_employee->forward_result_report_mang($result_id,$for_id)){
+				
+              echo 'ok';
+				}else{
+              echo 'no2';
+					}
+			}elseif($this->model_employee->is_sub_manager($emp_id)){
+				if($this->model_employee->forward_result_report_sub($result_id,$for_id)){
+				
+              echo 'ok';
+				}else{
+              echo 'no2';
+					}
+				}
+			
+			
+			
+			}
+				
+				}else{
+					 redirect('site/index_employee');	
+					}
+		}	
+	////////////////////////////////////////////////////////////////
+	function ajax_insert_archive_result(){
+				if ($this->session->userdata('employee_logged_in') || $this->uri->segment(3) != ''|| $this->uri->segment(4) != ''){
+					 $result_id=$this->input->post('result_id');
+			
+				if($this->model_employee->ajax_insert_archive_result($result_id)){
+				
+              echo 'ok';
+				}else{
+              echo 'no2';
+					}
+					}else{
+				    redirect('site/index_employee');	
+					}
+		
+		}	
+	//////////////////////////////////////////////////////////
+	function ajax_discount_employee(){
+		if ($this->session->userdata('employee_logged_in') || $this->uri->segment(3) != ''|| $this->uri->segment(4) != ''){
+					 $report_id=$this->input->post('report_id');
+			          $days=$this->input->post('days');
+				if($this->model_employee->discount_salary($report_id,$days)){
+				
+              echo 'ok';
+				}else{
+              echo 'no2';
+					}
+					}else{
+				    redirect('site/index_employee');	
+					}
+		}	
 }?>

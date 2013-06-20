@@ -377,6 +377,7 @@ function select_sub_departments($comp_id , $dept_id){
 
 	////////////////////////////////////////////////
 	function select_dashbord_tasks($id){
+		$this->db->order_by("id", "DESC"); 
 		$this->db->where('emp_id',$id);
 		$result=$this->db->get('tasks');
 		if($result->num_rows() >= 1){
@@ -690,9 +691,33 @@ function get_chat_messages_last_one($from_id ,$to_id){
 	function show_reports($to_id){
 		$sql='select e.id,e.firstname,e.lastname,e.profile_pic,e.company_id,e.department_id,e.sub_dept_id,e.online,r.sender_id,r.the_reason,r.report_date,r.id as report_id,r.to_id
               from employees e 
-			  join report_employee r on e.id=r.sender_id and r.to_id=?';
+			  join report_employee r on e.id=r.sender_id and r.to_id=? order by r.report_date DESC';
 			  
 	    $result=$this->db->query($sql,$to_id);
+		if($result->num_rows() >= 1){
+	
+            return $result;
+			
+        } else {
+            return false;
+        } 
+		}
+	///////////////////////////////////////////////
+		
+	function show_reports_emp($to_id){
+		$sql='select e.id,e.firstname,e.lastname,e.profile_pic,e.company_id,e.department_id,e.sub_dept_id,e.online,
+
+       r.sender_id,r.the_reason,r.report_date,r.id as report_id,r.to_id,f.emp_id as lawer_id ,f.seen
+
+              from employees AS e
+
+       LEFT JOIN  report_employee AS r ON  e.id=r.sender_id
+
+       JOIN forward_reports as f ON f.report_id = r.id where  f.emp_id=? and archive=? 
+			  
+			  ';
+			  
+	    $result=$this->db->query($sql,array($to_id,0));
 		if($result->num_rows() >= 1){
 	
             return $result;
@@ -717,6 +742,21 @@ function get_chat_messages_last_one($from_id ,$to_id){
             return false;
         } 
 		}
+			///////////////////////////////////////////////////
+		
+	function show_unseen_reports_not_manager($to_id){
+		$sql='select id from forward_reports where emp_id=? and seen=?';
+			  
+	    $result=$this->db->query($sql,array($to_id,0));
+		if($result->num_rows() > 0){
+	
+            return $result;
+			
+        } else {
+            return false;
+        } 
+		}
+	
 	///////////////////////////////////////////////////////////////////
 	function select_deaprtment($id){
 		$sql="select * from department where id=?";
@@ -749,5 +789,249 @@ function get_chat_messages_last_one($from_id ,$to_id){
         }   
 		
 		}		
+	////////////////////////////////////////////////////////
+	function legel_sector_emp($comany_id){
+		$sql='select e.id,e.firstname,e.lastname,e.profile_pic,e.company_id,e.department_id,e.sub_dept_id,e.online
+              from employees e 
+			  join department d on e.department_id=d.id and e.company_id=? and d.type=? ';
+		$result=$this->db->query($sql,array($comany_id,'legal'));
+		if($result->num_rows() >= 1){
+	
+            return $result;
+			
+        } else {
+            return false;
+        } 
+		}	
+	////////////////////////////////////////
+	function legel_sector_emp2($keywords,$comany_id){
+	
+	$returned_result=array();
+	$where="";
+	
+	$keywords=preg_split('/[\s]+/',$keywords);
+   
+	$total_keywords=count($keywords);
+	
+	foreach($keywords as $key=>$keyword){
+		$where .="`username` like '%$keyword%'";
+		if($key !=($total_keywords -1)){
+			$where .="AND";
+			}
+		}
+		$type='legal';
+		$result="select e.id,e.firstname,e.lastname,e.profile_pic,e.company_id,e.department_id,e.sub_dept_id,e.online
+              from employees e 
+			  join department d on e.department_id=d.id and e.company_id={$comany_id} and d.type=? and $where limit 6";
+		 if ($result2 = $this->db->query($result,$type)) {
+            return $result2;
+        } else {
+            return false;
+        }
+}		
+//////////////////////////////////////////////
+  function forward_report($for_id,$report_id,$reason){
+	   $data = array(
+            'emp_id' => $for_id ,
+            'report_id'=>$report_id,
+			
+            );
+        $query = $this->db->insert('forward_reports', $data);
+        if($this->db->affected_rows()==1){
+	        $link=base_url().'employee/report_details/'.$report_id.'/'.$for_id;
+			$data = array(
+            'emp_id' => $for_id,
+            'activity' => 'there is a new report check it"'.substr($reason,0,10).'..." ',
+			
+			'link'=>$link
+            );
+			
+			$query = $this->db->insert('activity', $data);
+			if($this->db->affected_rows()==1){
+				return true;
+				}else{
+					return false;
+					}
+				
+			return true;
+			}else{
+			return false;
+			}
+	  }
+	  ///////////////////////////////////////
+	  function update_archive($id){
+		   $data = array(
+               'archive' => 1,
+            );
+
+			$this->db->where('id', $id);
+			$this->db->update('report_employee', $data); 
+
+		 if($this->db->affected_rows()==1){
+			 return true;
+			 }else{
+				 return false;
+				 }
+		  
+		  }
+	/////////////////////////////////////////////	  
+	function add_result_report($report_id,$result,$company_id,$lawer_id){
+		$sql1='select * from department where company_id=? and type=?';
+		$result_sql1=$this->db->query($sql1,array($company_id,'financial'));
+		
+		if($result_sql1->num_rows() == 1){
+	    $manager_id=$result_sql1->row(0)->depart_manager;
+           $data = array(
+            'report_id' => $report_id,
+            'to_id' => $manager_id,
+			'result'=>$result,
+			'lawer_id'=>$lawer_id
+            );
+			
+			$query = $this->db->insert('report_results', $data);
+			if($this->db->affected_rows()==1){
+				return true;
+				}else{
+					return false;
+					}
+			
+        } else {
+            return false;
+        } 
+		
+		
+		}
+	///////////////////////////////////////////////////////////////
+	function show_result_report_mang($id){
+		$sql='select e.id,e.firstname,e.lastname,e.profile_pic,e.company_id,
+		             e.department_id,e.sub_dept_id,e.online,r.report_id,r.result,r.to_id,r.date_result,r.id as result_id
+              from employees e 
+			  join report_results r on e.id=r.lawer_id and r.to_id=? and r.archive =? order by r.date_result DESC';
+			  $result = $this->db->query($sql,array($id,0));
+		if($result->num_rows() >= 1){
+            return $result;
+        } else {
+            return false;
+        }
+		}
+	/////////////////////////////////////////////////////////////
+	function show_result_report_sub($id){
+		$sql='select                 			      e.id,e.firstname,e.lastname,e.profile_pic,e.company_id,e.department_id,e.sub_dept_id,e.online,r.report_id,r.result,r.to_id,r.forward_sub_id,r.date_result,r.id as result_id
+              from employees e 
+			  join report_results r on e.id=r.lawer_id and r.forward_sub_id=? and r.archive =? order by r.date_result DESC';
+			  $result = $this->db->query($sql,array($id,0));
+		if($result->num_rows() >= 1){
+            return $result;
+        } else {
+            return false;
+        }
+		}
+	/////////////////////////////////////////////////////////////
+	function show_result_report_emp($id){
+		$sql='select  e.id,e.firstname,e.lastname,e.profile_pic,e.company_id,e.department_id,
+		             e.sub_dept_id,e.online,r.report_id,r.result,r.to_id,r.forward_emp_id,r.date_result,r.id as result_id
+					 
+              from employees e 
+			  join report_results r on e.id=r.lawer_id and forward_emp_id=? and r.archive =? order by r.date_result DESC';
+			  $result = $this->db->query($sql,array($id,0));
+		if($result->num_rows() >= 1){
+            return $result;
+        } else {
+            return false;
+        }
+		}			
+	/////////////////////////////////////////////////////////////	
+		function result_report_details($id){
+		$sql='select  e.id,e.firstname,e.lastname,e.profile_pic,e.company_id,e.department_id,
+		             e.sub_dept_id,e.online,r.report_id,r.result,r.to_id,r.forward_emp_id,r.date_result,r.id as result_id
+					 
+              from employees e 
+			  join report_results r on e.id=r.lawer_id and r.id=? and r.archive =?';
+			  $result = $this->db->query($sql,array($id,0));
+		if($result->num_rows() >= 1){
+            return $result;
+        } else {
+            return false;
+        }
+		}
+	////////////////////////////////////////////////////////////////////
+	function forward_result_report_mang($result_id,$for_id){
+		 $data = array(
+               'forward_sub_id' => $for_id,
+            );
+
+			$this->db->where('id', $result_id);
+			$this->db->update('report_results', $data); 
+
+		 if($this->db->affected_rows()==1){
+			 return true;
+			 }else{
+				 return false;
+				 }
+		}
+		////////////////////////////////////////////////////////////////////
+	function forward_result_report_sub($result_id,$for_id){
+		 $data = array(
+               'forward_emp_id' => $for_id,
+            );
+
+			$this->db->where('id', $result_id);
+			$this->db->update('report_results', $data); 
+
+		 if($this->db->affected_rows()==1){
+			 return true;
+			 }else{
+				 return false;
+				 }
+		}
+		////////////////////////////////////////////////////////////////////
+	function ajax_insert_archive_result($result_id){
+		 $data = array(
+               'archive' => 1,
+            );
+
+			$this->db->where('id', $result_id);
+			$this->db->update('report_results', $data); 
+
+		 if($this->db->affected_rows()==1){
+			 return true;
+			 }else{
+				 return false;
+				 }
+		}
+		/////////////////////////////////////////////////////
+		function discount_salary($report_id,$days){
+			$sql='select e.id,e.firstname,e.lastname,e.profile_pic,e.company_id,e.department_id,e.sub_dept_id,e.online,r.sender_id,r.the_reason,r.report_date,r.id as report_id,r.to_id,e.salary
+              from employees e 
+			  join report_employee r on e.id=r.emp_id and r.id=?';
+			  
+	    $result=$this->db->query($sql,$report_id);
+		if($result->num_rows() == 1){
+	       $emp_id=$salary=$result->row(0)->id;
+           $salary=$result->row(0)->salary;
+		   
+		   
+		   $dolor_per_day=$salary/30;
+		   $discount_amount=$dolor_per_day*$days;
+		  
+		   $data = array(
+               'discounts' => $discount_amount,
+            );
+
+			$this->db->where('id', $emp_id);
+			$this->db->update('employees', $data); 
+
+		 if($this->db->affected_rows()==1){
+			 return true;
+			 }else{
+				 return false;
+				 }
+		   
+			
+        } else {
+            return false;
+        } 
+			}
+	
 }
 ?>

@@ -70,12 +70,8 @@ var base_url=" <?php echo base_url();?>";
                     <?php }?>
                   <h1 style="border-bottom:1px dashed #e1e1e1; padding-bottom:10px">
                    <?php if(isset($report)){?>
-                   <a href="<?php echo base_url(); ?>employee/chat/<?php echo  $report->row(0)->id ?>" title="chat with the reporter" ><?php echo $report->row(0)->firstname.				 	 								' '.$report->row(0)->lastname ; ?></a>  reported  
-                                    <a href="<?php echo base_url(); ?>employee/chat/<?php echo  $report->row(0)->id ?>" title="chat with the Guilty">
-										<?php $gelty=$this->model_users->select_emp($report->row(0)->the_gelty);
-										echo $gelty->row(0)->firstname ." ".$gelty->row(0)->lastname ;
-									
-				   }?>
+                  	<a href="" >report number #<?php echo $report->row(0)->report_id?></a>
+				  <?php }?>
                    	</a>
                   </h1>
                 <br />
@@ -87,33 +83,30 @@ var base_url=" <?php echo base_url();?>";
                             	<li>
                                <div class="avatar"><img src="<?php echo base_url(); ?>images/profile/thumb_profile/<?php echo $report->row(0)->profile_pic ?>" width="50" height="45" /></div>
                                     <div class="info" style="margin-left:70px">
-                                    <a href="<?php echo base_url(); ?>employee/chat/<?php echo  $report->row(0)->id ?>" title="chat with the reporter" ><?php echo $report->row(0)->firstname.				 	 								' '.$report->row(0)->lastname ; ?></a>  reported  
-                                    
-										<?php $gelty=$this->model_users->select_emp($report->row(0)->the_gelty);
-										echo $gelty->row(0)->firstname ." ".$gelty->row(0)->lastname ;
-										?>
+                                    <a href="<?php echo base_url(); ?>employee/chat/<?php echo  $report->row(0)->id ?>" title="chat with the reporter" ><?php echo $report->row(0)->firstname.				 	 								' '.$report->row(0)->lastname ; ?></a> 
                                         
                                        <br/>
                                         <span style="font-weight:bold">Department: <?php 
 										echo $this->model_employee->select_deaprtment($report->row(0)->department_id)->row(0)->type; ; ?></span> <br />
                                         
-                        <?php echo $report->row(0)->the_reason ; ?><br />                        
+                        <?php echo $report->row(0)->result ; ?><br />                        
                                         
                                         
                                         
-                                        <br /> <span style="text-align:right;float:right"><?php echo $report->row(0)->report_date; ?></span>
+                                        <br /> <span style="text-align:right;float:right"><?php echo $report->row(0)->date_result; ?></span>
                                          <ul class="buttonlist">
                                          <?php if(isset($manager)){?>
-                   		                <li style="border:none;"><a href="#" id="forward" class="btn  btn_link"><span>Forward it to a Lawyer</span></a></li>
-                                        <li style="border:none;"><a href="<?php echo base_url(); ?>employee/chat/<?php echo  $report->row(0)->id ?>" class="btn  btn_mail"><span>Message the sender</span></a></li>
-                                        <?php }else{ ?>
+                   		                <li style="border:none;"><a href="#" id="forward" class="btn  btn_link"><span>Forward it to the sub sector</span></a></li>
+                                        
+                                        <?php }elseif(isset($sub_manager)){ ?>
+                                         <li style="border:none;"><a href="#" id="forward" class="btn  btn_link"><span>Forward it to an employee</span></a></li>
+                                        
                                         <br/>
-											<li style="border:none;"><a href="<?php echo base_url(); ?>employee/chat/<?php echo  $report->row(0)->the_gelty ?>/investigation" id="detect" class="btn  btn_link"><span>Start The Investigation</span></a></li>
-                                        <li style="border:none;"><a href="<?php echo base_url(); ?>employee/chat/<?php echo  $report->row(0)->id ?>" class="btn  btn_mail"><span>Message the sender</span></a></li>
-                                        <input type="hidden" value="<?php echo  $report->row(0)->report_id ?>" id="archive_val"/>
-                                        <li style="border:none;"><a href="#" id="archive" class="btn btn_archive"><span>Archive the Report</span></a></li>
-                                      <li style="border:none;"><a href="#"  id="report_result2" class="btn  btn_mail"><span>Send the result </span></a></li>
-										<?php	}?>
+										<?php	}else{?>
+											  <li style="border:none;"><a href="#" id="forward" class="btn  btn_link"><span>ِApply the discount</span></a></li>
+                                                <input type="hidden" id="result_id" value="<?php echo  $report->row(0)->result_id ?>" />
+                                        <li style="border:none;"><a href="#" id="archive_result" class="btn btn_archive"><span>Archive the Report</span></a></li>
+											<?php }?>
                                         
                                         </ul>
                                         
@@ -127,54 +120,6 @@ var base_url=" <?php echo base_url();?>";
                    
                    </div>
                    
-                    <?php if(isset($manager)){?>
-                                        <div id="forward_form">
-                                     <?php echo form_open('#',array('id'=>'form2','class'=>'stdform stdform2',));  ?>
-                    	<p>
-                        	<label>The Lawyer</label>
-                            <span class="field">
-                          
-                          <select data-placeholder="Choose the  Lawyer..." name="depart_manager" id="for_emp"  class="chzn-select"  style="                             width:100%;" tabindex="4">
-                            <option value="">Choose the  Lawyer...</option> 
-                            <?php if(isset($lawyers)){foreach($lawyers as $lawyer){?>
-                            <option value="<?php echo $lawyer->id?>"><?php echo $lawyer->firstname.' '.$lawyer->lastname; ?></option> 
-                             
-                            
-                            <?php }}?>
-                           
-                            </select>  
-                           <input type="hidden" id="report_id" value="<?php echo  $report->row(0)->report_id ?>" />
-                           <input type="hidden" id="reason" value="<?php echo  $report->row(0)->the_reason ?>" />
-                            </span>
-                         </p>
-                       
-                  
-                        <p class="stdformbutton">
-                        	<button type="button" id="forword_button" class="submit radius2">Forward</button>
-                        </p>
-                    </form>
-                    </div>
-                     <?php }else{?>
-						 
-						               <div id="result_form">
-                                     <?php echo form_open('#',array('id'=>'form2','class'=>'stdform stdform2',));  ?>
-                    	<p>
-                        	<label>The result</label>
-                            <span class="field">
-                          
-                          <textarea  id="reason"  style="width:98%" rows="10"></textarea>  
-                           <input type="hidden" id="report_id" value="<?php echo  $report->row(0)->report_id ?>" />
-                          
-                            </span>
-                         </p>
-                       
-                  
-                        <p class="stdformbutton">
-                        	<button type="button" id="result_button" class="submit radius2">Send</button>
-                        </p>
-                    </form>
-                    </div>
-						 <?php }?>
                                         <br clear="all" />
                                        
                                     </div><!--info-->
@@ -184,6 +129,82 @@ var base_url=" <?php echo base_url();?>";
                                 
                             </ul>
                             <br clear="all" />
+                            
+                             <?php if(isset($manager)){?>
+                                        <div id="forward_form">
+                                     <?php echo form_open('#',array('id'=>'form2','class'=>'stdform stdform2',));  ?>
+                    	<p>
+                        	<label>The sub manager</label>
+                            <span class="field">
+                          
+                          <select data-placeholder="Choose the  sub manager..." name="depart_manager" id="for_emp"  class="chzn-select"  style="                             width:100%;" tabindex="4">
+                            <option value="">Choose the  sub manager...</option> 
+                            <?php if(isset($employees)){foreach($employees as $employee){?>
+                            <option value="<?php echo $employee->id?>"><?php echo $employee->firstname.' '.$employee->lastname; ?></option> 
+                             
+                            
+                            <?php }}?>
+                           
+                            </select>  
+                          <input type="hidden" id="result_id" value="<?php echo  $report->row(0)->result_id ?>" />
+                           
+                            </span>
+                         </p>
+                       
+                  
+                        <p class="stdformbutton">
+                        	<button type="button" id="forword_button_result" class="submit radius2">Forward</button>
+                        </p>
+                    </form>
+                    </div>
+                     <?php }elseif(isset($sub_manager)){?>
+                                   <div id="forward_form">
+                                     <?php echo form_open('#',array('id'=>'form2','class'=>'stdform stdform2',));  ?>
+                    	<p>
+                        	<label>The employee</label>
+                            <span class="field">
+                          
+                          <select data-placeholder="Choose the  employee..." name="depart_manager" id="for_emp"  class="chzn-select"  style="                             width:100%;" tabindex="4">
+                            <option value="">Choose the  employee...</option> 
+                            <?php if(isset($employees)){foreach($employees as $employee){?>
+                            <option value="<?php echo $employee->id?>"><?php echo $employee->firstname.' '.$employee->lastname; ?></option> 
+                             
+                            
+                            <?php }}?>
+                           
+                            </select>  
+                           <input type="hidden" id="result_id" value="<?php echo  $report->row(0)->result_id ?>" />
+                           
+                            </span>
+                         </p>
+                       
+                  
+                        <p class="stdformbutton">
+                        	<button type="button" id="forword_button_result" class="submit radius2">Forward</button>
+                        </p>
+                    </form>
+                    </div>
+                     <?php }else{?>
+                                <div id="forward_form">
+                                     <?php echo form_open('#',array('id'=>'form2','class'=>'stdform stdform2',));  ?>
+                    	<p >
+                        	<label style="text-align:center">Number of discounted
+                             days from salary</label>
+                            <span class="field">
+                          
+                          <input type="numirec"  name="amount" id="days" required/>
+                        
+                             <input type="hidden" id="report_id" value="<?php echo  $report->row(0)->report_id ?>" />
+                            </span>
+                         </p>
+                       
+                  
+                        <p class="stdformbutton">
+                        	<button type="button" id="discount" class="submit radius2">Discount</button>
+                        </p>
+                    </form>
+                    </div>
+                     <?php }?>
                             
                         </div><!--widgetcontent-->
                     

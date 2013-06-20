@@ -11,7 +11,7 @@
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery-ui-1.8.16.custom.min.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/general.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/chat.js" ></script>
-
+<script src="<?php echo base_url();?>js/activity.js" type="text/javascript" ></script>
 </head>
 
 <body class="loggedin">
@@ -36,7 +36,7 @@
         	<div class="maincontentinner">
             	
                 <ul class="maintabmenu">
-                	<li class="current"><a href="<?php echo base_url();?>site/chat/" >Meetings</a></li>
+                	<li class="current"><a href="" >Meeting With<?php if(isset($first,$last)){?> <span style="color:#369"> <?php echo $first.' '.$last ;?></span> <?php }?> </a></li>
                 </ul><!--maintabmenu-->
                 
                 <div class="content chatcontent" >
@@ -67,7 +67,8 @@
                         	<input type="text" name="" value="Search" />
                         </div>
                     	<ul class="contactlist">
-                        	 <?php if(isset($chairman)){?>
+                        	
+                        <?php if(isset($chairman)){?>
                         
                     	<!--<!--<div class="chatsearch">
                         	<input type="text" name="" value="Search" />
@@ -185,6 +186,7 @@
                              
                             <li <?php  if($my_sub_manager->row(0)->online == 1){ ?> class="online new" <?php }if($my_sub_manager->row(0)->id == $to_id){ ?> id="active" <?php }?>>
                             
+                            
                             <a href="<?php echo base_url(); ?>employee/chat/<?php echo $my_sub_manager->row(0)->id; ?>">
                             
                             <img src="<?php echo base_url(); ?>images/profile/thumb_profile/<?php echo $my_sub_manager->row(0)->profile_pic; ?>" width="35" height="30"  alt="" />
@@ -195,7 +197,21 @@
                             
                             </li>
                              <?php }?>
-                       
+                             
+                             <?php if(isset($my_manager)){?>
+                             
+                            <li <?php  if($my_manager->row(0)->online == 1){ ?> class="online new" <?php }if($my_manager->row(0)->id == $to_id){ ?> id="active" <?php }?>>
+                            
+                            <a href="<?php echo base_url(); ?>employee/chat/<?php echo $my_manager->row(0)->id; ?>">
+                            
+                            <img src="<?php echo base_url(); ?>images/profile/thumb_profile/<?php echo $my_manager->row(0)->profile_pic; ?>" width="35" height="30"  alt="" />
+                            
+                            <span><?php echo $my_manager->row(0)->firstname; ?> <?php echo $my_manager->row(0)->lastname; ?></span></a>
+                            
+                            <!--  <span class="msgcount">3</span> -->
+                            
+                            </li>
+                             <?php }?>
                         </ul>
                          <?php if(isset($no_contacts)){?>
                         <div class="notification msgalert">
@@ -205,7 +221,7 @@
                     </div>
                         <?php }?>
                         <div class="chatbottom">
-                        	<a href="">+ Add Contact</a>
+                        
                         </div>
                     </div><!--widgetcontent-->
                 </div><!--widgetbox-->
@@ -216,7 +232,7 @@
      	</div><!--mainwrapperinner-->
     </div><!--mainwrapper-->
 	<!-- END OF MAIN CONTENT -->
-    
-
+<script type="text/javascript" src="<?php echo base_url();?>js/jquery-1.7.min.js" ></script>    
+<script src="<?php echo base_url();?>js/activity.js" type="text/javascript" ></script>
 </body>
 </html>

@@ -6,17 +6,17 @@
 <link rel="shortcut icon" href="<?php echo base_url();?>images/head.png" type="image/x-icon"/>
 <title>Dashboard |Business Linkage</title>
 <link rel="stylesheet" href="<?php echo base_url();?>css/style.css"  type="text/css" />
+<link rel="stylesheet" href="<?php echo base_url();?>css/chosen.css" />
 
 
-<script type="text/javascript" src="<?php echo base_url();?>js/jquery-1.7.min.js" ></script>
-
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery-ui-1.8.16.custom.min.js"></script>
  
  <script type="text/javascript" src="<?php echo base_url();?>js/jquery.flot.min.js" ></script>
 
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.flot.resize.min.js" ></script>
 
-<script type="text/javascript" src="<?php echo base_url();?>js/jquery-ui-1.8.16.custom.min.js"></script>
+
 <script type="text/javascript" src="<?php echo base_url();?>js/dashboard.js" ></script>
 
 <script type="text/javascript" src="<?php echo base_url();?>js/general.js"></script>
@@ -87,17 +87,52 @@
                           
                              
                             <?php if(isset($manager)){?>
-                            <select data-placeholder="Choose the subdempartment manager..." name="depart_manager" id="emp_id"  class="chzn-select"  style="                             width:200px;" tabindex="4">
+                            <select data-placeholder="Choose an employee..." name="depart_manager" id="emp_id"  class="chzn-select"  style="                             width:101%;" tabindex="4">
                             <option value="">select the employee</option> 
                             <?php foreach($departments as $department){?>
-                             <option value="<?php echo $department->sub_depart_manager?>"><?php echo $department->firstname.' '.$department->lastname;?></option> 
+                             <option value="<?php echo $department->id?>"><?php echo $department->firstname.' '.$department->lastname;?></option> 
+                             
+                             <?php if(isset($my_chairman)){?>
+                             <option value="<?php  echo $my_chairman->row(0)->id; ?>"><?php echo $my_chairman->row(0)->firstname; ?> <?php echo $my_chairman->row(0)->lastname; ?></option> 
+                             <?php }?>
                             <?php }?>
 							</select>
 						<?php	}?>
                              <?php if(isset($sub_manager)){?>
-                               <input type="text" name="depart_manager" style="width:98%" id="emp_id" class="longinput" />
+                             <select data-placeholder="Choose an employee..." name="depart_manager" id="emp_id"  class="chzn-select"  style="                             width:101%;" tabindex="4">
+                            <option value="">select the employee</option> 
+                             <?php foreach($departments as $department){?>
+                             
+                             <option value="<?php echo $department->id?>"><?php echo $department->firstname.' '.$department->lastname;?></option> 
+                             
                             
                             <?php }?>
+                            <?php if(isset($my_manager)){?> 
+                             <option value="<?php  echo $my_manager->row(0)->id; ?>"><?php echo $my_manager->row(0)->firstname; ?> <?php echo $my_manager->row(0)->lastname; ?></option> 
+                             <?php }?>
+                             </select>
+                            <?php }?>
+                            
+                            <?php if(!isset($chairman)&& !isset($manager) && !isset($sub_manager)){?>
+                              <select data-placeholder="Choose an employee..." name="depart_manager" id="emp_id"  class="chzn-select"  style="                             width:101%;" tabindex="4">
+                            <option value="">select the employee</option> 
+                             <?php if(isset($my_manager)){?> 
+                             <option value="<?php  echo $my_manager->row(0)->id; ?>"><?php echo $my_manager->row(0)->firstname; ?> <?php echo $my_manager->row(0)->lastname; ?></option> 
+                             <?php }?>
+								<?php foreach($departments as $department){ if($department->id != $id ){?>
+                                
+                             <option value="<?php echo $department->id?>"><?php echo $department->firstname.' '.$department->lastname;?></option>
+                             
+                             <?php if(isset($my_sub_manager)){?> 
+                             <option value="<?php  echo $my_sub_manager->row(0)->id; ?>"><?php echo $my_sub_manager->row(0)->firstname; ?> <?php echo $my_sub_manager->row(0)->lastname; ?></option> 
+                             
+                             <?php }?>
+                             
+                            <?php }}?>
+                            </select>
+                            <?php }?>
+                            
+							
                             
                             
                             
@@ -148,7 +183,23 @@
      	</div><!--mainwrapperinner-->
     </div><!--mainwrapper-->
 	<!-- END OF MAIN CONTENT -->
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js" type="text/javascript"></script>
   
+  <script type="text/javascript">
+var base_url=" <?php echo base_url();?>";
+</script>
+<script type="text/javascript" src="<?php echo base_url();?>js/jquery-ui-1.8.16.custom.min.js"></script>
+ 
+ 
+
+<script src="<?php echo base_url();?>js/activity.js" type="text/javascript" ></script>
+
+
+
+ 
+ 
+
+
   <script src="<?php echo base_url();?>js/chosen.jquery.js" type="text/javascript"></script>
   <script type="text/javascript"> 
     var config = {
