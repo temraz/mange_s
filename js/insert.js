@@ -26,7 +26,71 @@ jQuery(document).ready(function(){
 		discount_salary();
 	});
 	
+	jQuery('#salary_option').change(function(){
+		
+		get_salary();
+	});
+	
+	jQuery('#salary_button').click(function(){
+		insert_salary();
+	});
+	
 /////////////////////////////////////////////////////////////////////	
+function insert_salary(){
+	var salary = jQuery('#salary').val();	
+	var emp_id = jQuery('#salary_option').val();
+	if(salary == '' && emp_id == ''){
+	jQuery('#report_validate').append(' <div class="notification msgerror"> <a class="close"></a> <p ><strong>Error Message:</strong> You must Enter the salary value and the employee !!</p></div>');
+			
+			}else{
+				jQuery.post(base_url+"employee/ajax_insert_salary" ,{ salary: salary , emp_id : emp_id }, function(data){
+             
+          if(data==='ok'){
+			 
+			  jQuery.post(base_url+"employee/ajax_get_salary" ,{ emp_id : emp_id}, function(data2){
+             
+          if(data2.status === 'ok'){
+            jQuery('#hide').append(' <div class="notification msgsuccess"> <a class="close"></a> <p>The salary after update is : '+data2.salary+' </p> </div>');
+			  
+			 
+			  }else{
+			       jQuery('back_salary').text('no salary');
+				  }
+			
+			
+			},"json");
+			
+			  }else{
+				   jQuery('#fail').append(' <div class="notification msgerror"> <a class="close"></a><p > Error while saving the salary try again please. !!</p></div>');
+				  }
+			
+			
+			});
+				}
+	}
+
+///////////////////////////////////////////////////////////////////////
+function get_salary(){
+	var emp_id = jQuery('#salary_option').val();	
+	if(emp_id != '') {
+			
+			jQuery.post(base_url+"employee/ajax_get_salary" ,{ emp_id : emp_id}, function(data){
+             
+          if(data.status === 'ok'){
+            jQuery('#hide').html(' <div class="notification msgsuccess"> <a class="close"></a> <p>The salary is : '+data.salary+' </p> </div>');
+			  
+			 
+			  }else{
+			       jQuery('back_salary').text('no salary');
+				  }
+			
+			
+			},"json");
+					
+		}
+	
+	}
+////////////////////////////////////////////////////////////////////
 	function enterReport() {
 		var emp_id = jQuery('#emp_id').val();	
 		var reason = jQuery('#wysiwyg2').val();

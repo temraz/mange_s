@@ -1316,4 +1316,124 @@ function ajax_forward_report(){
 				    redirect('site/index_employee');	
 					}
 		}	
+	//////////////////////////////////////////////////
+	function staff_salaries(){
+		if($this->session->userdata('employee_logged_in')){
+			 $id=$this->session->userdata('emp_id');
+			 if($this->model_employee->is_manager($id)){ 
+			 $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+ }elseif($this->model_employee->is_sub_manager($id)){
+	  $sector_type=$this->model_employee->sector_type_sub_manger($id)->row(0)->type;
+	 }
+ 
+ else{
+	  $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+	 }
+	
+	 if(isset($sector_type) && $sector_type=='financial'){   /// start
+	   $company_id=$this->session->userdata('company_id');
+	 if($this->model_employee->employees_sallary($company_id)){
+		 $data['employees']=$this->model_employee->employees_sallary($company_id)->result();
+	 $this->load->view('staff_salary',$data);	 
+		 }else{
+			 $data['no_employees']=1;
+			  $this->load->view('staff_salary',$data);
+			 }
+	
+	 }else{
+		   redirect('site/error404');
+		   }
+			
+			}else{
+				redirect('site/index_employee');	
+				}
+		
+		}
+		
+		//////////////////////////////////////////////////
+		function ajax_get_salary(){
+			$emp_id=$this->input->post('emp_id');
+			echo $this->_ajax_get_salary($emp_id);
+			}
+		function _ajax_get_salary($emp_id){
+				if($this->session->userdata('employee_logged_in')){
+			 $id=$this->session->userdata('emp_id');
+			 if($this->model_employee->is_manager($id)){ 
+			 $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+ }elseif($this->model_employee->is_sub_manager($id)){
+	  $sector_type=$this->model_employee->sector_type_sub_manger($id)->row(0)->type;
+	 }
+ 
+ else{
+	  $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+	 }
+	
+	 if(isset($sector_type) && $sector_type=='financial'){   /// start
+	  
+	  if($this->model_employee->ajax_get_salary($emp_id)){
+		  $salary=$this->model_employee->ajax_get_salary($emp_id)->row(0)->salary;
+		  $result=array('status'=>'ok','salary'=>$salary);
+			return json_encode($result);	
+		  }else{
+			  
+			  
+$result=array('status'=>'no');
+
+	return json_encode($result);
+						}
+	 
+	 
+	 
+	 }else{
+		   redirect('site/error404');
+		   }
+			
+			}else{
+				redirect('site/index_employee');	
+				}
+			}
+		//////////////////////////////////////////////////	
+		function ajax_insert_salary(){
+				if($this->session->userdata('employee_logged_in')){
+			 $id=$this->session->userdata('emp_id');
+			 if($this->model_employee->is_manager($id)){ 
+			 $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+ }elseif($this->model_employee->is_sub_manager($id)){
+	  $sector_type=$this->model_employee->sector_type_sub_manger($id)->row(0)->type;
+	 }
+ 
+ else{
+	  $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+	 }
+	
+	 if(isset($sector_type) && $sector_type=='financial'){   /// start
+	 
+	  $this->load->library('form_validation');
+       $this->form_validation->set_rules('emp_id', 'the manager', 'required|trim|xss_clean|numeric');
+	   $this->form_validation->set_rules('salary', 'the manager', 'required|trim|xss_clean|numeric');
+		
+	
+       
+		
+        if ($this->form_validation->run() == false) {
+			    echo 'no1';
+		}else{
+			 $emp_id=$this->input->post('emp_id');
+		     $salary=$this->input->post('salary');
+	 if($this->model_employee->ajax_insert_salary($emp_id,$salary)){
+		 echo 'ok';
+		 }else{
+			 echo 'no';
+			 }
+		}
+	 
+	 }else{
+		   redirect('site/error404');
+		   }
+			
+			}else{
+				redirect('site/index_employee');	
+				}
+			
+			}
 }?>

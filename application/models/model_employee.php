@@ -1032,6 +1032,43 @@ function get_chat_messages_last_one($from_id ,$to_id){
             return false;
         } 
 			}
-	
+	//////////////////////////////////////////////////
+	function employees_sallary($company_id){
+		$sql='select id,firstname,lastname,profile_pic,company_id,department_id,sub_dept_id
+              from employees where company_id=?';
+			    $result = $this->db->query($sql,array($company_id));
+		if($result->num_rows() >= 1){
+            return $result;
+        } else {
+            return false;
+        }
+		
+		}
+	////////////////////////////////////////////////////
+	function ajax_get_salary($emp_id){
+		$sql='select salary,discounts
+              from employees where id=?';
+			    $result = $this->db->query($sql,array($emp_id));
+		if($result->num_rows() == 1){
+            return $result;
+        } else {
+            return false;
+        }
+		}	
+	////////////////////////////////////////////////////////
+	function ajax_insert_salary($emp_id,$salary){
+		 $data = array(
+               'salary' => $salary,
+            );
+
+			$this->db->where('id', $emp_id);
+			$this->db->update('employees', $data); 
+
+		 if($this->db->affected_rows()==1){
+			 return true;
+			 }else{
+				 return false;
+				 }
+		}	
 }
 ?>
