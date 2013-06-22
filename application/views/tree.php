@@ -58,13 +58,15 @@
                 
                 <div class="content">
                 
+                 <?php if(count($depart_info) != 0){?>
                 
                  <center><h3 style="color:#aaa ;;padding:5px ; border-radius:5px ; word-spacing:1px">This is Your Company Tree .. <a href="<?php echo base_url();?>company" style="text-decoration:underline">Back</a> To your Profile.
                  You also Can <a href="<?php echo base_url();?>company/tree_step1" style="text-decoration:underline">Edit</a> Your Company Tree.</h3></center>
                  <br /><br />
                  
+                 <?php } ?>
                  
-                 <?php if(count($depart_info) != 0){
+                 <?php if(isset($depart_info) && count($depart_info) != 0){
 				  foreach ($depart_info as $row){
 					 $depart_id = $row->id;
 					 $depart_name = $row->name;

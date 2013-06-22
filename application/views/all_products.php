@@ -83,7 +83,8 @@ var base_url = "<?php echo base_url(); ?>";
                             <th class="head0">Logo</th>
                             <th class="head1">Name</th>
                             <th class="head0">Date Release</th>
-                            <th class="head1">Details</th>
+                            <th class="head1">Price</th>
+                            <th class="head0">Details</th>
                             <th class="head1">Quick View</th>
                         </tr>
                     </thead>
@@ -97,7 +98,7 @@ var base_url = "<?php echo base_url(); ?>";
 					$date=$row->date_release;
 					$details=$row->product_desc;
 					$pic=$row->logo;
-					
+					$price = $row->price;
 					 ?>
                         <tr id="<?php echo $id; ?>">
                         	<td class="center"><input type="checkbox" /></td>
@@ -105,6 +106,7 @@ var base_url = "<?php echo base_url(); ?>";
                             <td class="center"><img src="<?php echo base_url(); ?>images/products/<?php echo $pic ; ?>"  width="60" height="50" style="border:1px solid #1c1c1c"/></td>
                             <td class="center"><?php echo $name ; ?></td>
                             <td class="center"><?php echo $date ; ?></td>
+                            <td class="center"><?php echo $price ; ?></td>
                             <td class="center"><?php echo substr($details,0,30) ; ?></td>
                             <td class="center"><a href="<?php echo base_url(); ?>company/product/<?php echo $id; ?>" >Quick View</a></td>
                         </tr>

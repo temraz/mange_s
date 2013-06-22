@@ -17,6 +17,32 @@
 <script type="text/javascript" src="<?php echo base_url();?>js/general.js" ></script>
 
 <script type="text/javascript" src="<?php echo base_url();?>js/dashboard.js" ></script>
+<script type="text/javascript" src="<?php echo base_url();?>js/jquery.alerts.js" ></script>
+
+<script type="text/javascript" >
+var base_url = "<?php echo base_url(); ?>";
+</script>
+<script>
+jQuery(document).ready(function(){
+
+var job_id = jQuery('#job_id').val();
+jQuery('#wait_m').hide();
+	jQuery('#apply_job').click(function(){	
+	jConfirm('Do You Really Want to apply to this job?', 'Confirm', function(r) {
+                    if( r ){
+		jQuery.post(base_url+"user/apply_job",{ job_id : job_id }, function(data){
+			if(data.status == 'ok'){
+					jQuery('#apply_m').hide();
+					jQuery('#wait_m').hide().fadeIn(1000);					
+				}
+			},"json");
+					}
+	});
+			
+					
+		});			
+});
+</script>
 
 </head>
 
@@ -45,6 +71,7 @@
                            <?php 
 						   if(isset($job)){
 						   foreach($job as $row){ 
+						   $id = $row->id;
 						   $company_id= $row->company_id;
 						   $name = $row->name;
 						   $description = $row->description;
@@ -54,13 +81,32 @@
 						  $country=$this->model_company->get_company_city($company_id);
 						   }}
 						   ?>
-                           <h1><?php echo $name ?></h1>
+                           <h1><?php echo $name ;?></h1>
                            <br class="all"/>
                      <h3><?php echo $country ?></h3><br />
                      <small style="color:#AAA">Department : <?php echo $department;?></small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small style="color:#AAA">Professional level : <?php echo $level;?></small>
                      <p><?php echo $description;?></p><br />
-                    
-                      <h3 style="float:right;margin-right:60px"><button class="stdbtn btn_black">Apply</button></h3>
+                    <input type="hidden" value="<?php echo $id ?>" id="job_id" /> 
+                      <?php 
+					  $user_id = $this->session->userdata('user_id');
+					$job_id = $this->uri->segment(3);
+					  if(!$this->model_users->is_applied($user_id,$job_id)){ ?><h3 style="float:right;margin-right:40px" id="apply_m"><button class="stdbtn btn_black" id="apply_job" style="width:90px">Apply</button></h3>
+                     <?php }else{ ?>
+                     
+                     <?php 
+						foreach($applied_job as $row){
+							$wait = $row->wait;
+							$accept = $row->accept;
+						?>
+                      
+                     <?php if($accept == 1 && $wait == 1){ ?>
+                      <h3 style="color:#093; float:right;margin-right:40px" >You are aceepted</h3>
+                      <?php }elseif($accept == 0 && $wait == 1){ ?>
+                      <h3  style="color:#F60 ; float:right;margin-right:40px">Wait for Acception</h3>
+                      
+                      <?php }}}?>
+                       <h3 id="wait_m"  style="color:#F60 ; float:right;margin-right:40px">Wait for Acception</h3>
+                      <br />
                       <br class="all"/>
                      
                       

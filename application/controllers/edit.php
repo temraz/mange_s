@@ -201,12 +201,15 @@ class Edit extends CI_Controller {
 					$product_title = $this->input->post('product_name');
 			$product_date = $this->input->post('date_release');
 			$product_details = str_replace("\n","<br>",$this->input->post('product_details'));
+			$price = $this->input->post('price');
+			$currencies = $this->input->post('currencies');
 			$data = array (
 	   'company_id' => $company_id,
 	   'name' => $product_title,
 	   'date_release' => $product_date,
 	   'product_desc' => $product_details,
-	   'logo'=>$photo_name
+	   'logo'=>$photo_name,
+	   'price'=>$price." ".$currencies
 	   );		
 					 if($this->db->insert('products',$data)){
 						 

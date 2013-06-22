@@ -60,8 +60,7 @@
                      <h2><a href="<?php echo base_url();?>company/job/<?php echo $id; ?>"> <?php echo $name;?></a></h2><small style="float:right"><?php echo $date;?></small><br />
                      <h3><?php echo $country ; ?></h3><br />
                      <p><?php echo substr($description,0,80);?></p><br />
-                    <small style="color:#AAA">Department : <?php echo $department;?></small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small style="color:#AAA">Professional level : <?php echo $level;?></small>
-                      <h3 style="float:right;margin-right:60px"><button class="stdbtn" onclick="window.location = '<?php echo base_url();?>company/job/<?php echo $id; ?>'">Job Details</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="stdbtn btn_black">Apply</button></h3>                      
+                    <small style="color:#AAA">Department : <?php echo $department;?></small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small style="color:#AAA">Professional level : <?php echo $level;?></small>                      
                      </div>
                      <?php }}else{?>
                     <center><h1 style="color:#c1c1c1">There Are Not Jobs Yet</h1></center>

@@ -37,61 +37,6 @@ jQuery(document).ready(function(){
 			jQuery(this).parents('tr').removeClass('selected');
 		}
 	});
-	
-	jQuery('.delete_item').click(function(){
-jConfirm('Do Your Really Want to Delete it?', 'Delete', function(r) {
-                    if( r ){
-							// get target id of table								   
-		var sel = false;											//initialize to false as no selected row
-		var ch = jQuery('#table1').find('tbody input[type=checkbox]');		//get each checkbox in a table
-		//check if there is/are selected row in table
-		ch.each(function(){
-			if(jQuery(this).is(':checked')) {
-				sel = true;					
-				var tr = jQuery(this).parents('tr');
-				for (var i = 0; i < tr .length; i++) {
- // var ids = tr[i].id;
- // delete_pro( tr[i].id );
- delete_event(tr[i].id);
-}
-			//set to true if there is/are selected row
-				jQuery(this).parents('tr').fadeOut(function(){
-					jQuery(this).remove();							//remove row when animation is finished
-				});
-			}
-		});
-		
-		if(!sel) jAlert('Please Select at Least one Index to Delete ');	
-            }
-		});
-		return false;
-		});
-		
-
-
-	
-	function delete_pro( ids )
-	{
-		jQuery.post("http://localhost/mange_s/company/delete_event",{
-				task : "event_delete",
-				event_id : ids
-			}
-			).success( function( data )
-			{ 
-			$( '#' + _comment_id ).detach();
-			});
-	
-	}
-	//////////////////////////////////////////////////
-	function delete_event(ids){
-		
-        
-		$.post("http://localhost/mange_s/company/delete_event",{event_id : ids }, function(data){
-			
-			$( '#' + ids ).detach();	
-				
-			},"json");
-            }
 
 	
 	//delete selected row in table
@@ -110,14 +55,15 @@ jConfirm('Do Your Really Want to Delete it?', 'Delete', function(r) {
 				for (var i = 0; i < tr .length; i++) {
   var ids = tr[i].id;
   console.log( ids );
-  jQuery.post("http://localhost/mange_s/company/delete_item" ,{ ids : tr[i].id , table : table }, function(data){
+  jQuery.post(base_url+"company/delete_item" ,{ ids : tr[i].id , table : table }, function(data){
+	  if(data.status == 'ok'){
+	  jQuery('#'+ids).fadeOut();
+	  }
 		},"json");
 	
 }
 			//set to true if there is/are selected row
-				jQuery(this).parents('tr').fadeOut(function(){
-					jQuery(this).remove();							//remove row when animation is finished
-				});
+				
 			}
 		});
 		

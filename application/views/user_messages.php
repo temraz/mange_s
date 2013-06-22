@@ -4,8 +4,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Dashboard |Business Linkage</title>
+<link rel="shortcut icon" href="<?php echo base_url();?>images/head.png" type="image/x-icon"/>
 <link rel="stylesheet" href="<?php echo base_url();?>css/style.css"  type="text/css" />
-
 
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery-1.7.min.js"></script>
  
@@ -14,15 +14,23 @@
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.flot.resize.min.js" ></script>
 
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery-ui-1.8.16.custom.min.js"></script>
-
+<script type="text/javascript" src="<?php echo base_url();?>js/jquery.colorbox-min.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/general.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/colorpicker.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/dashboard.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.jgrowl.js" ></script>
-<script type="text/javascript" src="<?php echo base_url();?>js/jquery.alerts.js" ></script>
-
+<script type="text/javascript" src="<?php echo base_url();?>js/media.js" ></script>
+<script type="text/javascript" >
+var base_url = "<?php echo base_url(); ?>";
+</script>
+<script type="text/javascript" src="<?php echo base_url();?>js/tables.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>js/jquery.dataTables.min.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/elements.js" ></script>
+<script type="text/javascript" src="<?php echo base_url();?>js/jquery.alerts.js" ></script>
 <style>
+.gallery-item  { width:300px ; padding:3px }
+.gallery-item a {border: .1em solid #CCC ;  padding:193px 5px 1px 5px}
+.gallery-item a:hover {border: .1em solid #999 }
 .follow  {float:right;margin-right:50px;margin-top:-20px; border-radius:3px; font-family:Verdana, Geneva, sans-serif }
 .follow button {width:80px}
 </style>
@@ -40,7 +48,8 @@
          	
         <div class="mainleft">
           	<div class="mainleftinner">
-            <?php  if($this->session->userdata('company_logged_in')){ include('left_menu_company.php'); } elseif($this->session->userdata('user_logged_in')){include('left_menu_user.php');}?>
+            
+              	<?php include('left_menu_user.php');?>
             	<div id="togglemenuleft"><a></a></div>
             </div><!--mainleftinner-->
         </div><!--mainleft-->
@@ -48,56 +57,88 @@
         <div class="maincontent">
         	<div class="maincontentinner">
             	
-               <?php include('company_taps.php');?>
                 
                 <div class="content">
-                <h1>Products</h1>
-                <br />
-                <?php 
-				$counter=1;
-				if(isset($products) && count($products) != 0){
-				foreach($products as $row){
+                
+                <h1 style="border-bottom:1px dashed #e1e1e1; padding-bottom:10px">Messages</h1>
+                    <br />
+                 <div class="contenttitle radiusbottom0">
+                	<h2 class="table"><span>Messages</span></h2>
+                </div><!--contenttitle-->
+                <div class="tableoptions">
+                <?php if(isset($messages)){ ?>
+                	<button class="radius3 delete_item" id="user_messages" title="table1">Delete Selected</button> &nbsp;
+                    <?php } ?>
+                </div><!--tableoptions-->	
+                <table cellpadding="0" cellspacing="0" border="0" id="table1" class="stdtable stdtablecb">
+                    <colgroup>
+                        <col class="con0" />
+                        <col class="con1" />
+                        <col class="con0" />
+                        <col class="con1" />
+                        <col class="con0" />
+                        <col class="con1" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                        	<th class="head0"><input type="checkbox" class="checkall" /></th>
+                            <th class="head1">#</th>
+                            <th class="head0">From</th>
+                            <th class="head1">Subject</th>
+                            <th class="head0">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php 
+				$counter = 1;
+				if(isset($messages) && count($messages) != 0){
+				foreach ($messages as $row){
 					$id=$row->id;
-					$name=$row->name;
-					$logo=$row->logo;
-					$details=$row->	product_desc ;
-					$date=$row->date_release;
-					$price = $row->price;
+					$from_u=$row->from_u;
+					$from_c=$row->from_c;
+					$subject=$row->subject;
+					$date_m=$row->date_m;
+					$message=$row->message;
+					$read=$row->read_m;
+					if(isset($from_c)){
+						$from_company=$this->model_company->get_company_info($from_c);
+						foreach($from_company as $r){
+							$company_id = $r->id;
+							$company_name = $r->name;
+							}
+						}
+					if(isset($from_u)){
+						$from_user=$this->model_users->get_user_info($from_u);
+						foreach($from_user as $r){
+							$user_id = $r->id;
+							$user_name = $r->username;
+							}
+						}	
 					
 					 ?>
-                
-                	<div class="one_third <?php if($counter%3 == 0){ echo "last" ; } ?>">
-                    	<div class="widgetbox">
-                            <div class="title"><h2 class="general"><span><?php echo $name; ?></span></h2></div>
-                            <div class="widgetcontent">
-                                <img src="<?php echo base_url();?>images/products/<?php echo $logo; ?>" width="100%" height="140" style="border:.1em solid #666" /><br />
-                           <h3 style="padding-top:10px"><a href="<?php echo base_url();?>company/product/<?php echo $id; ?>"><?php echo $name; ?></a></h3><span class="radius2" style=" margin-top:-22px ; font-weight:bold ; float:right"><?php echo $date; ?></span>
-                               <span><b>Price: </b><?php echo $price; ?></span>
-                                <p><?php echo substr($details,0,60).'...'; ?> <small><a href="<?php echo base_url();?>company/product/<?php echo $id; ?>">Details</a></small></p>
-                        </div><!--widgetcontent-->
-                        </div><!--widgetbox-->
-                    </div><!--one_third-->
-                    
-                   <?php $counter++;}}else{?>
-                     <center><h1 style="color:#c1c1c1">There Are Not Products Yet</h1></center>
+                       <tr id="<?php echo $id; ?>" <?php if($read == 0){?>style="background:#fffccc"<?php }?> >
+                        	<td class="center"><input type="checkbox" /></td>
+                            <td class="center"><?php echo $counter ; ?></td>
+                            <td class="center"><a href="<?php if(isset($from_c)){ echo base_url()."company/profile/".$company_id; }elseif(isset($from_u)){ echo base_url()."user/profile/".$user_id;} ?>"><?php if(isset($from_c)){ echo $company_name; }elseif(isset($from_u)){ echo $user_name;} ?></a><?php if(isset($from_c)){ echo " (Company)"; }elseif(isset($from_u)){ echo " (User)";} ?></td>
+                            <td class="center"><?php echo $subject ; ?></td>
+                            <td class="center"><?php echo $date_m ; ?></td>
+                        </tr>
+                       <?php $counter++;}?>
+                          </tbody>
+                </table>
+						<?php }else{?>
+                        </tbody></table>
+                        <br class="all"/>
+                    <center><h1 style="color:#c1c1c1">There Are Not Messages Yet</h1></center>
                     <?php } ?>
-                   
-                                  
-                                  <br clear="all" />     
-                                  
-                                  <ul class="pagination" style="padding-top:40px ">
-                    	<li class="first"><a href="" class="disable">&laquo;</a></li>
-                        <li class="previous"><a href="" class="disable">&lsaquo;</a></li>
-                    	<li><a href="" class="current">1</a></li>
-                        <li><a href="">2</a></li>
-                        <li><a href="">3</a></li>
-                        <li><a href="">4</a></li>
-                        <li><a href="">5</a></li>
-                        <li class="next"><a href="">&rsaquo;</a></li>
-                        <li class="last"><a href="">&raquo;</a></li>
-                    </ul>
+                        
+                    </tbody>
+                </table>
+
+                            <br clear="all" />
+                           
+                        
                     
-                    <br clear="all" /><br />
                     
                     
                 </div><!--content-->
@@ -120,7 +161,12 @@
                         <div class="title"><h2 class="tabbed"><span>Recent Activity</span></h2></div>
                         <div class="widgetcontent padding0">
                             <ul class="activitylist">
-                    <?php include('recent_activity.php');?>
+                            	<li class="message"><a href=""><strong>Temraz</strong> sent a message <span>Just now</span></a></li>
+                                <li class="user"><a href=""><strong>Al hawata</strong> added <strong>23 users</strong> <span>Yesterday</span></a></li>
+                                <li class="user"><a href=""><strong>Sheir</strong> added <strong>2 users</strong> <span>2 days ago</span></a></li>
+                                <li class="message"><a href=""><strong>Gado</strong> sent a message <span>5 days ago</span></a></li>
+                                <li class="media"><a href=""><strong>Badran</strong> uploaded <strong>2 photos</strong> <span>5 days ago</span></a></li>
+                                 <li class="media"><a href=""><strong>Mohamed Temraz</strong> uploaded <strong>2 photos</strong> <span>5 days ago</span></a></li>
                             </ul>
                         </div><!--widgetcontent-->
                     </div><!--widgetbox-->
@@ -179,62 +225,7 @@
      	</div><!--mainwrapperinner-->
     </div><!--mainwrapper-->
 	<!-- END OF MAIN CONTENT -->
-    <script>var flash = [[0, 2], [1, 6], [2,3], [3, 8], [4, 5], [5, 13], [6, 8]];
-		
-		function showTooltip(x, y, contents) {
-			jQuery('<div id="tooltip" class="tooltipflot">' + contents + '</div>').css( {
-				position: 'absolute',
-				display: 'none',
-				top: y + 5,
-				left: x + 5
-			}).appendTo("body").fadeIn(200);
-		}
-
-		
-		var plot = jQuery.plot(jQuery("#chartplace2"),
-			   [ { data: flash, label: "Follows", color: "#069"} ], {
-				   series: {
-					   lines: { show: true, lineWidth: 1, fill: true, fillColor: { colors: [ { opacity: 0.1 }, { opacity: 0.5 } ] } },
-					   points: { show: true, radius: 2 }, shadowSize: 0
-				
-				   },
-				   legend: { position: 'nw'},
-				   grid: { hoverable: true, clickable: true, labelMargin: 5, borderWidth: 1, borderColor: '#bbb' },
-				   yaxis: { show: false, min: 0, max: 14 },
-				 });
-		
-		var previousPoint = null;
-		jQuery("#chartplace2").bind("plothover", function (event, pos, item) {
-			jQuery("#x").text(pos.x.toFixed(2));
-			jQuery("#y").text(pos.y.toFixed(2));
-			
-			if(item) {
-                if (previousPoint != item.dataIndex) {
-                    previousPoint = item.dataIndex;
-                    
-                    jQuery("#tooltip").remove();
-                    var x = item.datapoint[0].toFixed(2),
-                        y = item.datapoint[1].toFixed(2);
-                    
-                    showTooltip(item.pageX, item.pageY,
-                                item.series.label + " of " + x + " = " + y);
-                }
-            }
-            else {
-                jQuery("#tooltip").remove();
-                previousPoint = null;            
-            }
-	
-		});
-	
-		jQuery("#chartplace2").bind("plotclick", function (event, pos, item) {
-			if (item) {
-				jQuery("#clickdata").text("You clicked point " + item.dataIndex + " in " + item.series.label + ".");
-				plot.highlight(item.series, item.datapoint);
-			}
-		});
-		
-		</script>
+    
 
 </body>
 </html>

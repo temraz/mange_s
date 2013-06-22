@@ -42,14 +42,11 @@
         <div class="maincontent">
         	<div class="maincontentinner">
             	
-                <ul class="maintabmenu">
-                	<li class="current"><a href="<?php echo base_url();?>user/profile/" >profile</a></li>
-                </ul><!--maintabmenu-->
                 
                 <div class="content">
                     
                     <div class="one_half " style="width:100%">
-                    	<h1>Following</h1>
+                    	<h1 style="border-bottom:1px dashed #e1e1e1; padding-bottom:10px">Following</h1>
                                        <br />
                         <div class="widgetcontent announcement">
                         <?php if(isset($following) && count($following) != 0){

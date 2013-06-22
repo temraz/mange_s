@@ -1,3 +1,4 @@
+
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class User extends CI_Controller {
@@ -9,6 +10,7 @@ class User extends CI_Controller {
     ///////////////////
     function profile(){
         if($this->session->userdata('user_logged_in')){            ///////////////////////////else if he is a normal user
+		if($this->model_users->is_edit_cv($this->session->userdata('user_id'))){
 				if( $this->uri->segment(3) != ''){
 				$id=$this->uri->segment(3);   
                  $this->load->model('model_company');
@@ -23,13 +25,16 @@ class User extends CI_Controller {
 					$data['cv_exper']=$this->model_users->get_cv_exper($id);
 					$data['cv_skills']=$this->model_users->get_cv_skills($id);
 					$data['following']=$this->model_users->get_following($id);
-                    $this->load->view('user_profile',$data);
+                    $this->load->view('u_profile',$data);
 					 }else{
 				      redirect('site/error404');	 
 						 }
 				}else{
 					redirect('site/error404');
 					}
+		}else{
+			redirect("user/cv_edit");
+			}
 		}else{
 			 $data['hide']=1;
                        $this->load->view('index',$data);
@@ -75,9 +80,11 @@ class User extends CI_Controller {
 		////////////////////
 		public function edit(){
 			if($this->session->userdata('user_logged_in')){
-				
+				if($this->model_users->is_edit_cv($this->session->userdata('user_id'))){
 				$this->load->view('user_edit');
-				
+				}else{
+					redirect('user/cv_edit');
+					}
 				}else{
 				redirect('site/error404');
 				}
@@ -135,11 +142,15 @@ class User extends CI_Controller {
 	///////////////////
 	public function following(){
 		if($this->session->userdata('user_logged_in')){
+			if($this->model_users->is_edit_cv($this->session->userdata('user_id'))){
 		$user_id=$this->session->userdata('user_id');
 		 $this->load->model('model_users');
 		 $this->load->model('model_company');
 				 $data['following']=$this->model_users->get_following($user_id);
 		 $this->load->view('user_following' , $data);
+			}else{
+				redirect('user/cv_edit');
+				}
 		}else{
 					redirect('site');
 					}
@@ -147,12 +158,15 @@ class User extends CI_Controller {
 	////////////////////
 	public function news_feed(){
 		if($this->session->userdata('user_logged_in')){
+			if($this->model_users->is_edit_cv($this->session->userdata('user_id'))){
 			$user_id=$this->session->userdata('user_id');
 		 $this->load->model('model_users');
 		 $this->load->model('model_company');
 				 $data['following']=$this->model_users->get_following($user_id);
 		 $this->load->view('user_news_feed' , $data);
-		
+			}else{
+				redirect('user/cv_edit');
+				}
 		}else{
 					redirect('site');
 					}
@@ -284,7 +298,7 @@ class User extends CI_Controller {
 		}
 		if($skills==1 && $exper==1 && $edu==1 && $cv==1){
 			$flag['inserted']=1;
-			$this->load->view('cv_edit',$flag);
+			redirect('user/profile/'.$user_id);
 			}
 					
 					}else{
@@ -320,6 +334,650 @@ class User extends CI_Controller {
 					redirect('site');
 					}
 			}
-///////////////////////////			
+///////////////////////////
+public function add_card(){
+	$user_id = $this->session->userdata('user_id');
+	$product_id = $this->input->post('product_id');
+	
+	$data= array(
+		"user_id"=>$user_id , 
+		"product_id" => $product_id
+		);
+		
+	$this->db->insert('card' , $data);
+
+	}	
+///////////////////////////		
+public function mycard(){
+	if($this->session->userdata('user_logged_in')){
+		$this->load->model('model_company');
+		$this->load->model('model_users');
+	$user_id = $this->session->userdata('user_id');
+			 $data['products_list']= $this->model_users->mycard_items($user_id);
+			$this->load->view('mycard',$data);
+	}else{
+					redirect('site');
+					}
+	}
+////////////////////////
+function update_about(){
+	$user_id = $this->session->userdata('user_id');
+	$about_user = $this->input->post('about_user');
+    echo $this->_update_about($user_id,$about_user);
+	}
+///////////////////////////
+public function _update_about($user_id,$about_user){
+	
+	
+	
+	$data= array(
+		"about" => $about_user
+		);
+	
+	if($this->db->update('users' , $data , "id = ".$user_id."")){
+		$result=array('status'=>'ok');
+		}else{
+			$result=array('status'=>'no');
+			}
+			return json_encode($result);
+
+	}
+//////////////////////	
+
+public function update_summary(){
+		
+	$user_id = $this->session->userdata('user_id');
+	$summary = $this->input->post('summary');
+	
+	echo $this->_update_summary($user_id,$summary);
+	}
+	
+//////////////	
+public function _update_summary($user_id,$summary){
+	
+	$data= array(
+		"summary" => $summary
+		);
+	
+	if($this->db->update('cv' , $data , "id = ".$user_id."")){
+		$result=array('status'=>'ok');
+		}else{
+			$result=array('status'=>'no');
+			}
+			return json_encode($result);
+	
+	}
+//////////////////////
+
+public function update_accomplishments(){
+		
+	$user_id = $this->session->userdata('user_id');
+	$accomplishments = $this->input->post('accomplishments');
+	
+	echo $this->_update_accomplishments($user_id,$accomplishments);
+	}
+
+////////////////////////
+	public function _update_accomplishments($user_id,$accomplishments){
+	
+	$data= array(
+		"accomplishments" => $accomplishments
+		);
+	
+	if($this->db->update('cv' , $data , "user_id = ".$user_id."")){
+		$result=array('status'=>'ok');
+		}else{
+			$result=array('status'=>'no');
+			}
+			return json_encode($result);
+	
+	}
+//////////////////////
+
+public function update_expr(){
+		
+	$user_id = $this->session->userdata('user_id');
+	$id = $this->input->post('id');
+	$postion = $this->input->post('postion');
+	$company = $this->input->post('company');
+	$date_from = $this->input->post('date_from');
+	$date_to = $this->input->post('date_to');
+	$details = $this->input->post('details');
+	
+	$data= array(
+	"postion" => $postion,
+	"company" => $company,
+	"date_from" => $date_from,
+	"date_to" => $date_to,
+	"details" => $details
+		);
+
+	
+	echo $this->_update_expr($data,$id);
+	}
+
+//////////////////////
+public function _update_expr($data,$id){
+	
+	if($this->db->update('cv_exper' , $data , "id = ".$id."")){
+		$result=array('status'=>'ok');
+		}else{
+			$result=array('status'=>'no');
+			}
+			return json_encode($result);
+	
+	}
+//////////////////////
+public function new_expr(){
+	
+	$this->load->model('model_users');
+	$user_id = $this->session->userdata('user_id');
+	$postion = $this->input->post('postion');
+	$company = $this->input->post('company');
+	$date_from = $this->input->post('date_from');
+	$date_to = $this->input->post('date_to');
+	$details = $this->input->post('details');
+	
+	$data= array(
+	"user_id" => $user_id,
+	"postion" => $postion,
+	"company" => $company,
+	"date_from" => $date_from,
+	"date_to" => $date_to,
+	"details" => $details
+		);
+		
+	if($this->db->insert('cv_exper' , $data)){
+		$back_data=$this->model_users->get_last_expr();
+		foreach($back_data as $row){
+				$data_back = array(
+				"id" => $row->id,
+				"postion" => $row->postion,
+				"company" => $row->company,
+				"date_from" => $row->date_from,
+				"date_to" => $row->date_to,
+				"details" => $row->details
+				);
+		}
+		
+		echo json_encode($data_back);
+		}
+	
+	}
+////////////////
+public function delete_expr(){
+	
+	$expr_id= $this->input->post('id');
+	echo $this->_delete_expr($expr_id);
+	
+	}
+////////////////////////
+public function _delete_expr($expr_id){
+	$this->db->where('id',$expr_id);
+			 if($this->db->delete('cv_exper')){
+				 
+				 $result=array('status'=>'ok');
+		}else{
+			$result=array('status'=>'no');
+			}
+			return json_encode($result);
+}
+////////////////////
+function get_expr_ajax(){
+	$user_id = $this->session->userdata('user_id');
+			 echo $this->get_exprs($user_id);
+			 }
+		 
+		 
+		 function get_exprs($user_id){
+			 		
+					$exprs=$this->model_users->get_exprs($user_id);
+					$counter=1;
+					
+                             $expr_html='<div class="edit_area_expr" style="padding:10px" id="'.count($exprs).'">';
+						if(isset($exprs)){
+						foreach($exprs as $row){
+							
+							$id= $row->id;
+							$postion = $row->postion;
+							$date_from = $row->date_from;
+							$date_to = $row->date_to;
+							$company = $row->company;
+							$datails = $row->details;	
+						    
+							
+							$expr_html.=' <br />
+                       <p>
+                       <input type="hidden" class="pointer'.$counter.'" value="'.$id.'" />
+                           <h3>Job '.$counter.'</h3>
+                           <label>Postion</label>
+                           <span class="field"><input type="text" class="postion'.$counter.'" value="'.$postion.'" required>&nbsp;&nbsp;
+                           <label>Company</label>
+                           <input type="text" class="company'.$counter.'"  value="'.$company.'" required></span>  
+                           </p>
+                           <br />
+                           <p>
+                           <label>Date From</label>
+                           <span class="field"><input type="date" class="date_from'.$counter.'" value="'.$date_from.'" required> &nbsp;&nbsp;
+                           <label>Date To</label>
+                           <input type="date" class="date_to'.$counter.'"  value="'.$date_to.'" required></span>
+                           </p>
+                           </br>
+                           <p>
+                           <span class="field"><textarea cols="100" rows="5" class="job_details'.$counter.'" id="job_details"  required style="resize:none">'.$datails.'</textarea></span>
+                           </p><br>';
+                           $counter++; }
+							
+							
+						$expr_html.='</div>';
+						
+						
+						$result=array('status'=>'ok' ,'content'=>$expr_html , 'expr_count'=>count($exprs));
+						return json_encode($result);
+						exit();
+						}else{
+						$result=array('status'=>'no' ,'content'=>'No Update Yet');
+						return json_encode($result);
+							exit();
+							}
+					
+			 }
+
+///////////////
+////////////////////
+function get_skill_ajax(){
+	$user_id = $this->session->userdata('user_id');
+			 echo $this->get_skills_db($user_id);
+			 }
+		 
+		 
+		 function get_skills_db($user_id){
+			 		
+					$skills=$this->model_users->get_skills($user_id);
+					$counter=1;
+					
+                             $skill_html='<div class="edit_area_skill" style="padding:10px" id="'.count($skills).'">';
+						if(isset($skills)){
+						foreach($skills as $row){
+							
+							$id= $row->id;
+							$skill = $row->skill;
+							$level = $row->level;
+							
+							$skill_html.=' <br />
+							<p>
+							<input type="hidden" class="pointer_skill'.$counter.'" value="'.$id.'" />
+        <label>Skill : </label>
+        <span class="field">
+        <input type="text" class="skill'.$counter.'" value="'.$skill.'"  required>&nbsp;&nbsp;&nbsp;
+        <label>Level : </label>
+        <select class="level'.$counter.'"  required>
+        <option value="Excellent"';
+		if($level == 'Excellent'){ $skill_html.='selected="selected"' ;}
+		$skill_html.='>Excellent</option>
+        <option value="Very Good"';
+		if($level == 'Very Good'){ $skill_html.='selected="selected"' ;}
+		$skill_html.='>Very Good</option>
+         <option value="Good"';
+		 if($level == 'Good'){ $skill_html.='selected="selected"' ;}
+		 $skill_html.='>Good</option>
+          <option value="Medium"';
+		  if($level == 'Medium'){ $skill_html.='selected="selected"' ;}
+		  $skill_html.='>Medium</option>
+          <option value="Acceptable"';
+		  if($level == 'Acceptable'){ $skill_html.='selected="selected"' ;}
+		  $skill_html.='>Acceptable</option>
+          <option value="Weak"';
+		  if($level == 'Weak'){ $skill_html.='selected="selected"' ;}
+		  $skill_html.='>Weak</option>
+        </select>
+    </span></p>';
+                           $counter++; }
+							
+							
+						$skill_html.='</div>';
+						
+						
+						$result=array('status'=>'ok' ,'content'=>$skill_html , 'skill_count'=>count($skills));
+						return json_encode($result);
+						exit();
+						}else{
+						$result=array('status'=>'no' ,'content'=>'No Update Yet');
+						return json_encode($result);
+							exit();
+							}
+					
+			 }
+
+///////////////
+public function update_skill(){
+	
+	$user_id = $this->session->userdata('user_id');
+	$id = $this->input->post('id');
+	$skill = $this->input->post('skill');
+	$level = $this->input->post('level');
+	
+	$data= array(
+	"skill" => $skill,
+	"level" => $level,
+		);
+		
+	echo $this->_update_skill($data,$id);
+	}
+
+///////////////
+public function _update_skill($data,$id){
+	
+	if($this->db->update('cv_skills' , $data , "id = ".$id."")){
+	
+				 $result=array('status'=>'ok');
+		}else{
+			$result=array('status'=>'no');
+			}
+			return json_encode($result);
+	}
+//////////////////////
+public function new_skill(){
+	$this->load->model('model_users');
+	$user_id = $this->session->userdata('user_id');
+	$skill = $this->input->post('skill');
+	$level = $this->input->post('level');
+	
+	$data= array(
+	"user_id" => $user_id,
+	"skill" => $skill,
+	"level" => $level
+		);
+	
+	if($this->db->insert('cv_skills' , $data)){
+		$back_data=$this->model_users->get_last_skill();
+		foreach($back_data as $row){
+				$data_back = array(
+				"id" => $row->id,
+				"skill" => $row->skill,
+				"level" => $row->level
+				);
+		}
+		echo json_encode($data_back);
+		}
+	
+	
+	}
+//////////////////////
+public function delete_skill(){
+	$skill_id= $this->input->post('id');
+	
+	echo $this->_delete_skill($skill_id);
+	}
+////////////////
+public function _delete_skill($skill_id){
+	$this->db->where('id',$skill_id);
+			 if($this->db->delete('cv_skills')){
+				 $result=array('status'=>'ok');
+		}else{
+			$result=array('status'=>'no');
+			}
+			return json_encode($result);
+}
+////////////////////
+////////////////////
+function get_edu_ajax(){
+	$user_id = $this->session->userdata('user_id');
+			 echo $this->get_edu_db($user_id);
+			 }
+		 
+		 
+		 function get_edu_db($user_id){
+			 		
+					$edu=$this->model_users->get_edu($user_id);
+					$counter=1;
+					require("all_countries.php");
+					$countries = '' ;
+					 for($i=0;$i< count($country_list);$i++) {
+  $countries .= " <option value=\"$country_list[$i]\"";
+    $countries .= ">$country_list[$i]</option>";
+   } ;
+                             $edu_html='<div class="edit_area_edu" style="padding:10px" id="'.count($edu).'">';
+						if(isset($edu)){
+						foreach($edu as $row){
+							
+							$id= $row->id;
+							$school = $row->school;
+							$grad_year = $row->grad_year;
+							$country = $row->country;
+							$field_study = $row->field_study;
+							$degree = $row->degree;
+							$details = $row->details;	
+						    
+							$edu_html.=' <br />
+							<p>
+							<input type="hidden" class="pointer_edu'.$counter.'" value="'.$id.'" />
+							<h3>Study '.$counter.'</h3>
+						   <br>
+                           <label>School</label>
+                           <span class="field"><input type="text" class="school'.$counter.'" value="'.$school.'" required>&nbsp;&nbsp;&nbsp;
+                           <label>Grad Year</label>
+                        	<input type="number" min="1980" max="2013" class="grad_year'.$counter.'" value="'.$grad_year.'"  required>&nbsp;&nbsp;&nbsp;
+                           <label>Country</label>
+                           <select class="country'.$counter.'" size="1">'.$countries.'</select></span></p><p><br />
+   							<label>Field of Study</label>
+                             <span class="field"><input type="text" class="field_study'.$counter.'" value="'.$field_study.'" required>&nbsp;&nbsp;&nbsp;
+                             <label>Degree</label>
+                             <input type="text" class="degree'.$counter.'" value="'.$degree.'" required></span> 
+                              </p><p><br />
+                           <span class="field"><textarea cols="100" rows="5" class="edu_details'.$counter.'" required style="resize:none">'.$details.'</textarea></span>
+                           </p>
+                      <br>';
+                           $counter++; }
+							
+							
+						$edu_html.='</div>';
+						
+						
+						$result=array('status'=>'ok' ,'content'=>$edu_html , 'edu_count'=>count($edu));
+						return json_encode($result);
+						exit();
+						}else{
+						$result=array('status'=>'no' ,'content'=>'No Update Yet');
+						return json_encode($result);
+							exit();
+							}
+					
+			 }
+
+///////////////
+
+public function update_edu(){
+
+$user_id = $this->session->userdata('user_id');
+	$id = $this->input->post('id');
+	$school = $this->input->post('school');
+	$grad_year = $this->input->post('grad_year');
+	$country = $this->input->post('country');
+	$field_study = $this->input->post('field_study');
+	$degree = $this->input->post('degree');
+	$details = $this->input->post('edu_details');
+	
+	$data= array(
+	"school" => $school,
+	"grad_year" => $grad_year,
+	"country" => $country,
+	"field_study" => $field_study,
+	"degree" => $degree,
+	"details" => $details,
+		);
+	echo $this->_update_edu($data,$id);
+
+}
+///////////////
+
+public function _update_edu($data,$id){
+	
+	if($this->db->update('cv_edu' , $data , "id = ".$id."")){
+				
+				 $result=array('status'=>'ok');
+		}else{
+			$result=array('status'=>'no');
+			}
+			return json_encode($result);
+	
+	}
+//////////////////////
+public function new_edu(){
+	$this->load->model('model_users');
+	$user_id = $this->session->userdata('user_id');
+	
+	$school = $this->input->post('school');
+	$grad_year = $this->input->post('grad_year');
+	$country = $this->input->post('country');
+	$field_study = $this->input->post('field_study');
+	$degree = $this->input->post('degree');
+	$details = $this->input->post('details');
+	
+	$data= array(
+	"user_id" => $user_id,
+	"school" => $school,
+	"grad_year" => $grad_year,
+	"country" => $country,
+	"field_study" => $field_study,
+	"degree" => $degree,
+	"details" => $details,
+		);
+	
+	if($this->db->insert('cv_edu' , $data)){
+		$back_data=$this->model_users->get_last_edu();
+		foreach($back_data as $row){
+				$data_back = array(
+					"id" => $row->id,
+					"school" => $row->school,
+					"grad_year" => $row->grad_year,
+					"country" => $row->country,
+					"field_study" => $row->field_study,
+					"degree" => $row->degree,
+					"details" => $row->details
+				);
+		}
+		echo json_encode($data_back);
+		}
+	
+	
+	}
+//////////////////////
+public function delete_edu(){
+	$edu_id= $this->input->post('id');
+	echo $this->_delete_edu($edu_id);
+	}
+///////////////////////
+public function _delete_edu($edu_id){
+
+	$this->db->where('id',$edu_id);
+			 if($this->db->delete('cv_edu')){
+				 $result=array('status'=>'ok');
+		}else{
+			$result=array('status'=>'no');
+			}
+			return json_encode($result);
+	
+				 
+}
+////////////////////
+public function messages(){
+	if($this->session->userdata('user_logged_in')){
+		if($this->model_users->is_edit_cv($this->session->userdata('user_id'))){
+		$user_id=$this->session->userdata('user_id');
+		$data['messages']= $this->model_users->get_user_messages($user_id);
+		$this->load->view('user_messages' , $data);
+		}else{
+			redirect('user/cv_edit');
+			}
+		}else{
+			redirect('site/error404');
+			}
+	}
+	///////////////////
+	function select_user_messages(){
+	
+			$id=$this->session->userdata('user_id');
+			if($this->model_users->get_user_messages($id)){
+				$data['messages']=$this->model_users->get_user_messages($id);
+				$this->load->view('messages_user',$data);
+			
+				}else{
+					$data['no_messages']=1;
+					$this->load->view('messages_user',$data);
+					}
+			
+		}
+	//////////////////	
+	public function seen_messages(){
+		$user_id = $this->session->userdata('user_id');
+		$data = array (
+	   'seen' => 1,
+	   );	
+	   echo $this->_seen_messages($user_id,$data);
+		}		
+	///////////////////////
+	public function _seen_messages($user_id,$data){
+		
+					if($this->db->update('user_messages' , $data , "to_m = ".$user_id."")){
+						 $result=array('status'=>'ok');
+		}else{
+			$result=array('status'=>'no');
+			}
+			return json_encode($result);
+		
+		}	
+	/////////////////////
+	public function count_messages(){
+		$user_id = $this->session->userdata('user_id');
+		echo $this->_count_messages($user_id);
+		}
+	/////////////////////////
+	public function _count_messages($user_id){
+		$messages_count=$this->model_users->select_count_messages($user_id);
+		if($messages_count){
+		$result=array('status'=>'ok','messages_count'=>$messages_count);
+		}else{
+			$result=array('status'=>'no');
+			}
+			return json_encode($result);
+		}
+		////////////////
+		
+		public function apply_job(){
+			$user_id = $this->session->userdata('user_id');
+			$job_id = $this->input->post('job_id');
+			$data = array(
+			'user_id'=>$user_id,
+			'job_id'=>$job_id,
+			'wait'=>1
+			);
+			echo $this->_apply_job($data);
+			}
+		////////////////
+		public function _apply_job($data){
+			
+			if($this->db->insert('apply_job',$data)){
+			$result=array('status'=>'ok');
+		}else{
+			$result=array('status'=>'no');
+			}
+			return json_encode($result);	
+			}
+		////////////////
+	public function applied_jobs(){
+	if($this->session->userdata('user_logged_in')){
+		if($this->model_users->is_edit_cv($this->session->userdata('user_id'))){
+		$user_id=$this->session->userdata('user_id');
+		$data['applied_jobs']= $this->model_users->get_job_applied($user_id);
+		$this->load->view('applied_jobs' , $data);
+		}else{
+			redirect('user/cv_edit');
+			}
+	}else{
+			redirect('site/error404');
+			}
+	}
+	/////////////////////
 }
 ?>

@@ -146,6 +146,19 @@ class model_company extends CI_Model {
 	  return $result->result();
 	  
 	  }
+	  //////////////////////
+	  public function is_tree_bulid($company_id){
+			 $this->db->where('company_id',$company_id);
+			 $query = $this->db->get('department');
+			 
+			 if($query->num_rows() != 0){
+				 return 1;
+				 } else {
+					 
+					 return 0 ;
+					 }
+			 }
+			/////////// 
 }
 
 ?>

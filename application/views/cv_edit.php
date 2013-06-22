@@ -143,7 +143,58 @@ $(document).ready(function(){
 <body class="loggedin">
 
 	<!-- START OF HEADER -->
-	<?php include('header.php');?>
+    
+	<?php
+	if($this->model_users->is_edit_cv($this->session->userdata('user_id'))){
+	 include('header.php');
+	}else{
+		if($this->session->userdata('user_logged_in')){
+		$id=$this->session->userdata('user_id');
+$user=$this->model_users->get_user_info($id);
+if(isset($user)){
+		foreach($user as $row){
+			$pic= $row->pic;
+			$name= $row->username;
+			$gender = $row->gender;
+			}
+		
+		}
+	}
+		?>
+    
+    <div class="header radius3">
+    	<div class="headerinner">
+        	
+            <img src="<?php echo base_url();?>images/logo.png"  alt="" />
+             
+            <div class="headright">
+                <div id="userPanel" class="headercolumn">
+                    <a href="" class="userinfo radius2">
+                       <?php if($this->session->userdata('user_logged_in')){ ?>
+                       <img src="<?php echo base_url(); ?>images/profile/<?php if (isset($pic)) { echo $pic;}elseif($pic == NULL && $gender == 'female'){ echo "female.gif";}elseif($pic == NULL && $gender == 'male'){echo "male.gif";}?>" width="30" height="30" alt="" class="radius2" /> 
+                        <?php }?>
+                        
+                        
+                        <span><strong><?php 
+						if($this->session->userdata('user_logged_in') && isset($name)){echo $name;}?>
+                        
+                        </strong></span>
+                        
+                    </a>
+                    
+                    <div class="userdrop">
+                        <ul>
+                            
+                            
+                            <li><a href="<?php echo base_url();?>site/logout" >Logout</a></li>
+                        </ul>
+                    </div><!--userdrop-->
+                </div><!--headercolumn-->
+            </div><!--headright-->
+        
+        </div><!--headerinner-->
+	</div><!--header-->
+    <?php } ?>
     <!-- END OF HEADER -->
         
     <!-- START OF MAIN CONTENT -->
@@ -153,15 +204,20 @@ $(document).ready(function(){
         <div class="mainleft">
           	<div class="mainleftinner">
             
-              	<?php  if($this->session->userdata('user_logged_in')){ include('left_menu_user.php'); }?>
+              	<?php  if($this->session->userdata('user_logged_in')){ 
+				if($this->model_users->is_edit_cv($this->session->userdata('user_id'))){
+				include('left_menu_user.php'); }}?>
             	<div id="togglemenuleft"><a></a></div>
             </div><!--mainleftinner-->
         </div><!--mainleft-->
         
         <div class="maincontent" style="margin-right:0 ">
         	<div class="maincontentinner" >
-                
                 <div class="content">
+                			<?php if(!$this->model_users->is_edit_cv($this->session->userdata('user_id'))){?>
+                                <h3 style="color:#F00;float:right">Must create your own CV before create profile</h3><br />
+                                <span style="float:right">Please fill the following fields with your CV</span>
+                                <?php } ?>
                 <h1 style="border-bottom:1px dashed #c1c1c1 ; padding:10px">Your Curriculum vitae (CV)</h1>
                  <?php echo form_open_multipart('user/insert_cv' , array( 'id'=> "form1" , "class"=>"stdform")); ?>
                 <?php if (validation_errors()){ ?>

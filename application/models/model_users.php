@@ -132,11 +132,22 @@ class Model_users extends CI_Model {
 		}	
 		////////////////////////////////////////////////
 		
-	function select_all_emp(){
-		$sql='select id,username from employees';
+	function select_all_emp($company_id){
+		$sql='select id,username from employees where company_id='.$company_id.'';
 		 $result=$this->db->query($sql);
 		 if($result->num_rows() >= 1){
 			 return $result;
+			 }else{
+				 return false;
+				 }
+		}	
+			////////////////////////////////////////////////
+		
+	function all_emp($company_id){
+		$sql='select id,username from employees where company_id='.$company_id.'';
+		 $result=$this->db->query($sql);
+		 if($result->num_rows() >= 1){
+			 return $result->result();
 			 }else{
 				 return false;
 				 }
@@ -283,5 +294,134 @@ class Model_users extends CI_Model {
 			 $query= $this->db->get('cv_skills');
 				 return $query->result();
 	  }	
+	  
+	 ///////////////////////////////////////////////	
+	public function in_my_card($user_id , $product_id){
+		$sql='select * from card where user_id='.$user_id.' and product_id='.$product_id.'';
+		 $result=$this->db->query($sql);
+		 if($result->num_rows() == 1){
+			 return true;
+			 }else{
+				 return false;
+				 }
+		} 
+	  /////////////////////////////////////////
+	public function mycard_items($id){
+	 $this->db->where('user_id',$id);
+			 $query= $this->db->get('card');
+				 return $query->result();
+	  }	
+	 /////////////////////////////////
+	 public function get_last_expr(){
+	$query = "select * from cv_exper ORDER BY id  ";
+					$result=$this->db->query($query);
+				return $result->result();
+	
+	}
+	////////////////////////////////
+	public function get_exprs($id){
+	 $this->db->where('user_id',$id);
+			 $query= $this->db->get('cv_exper');
+				 return $query->result();
+	  }	
+	   	
+		////////////////////////////////
+	public function get_skills($id){
+	 $this->db->where('user_id',$id);
+			 $query= $this->db->get('cv_skills');
+				 return $query->result();
+	  }	
+	   /////////////////////////////////
+	 public function get_last_skill(){
+	$query = "select * from cv_skills ORDER BY id  ";
+					$result=$this->db->query($query);
+				return $result->result();
+	
+	}
+	////////////////////////////////
+	public function get_edu($id){
+	 $this->db->where('user_id',$id);
+			 $query= $this->db->get('cv_edu');
+				 return $query->result();
+	  }	
+	   /////////////////////////////////
+	    public function get_last_edu(){
+	$query = "select * from cv_edu ORDER BY id  ";
+					$result=$this->db->query($query);
+				return $result->result();
+	
+	}
+	////////////////////////////////
+	public function is_edit_cv($user_id){
+		$sql='select * from cv where user_id='.$user_id.'';
+		 $result=$this->db->query($sql);
+		 if($result->num_rows() == 1){
+			 return true;
+			 }else{
+				 return false;
+				 }
+		} 
+	  /////////////////////////////////////////
+	   public function get_user_messages($user_id){
+	$query = "select * from user_messages where to_m = ".$user_id." ORDER BY id desc ";
+					$result=$this->db->query($query);
+				return $result->result();
+	
+	}
+	///////////////////////////////////////////////////
+	function select_count_messages($user_id){
+		$query = "select * from user_messages where to_m = ".$user_id." and seen=0 ORDER BY id desc ";
+					$result=$this->db->query($query);
+				return count($result->result());
+	
+		}		
+		
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+	public function is_apply_job($user_id,$job_id){
+		$sql='select * from apply_job where user_id='.$user_id.' and job_id='.$job_id.'';
+		 $result=$this->db->query($sql);
+		 if($result->num_rows() == 1){
+			 return $result->result();
+			 }else{
+				 return false;
+				 }
+		} 
+	
+	///////////////////////////////////////////
+	///////////////////////////////////////////////	
+	public function is_applied($user_id,$job_id){
+		$sql='select * from apply_job where user_id='.$user_id.' and job_id='.$job_id.'';
+		 $result=$this->db->query($sql);
+		 if($result->num_rows() == 1){
+			 return true;
+			 }else{
+				 return false;
+				 }
+		}
+	/////////////////////////////////////////
+	public function get_job_applied($user_id){
+		$sql='select * from apply_job where user_id='.$user_id.' ';
+		 $result=$this->db->query($sql);
+		 return $result->result();
+		}
+	///////////////////
+	///////////////////////////////////////////////////
+		function update_prof($id){
+			
+			 $data = array(
+               'prof' => 1,
+            );
+
+			$this->db->where('id', $id);
+			$result=$this->db->update('employees', $data); 
+
+		 if($this->db->affected_rows()==1){
+			 return true;
+			 }else{
+				 return false;
+				 }
+			}
+	
 }
 ?>

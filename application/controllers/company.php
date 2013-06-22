@@ -8,7 +8,6 @@ class Company extends CI_Controller {
                 $id=$this->session->userdata('comp_id');
 				 $this->load->model('model_users');
 				 if($this->model_users->select_company($id)){
-					 $id=$this->model_users->select_company($id)->row(0)->id;
 				 
                     redirect('company/profile/'.$id);	 
 					 }else{
@@ -22,11 +21,12 @@ class Company extends CI_Controller {
 	/////////////////////////////////////////////////
 	function tree_step1(){
 		$this->load->model('model_users');
-		if($this->model_users->select_all_emp()){
-			$data['users']=$this->model_users->select_all_emp()->result();
+		$company_id = $this->session->userdata('comp_id');
+		if( count($this->model_users->all_emp($company_id)) > 6 ){
+			$data['users']=$this->model_users->all_emp($company_id);
 		$this->load->view("company_tree",$data);		
 			}else{
-				
+				redirect('company/no_employees');
 				}
 	
 		}
@@ -130,18 +130,19 @@ class Company extends CI_Controller {
         $this->form_validation->set_rules('chairman', 'chairman', 'required|trim|max_length[100]|xss_clean');
         $chairman = $this->input->post('chairman');
 	    $depart_num = $this->input->post('department_number');
-		
+		$id = $this->session->userdata('comp_id');
         if ($this->form_validation->run() == false) {
-			$this->load->model('model_users');
-		if($this->model_users->select_all_emp()){
-			$data['users']=$this->model_users->select_all_emp()->result();
+			
+		if($this->model_users->all_emp($id)){
+			$data['users']=$this->model_users->all_emp($id);
 		$this->load->view("company_tree",$data);		
 			}else{
 				
 				}
 			
 		}else {
-					$id = $this->session->userdata('comp_id');
+			
+				
 			$data = array(
 			'is_logged_in' => 1,
 			'company_id' => $id,
@@ -164,11 +165,11 @@ class Company extends CI_Controller {
 		$this->load->model('model_company');
 		$data['depart_no'] = $this->model_company->get_department_number($id);
 		$this->load->model('model_users');
-		if($this->model_users->select_all_emp()){
-			$data['users']=$this->model_users->select_all_emp()->result();
+		if(count($this->model_users->all_emp($id)) > 6 ){
+			$data['users']=$this->model_users->all_emp($id);
 		$this->load->view("step2",$data);		
 			}else{
-				
+				redirect('company/no_employees');
 				}
 		
 		}
@@ -183,6 +184,7 @@ public function step2_validation()
 		$sub_depart_number;
 		$field;
 		$depart_number = $this->session->userdata('depart_number');
+		$id=$this->session->userdata('comp_id');
 		$this->load->library('form_validation');
 		for ($i=1 ; $i<=$depart_number ; $i++ ) {
 		 $this->form_validation->set_rules('name_'.$i, ' Department Name '.$i, 'required|trim|max_length[100]|xss_clean');	
@@ -194,23 +196,25 @@ public function step2_validation()
 		}
 			 if ($this->form_validation->run() == false) {
 			$this->load->model('model_users');
-		if($this->model_users->select_all_emp()){
-			$data['users']=$this->model_users->select_all_emp()->result();
+		if($this->model_users->all_emp($id)){
+			$data['users']=$this->model_users->all_emp($id);
 		$this->load->view("step2",$data);		
 			}else{
 				
 				}
 		}else {
 			if($this->model_company->is_company_valid($this->session->userdata('comp_id'),'department')){
-				 $this->db->where('company_id',$this->session->userdata('comp_id'));
-				$this->db->delete('department');
-				}
+			
+		 $this->db->where('company_id',$this->session->userdata('comp_id'));
+	$this->db->delete('department');
+			}
 			for ($i=1 ; $i<=$depart_number ; $i++ ) {
+				if($sub_depart_number[$i] == ''){ $sub_depart_num = 0 ;}else{ $sub_depart_num = $sub_depart_number[$i]; }
 			$data= array(
 		"company_id"=>$this->session->userdata('comp_id') , 
 		"name" => $depart_name[$i],
 		"depart_manager" => $depart_manager[$i],
-		"sub_depart_num" => $sub_depart_number[$i],
+		"sub_depart_num" => $sub_depart_num,
 		"type" => $field[$i]
 		);
 		
@@ -227,11 +231,11 @@ public function step2_validation()
 		$data['depart_no'] = $this->model_company->get_department_number($id);
 		$data['depart_info'] = $this->model_company->get_department_info($this->session->userdata('comp_id'));
 		$this->load->model('model_users');
-		if($this->model_users->select_all_emp()){
-			$data['users']=$this->model_users->select_all_emp()->result();
+		if(count($this->model_users->all_emp($id)) > 6 ){
+			$data['users']=$this->model_users->all_emp($id);
 		$this->load->view("step3",$data);		
 			}else{
-				
+				redirect('company/no_employees');
 				}
 		}
 	///////////////////
@@ -241,6 +245,7 @@ public function step2_validation()
 	{
 		$this->load->model('model_company');
 		$this->load->model('model_employee');
+		$id = $this->session->userdata('comp_id');
 	$data['depart_no']= $this->session->userdata('depart_number');
 		$sub_depart_name;
 		$sub_depart_manager;
@@ -271,8 +276,8 @@ public function step2_validation()
 				 $data['depart_no'] = $this->model_company->get_department_number($this->session->userdata('comp_id'));
 		$data['depart_info'] = $this->model_company->get_department_info($this->session->userdata('comp_id'));
 			$this->load->model('model_users');
-		if($this->model_users->select_all_emp()){
-			$data['users']=$this->model_users->select_all_emp()->result();
+		if($this->model_users->all_emp($id)){
+			$data['users']=$this->model_users->all_emp($id);
 		$this->load->view("step3",$data);		
 			}else{
 				
@@ -294,6 +299,7 @@ public function step2_validation()
 		"name" => $sub_depart_name[$k][$i],
 		"sub_depart_manager" => $sub_depart_manager[$k][$i],
 		);
+	
 		
 	$this->db->insert('sub_department' , $data);
 			}
@@ -321,8 +327,11 @@ public function step2_validation()
 		
 		function job(){
 		$this->load->model('model_company');
+		$user_id = $this->session->userdata('user_id');
+		$job_id = $this->uri->segment(3);
 			$vaild = $this->model_company->is_id_valid($this->uri->segment(3),'jops');
 		if( $this->uri->segment(3) != '' && $vaild == 1 ){
+			$data['applied_job'] = $this->model_users->is_apply_job($user_id,$job_id);
 			$id=$this->uri->segment(3);
 			$data['job']=$this->model_company->get_job($id);
 		$this->load->view('job',$data);
@@ -363,6 +372,7 @@ public function step2_validation()
 		///////////////////////////////
 		function product(){
 			$this->load->model('model_company');
+			$this->load->model('model_users');
 			$vaild = $this->model_company->is_id_valid($this->uri->segment(3),'products');
 		if( $this->uri->segment(3) != '' && $vaild == 1 ){
 			$id=$this->uri->segment(3);
@@ -591,14 +601,30 @@ foreach($result as $row) {
 }
 		}
 
+///////////////////////
 public function delete_item(){
-	
-			$item_id = $this->input->post('ids');
+				$item_id = $this->input->post('ids');
 			$table = $this->input->post('table');
+			echo $this->_delete_item($item_id,$table);
+}
+///////////////////
+public function _delete_item($item_id,$table){
+	
 			$this->db->where('id',$item_id);
-			 $this->db->delete($table); 
+			 if($this->db->delete($table)){
+				 
+				 $result=array('status'=>'ok');
+		}else{
+			$result=array('status'=>'no');
+			}
+			return json_encode($result); 
 
 	}
+	public function no_employees(){
+		if($this->session->userdata('company_logged_in')){
+			$this->load->view('no_employees');
+			}
+		}	
 }
 
 ?>

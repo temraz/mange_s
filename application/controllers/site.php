@@ -262,7 +262,11 @@ class Site extends CI_Controller {
                 $login_data = array("user_logged_in" => true, "user_id" => $user['id'], "user_email"=> $user['email'], "company_id"=> $user['company_id']);
                 $this->session->set_userdata($login_data);
 				$id=$user['id'];
+				if($this->model_users->is_edit_cv($this->session->userdata('user_id'))){
                 redirect('user/profile/'.$id);
+				}else{
+					redirect('user/cv_edit/');
+					}
                
                 }  else{
                     

@@ -17,7 +17,27 @@
 <script type="text/javascript" src="<?php echo base_url();?>js/general.js" ></script>
 
 <script type="text/javascript" src="<?php echo base_url();?>js/dashboard.js" ></script>
+<script type="text/javascript" src="<?php echo base_url();?>js/jquery.alerts.js" ></script>
+<script type="text/javascript" >
+var base_url = "<?php echo base_url(); ?>";
+jQuery(document).ready(function(){
+	var added = document.getElementById('added');
+	var add_card = document.getElementById('add_card');
 
+jQuery('#add_card').click(function(){
+jConfirm('Do You Want to add This product to Your Card?', 'My Card', function(r) {
+                    if( r ){
+						var user_id = jQuery('#user_id').val();
+						var product_id = jQuery('#product_id').val();
+						jQuery.post(base_url+"user/add_card" ,{ product_id : product_id }, function(data){
+							add_card.style.visibility = 'hidden'; 
+							added.style.visibility = 'visible';
+		},"json");
+						}
+					});
+					});
+					});
+</script>    
 </head>
 
 <body class="loggedin">
@@ -50,15 +70,25 @@
 					$date=$row->date_release;
 					$details=$row->product_desc;
 					$pic=$row->logo;
+					$price=$row->price;
+					$user_id = $this->session->userdata('user_id');
 				}}
 						   ?>
                            <h1><?php echo $name ?></h1>
+                           
                             <h3 style="float:right ; color:#c1c1c1"><?php echo $date ?></h3>
                            <br class="all"/>
                      <div class="one_half" style="width:100%">
                     	<p><img src="<?php echo base_url();?>images/products/<?php echo $pic; ?>" height="200" width="270" style="float:left; border:1px solid #c1c1c1 ; margin:10px ; padding:3px "/><p><?php echo $details; ?></p></p>
                     <br clear="all" />
-                    <h3 style="float:right;margin-right:60px"><button class="stdbtn btn_black">Add to Card</button>&nbsp;&nbsp;&nbsp;&nbsp;<button class="stdbtn">Add to my list</button></h3>
+                    <span><b>Price: </b><?php echo $price; ?></span>
+                    <input type="hidden" value="<?php echo $id ?>" id="product_id" />
+                  
+                    <h3 style="float:right;margin-right:60px;visibility:<?php 	
+				if($this->model_users->in_my_card($user_id,$id)){echo "hidden";}else{ echo "visible";} ?>"><button class="stdbtn btn" id="add_card">Add to Card</button>
+                    </h3>
+                    <h3 id="added" style="float:right; word-spacing:1px ; margin-right:-130px ; color:#F63 ; visibility:<?php 	
+				if($this->model_users->in_my_card($user_id,$id)){echo "visible";}else{echo "hidden";} ?> ">The Product in Your Card</h3>
                     </div>
                     <br clear="all" />
                       
@@ -141,7 +171,6 @@
      	</div><!--mainwrapperinner-->
     </div><!--mainwrapper-->
 	<!-- END OF MAIN CONTENT -->
-    
 
 </body>
 </html>

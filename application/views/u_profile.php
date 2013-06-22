@@ -13,25 +13,22 @@
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.flot.resize.min.js" ></script>
 
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery-ui-1.8.16.custom.min.js"></script>
-
-<script type="text/javascript" src="<?php echo base_url();?>js/general.js" ></script>
-
-<script type="text/javascript" src="<?php echo base_url();?>js/dashboard.js" ></script>
-
 <script type="text/javascript" >
 var base_url = "<?php echo base_url(); ?>";
 </script>
+<script type="text/javascript" src="<?php echo base_url();?>js/general.js" ></script>
 
+<script type="text/javascript" src="<?php echo base_url();?>js/dashboard.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/edit_profile.js" ></script>
 <script src='<?php echo base_url();?>js/jquery.autosize.js'></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.alerts.js" ></script>
 <?php require("all_countries.php");?>
 <style>
-
+<?php if($this->session->userdata('user_id') == $this->uri->segment(3)){ ?>
 .edit{float:right ; cursor:pointer ; margin-right:15px ; display:none }
 .delete{float:right ; cursor:pointer ; margin-right:10px ; display:none }
 .delete_skill{float:right ; cursor:pointer ; margin-right:10px ; display:none }
-.delete_edu{float:right ; cursor:pointer ; margin-right:10px ; display:none }
+.delete_edu{float:right ; cursor:pointer ; display:none }
 .expr_one{border-radius:5px ;padding:10px 10px 20px 10px}
 .expr_one:hover{ border:1px dashed #CCC ; background:#FDFFFA}
 .expr_one:hover .delete{display:block}
@@ -48,6 +45,7 @@ var base_url = "<?php echo base_url(); ?>";
 .edu_one{border-radius:5px ;padding: 10px 20px 10px}
 .edu_one:hover{ border:1px dashed #CCC ; background:#FDFFFA}
 .edu_one:hover .delete_edu{display:block}
+<?php } ?>
 
 </style>
 
@@ -57,8 +55,8 @@ jQuery(document).ready(function() {
   //toggle the componenet with class msg_body
   jQuery(".show_content").click(function()
   {
-    jQuery(".following_items").slideToggle(500);
-	jQuery('.following_items').focus();
+    jQuery(".following_items").slideToggle(700);
+	jQuery('html, body').stop().animate({scrollTop: jQuery(".following_items").offset().top}, 2000);
   });
 });
 
@@ -107,7 +105,7 @@ jQuery(document).ready(function() {
 					 ?>
                 
                 	<div  style="width:100%">
-                    	<h1> <strong style="color:#096"> <?php echo $username; ?> </strong> Personnal Information</h1>
+                    	<h1> <strong style="color:#096"> <?php echo $name; ?> </strong> Personnal Information</h1>
                         <br />
                     	<p style="margin:10px"><img src="<?php echo base_url();?>images/profile/<?php if(isset($pic)){ echo $pic;}elseif($pic == NULL && $gender == 'female'){ echo "female.gif";}elseif($pic == NULL && $gender == 'male'){echo "male.gif";}
 							 ?>" height="10%" width="20%" style="float:left ; border:1px solid #c1c1c1 ; margin:10px ; padding:3px "/><p style="margin-right:5px">
@@ -123,11 +121,8 @@ jQuery(document).ready(function() {
                        <p ><strong style="font-weight:bold ; font-size:15px"><?php echo $country." - ".$address; ?></strong><span style="color:#e1e1e1 ; font-size:10px">  (Address)</span>
                        </p>
                        
-                        <?php }elseif($this->session->userdata('user_id') == $this->uri->segment(3) && !isset($user_data)) { ?>
-                        <br>
-                           <center><a href="<?php echo base_url();?>user/edit">Update</a> Your Profile </center>
-								<?php }else{ ?>
-                                <center><h3 style="color:#c1c1c1">Not Update Yet</span></h3>
+                        <?php }else{ ?>
+                                <center><h3 style="color:#c1c1c1">Not Update Yet</h3></center>
                                 <?php } ?></p>
                     </div>
                     
@@ -141,11 +136,8 @@ jQuery(document).ready(function() {
                         <br />
                         <div id="about_text">
                     	<p class="text" id="about_p"><?php  if(isset($about)){echo $about ; }
-					   elseif($this->session->userdata('user_id') == $this->uri->segment(3) && !isset($about)){
-					    ?>
-                       <center><a href="<?php echo base_url();?>user/edit">Update</a> Your Profile </center>
-                       <?php }else{?>
-					   <center><h3 style="color:#c1c1c1">Not Update Yet</h3></center>
+					 	else{?>
+					   <center><h3 style="color:#c1c1c1" id="no_about">Not Update Yet</h3></center>
 					   <?php }?>
                        </p>
                        </div>
@@ -177,17 +169,14 @@ jQuery(document).ready(function() {
                         <br />   
                         <div id="summary_text">     
                        <p class="text" id="summary"><?php  if(isset($summary)){echo $summary ; }
-					   elseif($this->session->userdata('user_id') == $this->uri->segment(3) && !isset($summary)){
-					    ?>
-                       <center><a href="<?php echo base_url();?>user/cv_edit">Update</a> Your CV </center>
-                       <?php }else{?>
-					   <center><h3 style="color:#c1c1c1">Not Update Yet</h3></center>
+					   else{?>
+					   <center><h3 style="color:#c1c1c1" id="no_summary">Not Update Yet</h3></center>
 					   <?php }?>
                        </p>
                        </div>
                        <div id="edit_area_summary">
                        <p>
-                       <span class="field" style="padding:10px"><textarea class="summary_edit" style="width:93%;resize:none;padding:10px;height:auto" required><?php echo $summary; ?></textarea></span> 
+                       <span class="field" style="padding:10px"><textarea class="summary_edit" style="width:93%;resize:none;padding:10px;height:auto" required><?php if(isset($summary)){echo $summary; }?></textarea></span> 
                        <button class="stdbtn btn_black" id="done_edit_summary" style="margin:12px;width:80px">Done</button>
                        <button class="stdbtn btn" id="cancel_edit_summary" style=";width:80px">Cancel</button>
                        </p>
@@ -204,17 +193,14 @@ jQuery(document).ready(function() {
                         <br />
                         <div id="accomplishments_text">        
                        <p class="text" id="accomplishments"><?php  if(isset($accomplishments)){echo $accomplishments ; }
-					   elseif($this->session->userdata('user_id') == $this->uri->segment(3) && !isset($accomplishments)){
-					    ?>
-                       <center><a href="<?php echo base_url();?>user/cv_edit">Update</a> Your CV </center>
-                       <?php }else{?>
-					   <center><h3 style="color:#c1c1c1">Not Update Yet</h3></center>
+					   else{?>
+					   <center><h3 style="color:#c1c1c1" id="no_accomplishments">Not Update Yet</h3></center>
 					   <?php }?>
                        </p>
                        </div>
                        <div id="edit_area_accomplishments">
                        <p>
-                       <span class="field" style="padding:10px"><textarea class="accomplishments_edit" style="width:93%;resize:none;padding:10px;height:auto" required><?php echo $accomplishments; ?></textarea></span> 
+                       <span class="field" style="padding:10px"><textarea class="accomplishments_edit" style="width:93%;resize:none;padding:10px;height:auto" required><?php if(isset($accomplishments)){echo $accomplishments ; } ?></textarea></span> 
                        <button class="stdbtn btn_black" id="done_edit_accomplishments" style="margin:12px;width:80px">Done</button>
                        <button class="stdbtn btn" id="cancel_edit_accomplishments" style=";width:80px">Cancel</button>
                        </p>
@@ -226,14 +212,14 @@ jQuery(document).ready(function() {
                     
                     <div class="one_half" style="width:100% ; border-top:1px dashed #e1e1e1 ; padding:15px 0 10px 0" id="expr">
                     <?php if($this->session->userdata('user_id') == $this->uri->segment(3)){ ?>
-                    <div class="edit" id="expr_edit_btn"><img src="<?php echo base_url();?>images/editor.png" width="15" height="15" title="Edit"/></div>
+                    <div class="edit" id="expr_edit_btn" ><img src="<?php echo base_url();?>images/editor.png" width="15" height="15" title="Edit"/></div>
                     <div class="edit" id="expr_add_btn"><img src="<?php echo base_url();?>images/add.png" width="15" height="15" title="New Job"/></div>
                     <?php } ?>
                     	<h1 class="title"> <strong style="color:#096"> <img src="<?php echo base_url();?>images/list-icon.png" width="40" height="40" />  Experience </strong></h1>
                     <div class="expr_text"  style="font-size:14px"> 
 					<?php 
 					$counter=1;
-					if($cv_exper != NULL){
+					if(isset($cv_exper)){
 						foreach($cv_exper as $row){
 							$id = $row->id;
 							$postion = $row->postion;
@@ -245,16 +231,17 @@ jQuery(document).ready(function() {
                     
                         <br />  
                         <div class="expr_one" id="<?php echo $id; ?>"> 
+                        <?php if($this->session->userdata('user_id') == $this->uri->segment(3)){ ?>
                         <div class="delete" id="<?php echo $id; ?>"><img src="<?php echo base_url();?>images/Delete.png" width="12" height="12" title="Delete"/></div>
+                       <?php } ?>
                        <p class="text"><img src="<?php echo base_url();?>images/rightg.png" width="35" height="35" style="margin-bottom:-12px;""/><span><strong class="postion_field<?php echo $counter; ?>"><?php echo $postion ;?></strong></span> at <span><strong class="company_field<?php echo $counter; ?>"><?php echo $company ;?></strong></span> from <span>
                        <strong class="date_from_field<?php echo $counter; ?>"><?php echo $date_from ;?></strong></span> to <span><strong class="date_to_field<?php echo $counter; ?>"><?php echo $date_to ;?></strong></span>
                        </p>
                        <br />
                        <p style="margin-left:40px" class="details_field<?php echo $counter; ?>"><?php echo $datails ;?></p>
                        </div>
-                       <?php $counter++; }}elseif($cv_exper == NULL){ ?>
-                        <center><h3 style="color:#c1c1c1">Not Update Yet</h3></center>
-                       <?php }?>
+                       <?php $counter++; }} ?>
+                        <center><h3 style="color:#c1c1c1" id="no_expr"></h3></center>
                        </div>
                        
                        <div id="new_job" style="padding:20px">
@@ -309,8 +296,9 @@ jQuery(document).ready(function() {
 						?>
                     
                     <div class="skill_one" id="<?php echo $id ;?>"  style="font-size:14px">
+                    <?php if($this->session->userdata('user_id') == $this->uri->segment(3)){ ?>
                     <div class="delete_skill" id="<?php echo $id; ?>"><img src="<?php echo base_url();?>images/Delete.png" width="12" height="12" title="Delete"/></div>
-                        <br />       
+                        <?php } ?>     
                        <p class="text" id="skills"><img src="<?php echo base_url();?>images/rightg.png" width="35" height="35" style="margin-bottom:-12px;""/><span><strong class="skill_field<?php echo $counter; ?>"><?php echo $skill ;?></strong></span><div class="progress">
                             <div class="bar2" style="width:70%; margin-left:100px"><div id="colorbar<?php echo $counter; ?>" class="value <?php if($level == 'Excellent'){ echo 'bluebar';}elseif($level == 'Very Good')
 							{ echo 'bluebar';}elseif($level == 'Good'){echo 'orangebar';}elseif($level == 'Medium'){echo 'orangebar';}elseif($level == 'Acceptable'){echo 'redbar';}elseif($level == 'Weak'){echo 'redbar';} ?>" style="width: <?php if($level == 'Excellent'){ echo '95%';}elseif($level == 'Very Good')
@@ -319,6 +307,7 @@ jQuery(document).ready(function() {
                         </div>
                        
                        <?php $counter++; }}?>
+                       <center><h3 style="color:#c1c1c1" id="no_skill"></h3></center>
                        </div>
                        <br />
                        <div id="new_skill" style="padding:20px">
@@ -375,20 +364,22 @@ jQuery(document).ready(function() {
 							$country = $row->country;
 							$field_study = $row->field_study;
 							$degree = $row->degree;
-							$details = $row->details;
+							$edu_details = $row->details;
 						?>
                     <div class="edu_one" id="<?php echo $id ;?>"  style="font-size:14px">
+                    <?php if($this->session->userdata('user_id') == $this->uri->segment(3)){ ?>
                     <div class="delete_edu" id="<?php echo $id; ?>"><img src="<?php echo base_url();?>images/Delete.png" width="12" height="12" title="Delete"/></div>
-                        <br />
+                        <?php } ?>
                         <p class="text" id="edu">
                         <div style="margin-left:30px">
                           <strong style="font-size:16px ; color:#111" class="school_field<?php echo $counter; ?>"><?php echo $school; ?></strong><br />
                           <span style="color:#a1a1a1" ><span class="study_field_field<?php echo $counter; ?>"><?php echo $field_study; ?></span> - <span class="degree_field<?php echo $counter; ?>"><?php echo $degree; ?></span> - <span class="country_field<?php echo $counter; ?>"><?php echo $country; ?></span> - <span class="grad_year_field<?php echo $counter; ?>"><?php echo $grad_year; ?></span></span><br />
-                          <span class="edu_datails_field<?php echo $counter; ?>"><?php echo $datails; ?></span>
+                          <span class="edu_datails_field<?php echo $counter; ?>"><?php echo $edu_details; ?></span>
                         </div>
                         </p>
                         </div>
                        <?php $counter++; }}?>
+                       <center><h3 style="color:#c1c1c1" id="no_edu"></h3></center>
                        </div>
                        <br />
                        <div id="new_edu" style="padding:20px">

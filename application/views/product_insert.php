@@ -80,7 +80,18 @@
                             <span class="field"><input type="date" name="date_release"  /></span>
                         </p>
 
-                        
+                        <p>
+                        	<label>Product Price</label>
+                            <span class="field"><input type="number" name="price" min='1' />&nbsp;&nbsp;&nbsp;
+                            <select name="currencies" size="1"  required>
+                            <option value="">select</option>
+                            <option value="€">€ (European Euro)</option>
+                            <option value="$">$ (American Dollar)</option>
+                            <option value="£">£ (Egyptian Pound)</option>
+                            <option value="ريال">ريال سعودى</option>
+                            </select>
+                            </span>
+                        </p>
                         
                         <p>
                         	<label>Description</label>

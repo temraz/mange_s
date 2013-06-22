@@ -1,3 +1,26 @@
+<script type="text/javascript" >
+var base_url = "<?php echo base_url(); ?>";
+</script>
+<script>
+jQuery(document).ready(function(){
+	
+	jQuery.post(base_url+"user/count_messages",{}, function(data){
+			if(data.status == 'ok'){
+				if(data.messages_count != 0);
+					jQuery('.count_seen').html(data.messages_count);					
+				}else{
+					jQuery('.count_seen').html('N');
+					}
+			},"json");
+	jQuery('#nog_btn').click(function(){		
+jQuery.post(base_url+"user/seen_messages",{}, function(data){
+			if(data.status == 'ok'){
+					jQuery('.count_seen').html('N');					
+				}
+			},"json");
+	});
+});
+</script>
 <?php
 if($this->session->userdata('employee_logged_in')){
 $id=$this->session->userdata('emp_id');
@@ -23,6 +46,7 @@ if(isset($company)){
 	
 	}elseif($this->session->userdata('user_logged_in')){
 		$id=$this->session->userdata('user_id');
+		$messages_count=$this->model_users->select_count_messages($id);
 $user=$this->model_users->get_user_info($id);
 if(isset($user)){
 		foreach($user as $row){
@@ -33,6 +57,8 @@ if(isset($user)){
 		
 		}
 	}
+	
+
 ?>
 
 <div class="header radius3">
@@ -52,10 +78,12 @@ if(isset($user)){
                 </div><!--headercolumn-->
             	<div id="notiPanel" class="headercolumn">
                     <div class="notiwrapper">
-                        <a href="<?php echo base_url();?>site/messages/" class="notialert radius2">9</a>
+                        <a href="<?php echo base_url();?>user/select_user_messages/" class="notialert radius2" id="nog_btn"><span class="count_seen"></span></a>
                         <div class="notibox">
                             <ul class="tabmenu">
-                                <li class="current"><a href="<?php echo base_url();?>site/messages/" class="msg">Messages (2)</a></li>
+                                <li class="current"><a href="<?php echo base_url();?>user/select_user_messages/" class="msg">Messages
+                                 (<span  class="count_seen"></span>)</a></li>
+                               
                                 <li><a href="<?php echo base_url();?>site/activities/"  class="act">Recent Activity (3)</a></li>
                             </ul>
                             <br clear="all" />
@@ -98,7 +126,8 @@ if(isset($user)){
                               <?php if($this->session->userdata('company_logged_in')){ ?>
                              <li><a href="<?php echo base_url();?>edit/">Account Settings</a></li>
 							<?php } ?>
-                             <?php if($this->session->userdata('user_logged_in')){ ?>
+                             <?php if($this->session->userdata('user_logged_in')){ 
+							 ?>
                              <li><a href="<?php echo base_url();?>user/edit/">Account Settings</a></li>
 							<?php } ?>
 

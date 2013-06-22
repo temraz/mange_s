@@ -18,11 +18,32 @@
 
 <script type="text/javascript" src="<?php echo base_url();?>js/general.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/colorpicker.js"></script>
-<script type="text/javascript" src="<?php echo base_url();?>js/dashboard.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.jgrowl.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.alerts.js" ></script>
 
-<script type="text/javascript" src="<?php echo base_url();?>js/elements.js" ></script>
+
+<script type="text/javascript">
+var depart_no ="<?php echo $depart_no ;?>"
+</script>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	for( var i=1 ; i<=depart_no ; i++){
+		jQuery('.no_sub_'+i).hide();
+		jQuery('.field_'+i).change(function() {
+			for( var i=1 ; i<=depart_no ; i++){
+		var field = jQuery('.field_'+i).val();
+			if( field == 'inventory'){
+				jQuery('.sub_depart_number_'+i).hide();
+				jQuery('.no_sub_'+i).hide().fadeIn(1000);
+			}else{
+				jQuery('.no_sub_'+i).hide();
+				jQuery('.sub_depart_number_'+i).hide().fadeIn(1000);
+				}
+			}
+});
+		}
+	});
+</script>
 <link rel="stylesheet" href="<?php echo base_url();?>css/chosen.css" />
 <style>
 .follow  {float:right;margin-right:50px;margin-top:-20px; border-radius:3px; font-family:Verdana, Geneva, sans-serif }
@@ -90,14 +111,9 @@
                             </span>
                         </p>
                         
-                        <p>
-                        	<label>Sub-Department Number</label>
-                            <span class="field"><input type="number" min="0" max="4"  name="sub_depart_number_<?php echo $i; ?>" required style="width:200px" /></span>
-                        </p>
-                        
-                        <p>
+                             <p>
                         	<label>Department Field</label>
-                            <span class="field"><select name="field_<?php echo $i; ?>">
+                            <span class="field"><select class="field_<?php echo $i; ?>" name="field_<?php echo $i; ?>">
                             <option value="">Select</option>
                             
                             <option value="marketing">Marketing</option>
@@ -113,16 +129,30 @@
                   </select></span>
                         </p>
                         
+                        <p class="sub_depart_number_<?php echo $i; ?>">
+                        	<label>Sub-Department Number</label>
+                            <span class="field"><input type="number" min="0" max="4"  name="sub_depart_number_<?php echo $i; ?>" style="width:200px" /></span>
+                        </p>
+                        
+                        <p class="no_sub_<?php echo $i; ?>">
+                        	<span class="field" style="color:#F00">This Department not include Sub-Department</span>
+                        </p>
+                        
+                        
 						</div>
                         <?php 
+						if($i % 2 == 0){?>
+						<br clear="all" />
+						<?php	
+							}
 				 }
 				 ?>
-                        
-                        <br />
+
                         
                         <p class="stdformbutton">
                         	<button class="submit radius2">Continue</button>
                         </p>
+                        <br clear="all" />
                         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js" type="text/javascript"></script>
   <script src="<?php echo base_url();?>js/chosen.jquery.js" type="text/javascript"></script>
   <script type="text/javascript"> 

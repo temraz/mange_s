@@ -1,3 +1,4 @@
+<?php require("all_countries.php");?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -148,83 +149,27 @@
                         
                         
                     	                        
-                        <p>
+                     <p>
                         	<label>Country</label>
                             <span class="field">
-                                
-                    <?php $options = array(
-                    'af' =>  'Afghanistan',
-                    'ax' =>  'Aland Islands',
-                    'al' =>  'Albania',
-                    'dz' =>  'Algeria',
-                    'as' =>  'American Samoa',
-                    'ad' =>  'Andorra',
-                    'ao' =>  'Angola',
-                    'ai' =>  'Anguilla',
-                    'aq' =>  'Antarctica',
-                    'ag' =>  'Antigua and Barbuda',
-                    'ar' =>  'Argentina',
-                    'am' =>  'Armenia',
-                    'aw' =>  'Aruba',
-                    'au' =>  'Australia',
-                    'at' =>  'Austria',
-                    'az' =>  'Azerbaijan',
-                    'bs' =>  'Bahamas',
-                    'bh' =>  'Bahrain',
-                    'bd' =>  'Bangladesh',
-                    'bb' =>  'Barbados',
-                    'by' =>  'Belarus',
-                    'be' =>  'Belgium',
-                    'bz' =>  'Belize',
-                    'bj' =>  'Benin',
-                    'bm' =>  'Bermuda',
-                    'bt' =>  'Bhutan',
-                    'bo' =>  'Bolivia',
-                    'bw' =>  'Botswana',
-                    'bv' =>  'Bouvet Island',
-                    'br' =>  'Brazil',
-                    'vg' =>  'British Virgin Islands',
-                    'bn' =>  'Brunei',
-                    'bg' =>  'Bulgaria',
-                    'bf' =>  'Burkina Faso',
-                    'bi' =>  'Burundi',
-                    'kh' =>  'Cambodia',
-                    'cm' =>  'Cameroon',
-                    'ca' =>  'Canada',
-                    'cv' =>  'Cape Verde',
-					'eg' =>  'egypt'
-					
-					);
-                    echo form_dropdown('country', $options, 'large');?>
-                          
-                          
+       
+                    <select name="country" size="1">
+   <?php for($i=0;$i< count($country_list);$i++) {
+  echo " <option value=\"$country_list[$i]\"";
+    echo ">$country_list[$i]</option>";
+   } ?>
+   
+   </select>
                             </span>
                         </p>
                         
                         <p>
-                        	<label>Phone</label>
-                            <span class="field">
-                             <?php $numbers = array(               
-                           '376'  => 'Andorra (+376)',
-                           '1268' => 'Antigua, Barbuda (+1268)',
-                           '54'   => 'Argentina (+54)',
-                           '297'  => 'Aruba (+297)',
-                           '61'   => 'Australia (+61)',
-                           '43'   => 'Austria (+43)',
-                           '32'   => 'Belgium (+32)',
-                           '1441' => 'Bermuda (+1441)',
-                           '591'  => 'Bolivia (+591)',
-                           '55'   => 'Brazil (+55)',
-                           '359'  => 'Bulgaria (+359)',
-                           '1'    => 'Canada (+1)',
-                           '1345' => 'Cayman Islands (+1345)',
-                           '56'   => 'Chile (+56)',
-                           '86'   => 'China (+86)',
-                           '385'  => 'Croatia (+385)'); 
-                             echo form_dropdown('mobile', $numbers, 'large');
-                             echo form_input(array('name'=>'phone','class'=>'longinput','style'=>'width:150px;margin-left:5px;'));
+                        <label>phone</label>
+                        <span class="field">
+                       <select name="mobile"><option value="376">Andorra (+376)</option><option value="1268">Antigua, Barbuda (+1268)</option><option value="54">Argentina (+54)</option><option value="297">Aruba (+297)</option><option value="61">Australia (+61)</option><option value="43">Austria (+43)</option><option value="32">Belgium (+32)</option><option value="1441">Bermuda (+1441)</option><option value="591">Bolivia (+591)</option><option value="55">Brazil (+55)</option><option value="359">Bulgaria (+359)</option><option value="1">Canada (+1)</option><option value="1345">Cayman Islands (+1345)</option><option value="56">Chile (+56)</option><option value="86">China (+86)</option><option value="385">Croatia (+385)</option><option value="357">Cyprus (+357)</option><option value="420">Czech Republic (+420)</option><option value="45">Denmark (+45)</option><option value="1767">Dominica (+1767)</option><option value="1806">Dominican Republic (+1806)</option><option value="593">Ecuador (+593)</option><option value="20" selected >Egypt (+20)</option><option value="503">El Salvador (+503)</option><option value="372">Estonia (+372)</option><option value="679">Fiji Islands (+679)</option><option value="358">Finland (+358)</option><option value="33">France (+33)</option><option value="594">French Guiana (+594)</option><option value="49">Germany (+49)</option><option value="30">Greece (+30)</option><option value="1473">Grenada (+1473)</option><option value="590">Guadeloupe (+590)</option><option value="852">Hong Kong (+852)</option><option value="36">Hungary (+36)</option><option value="354">Iceland (+354)</option><option value="91">India (+91)</option><option value="62">Indonesia (+62)</option><option value="353">Ireland (+353)</option><option value="972">Israel (+972)</option><option value="39">Italy (+39)</option><option value="1876">Jamaica (+1876)</option><option value="371">Latvia (+371)</option><option value="423">Liechtenstein (+423)</option><option value="370">Lithuania (+370)</option><option value="352">Luxembourg (+352)</option><option value="60">Malaysia (+60)</option><option value="356">Malta (+356)</option><option value="596">Martinique (+596)</option><option value="52">Mexico (+52)</option><option value="377">Monaco (+377)</option><option value="1664">Montserrat (+1664)</option><option value="31">Netherlands (+31)</option><option value="599">Netherlands Antilles (+599)</option><option value="64">New Zealand (+64)</option><option value="47">Norway (+47)</option><option value="507">Panama (+507)</option><option value="595">Paraguay (+595)</option><option value="51">Peru (+51)</option><option value="63">Philippines (+63)</option><option value="48">Poland (+48)</option><option value="351">Portugal (+351)</option><option value="40">Romania (+40)</option><option value="7">Russia (+7)</option><option value="1758">Saint Lucia (+1758)</option><option value="65">Singapore (+65)</option><option value="421">Slovakia (+421)</option><option value="386">Slovenia (+386)</option><option value="27">South Africa (+27)</option><option value="82">South Korea (+82)</option><option value="34">Spain (+34)</option><option value="597">Suriname (+597)</option><option value="46">Sweden (+46)</option><option value="41">Switzerland (+41)</option><option value="886">Taiwan (+886)</option><option value="66">Thailand (+66)</option><option value="1868">Trinidad, Tobago (+1868)</option><option value="90">Turkey (+90)</option><option value="1649">Turks and Caicos (+1649)</option><option value="44">United Kingdom (+44)</option><option value="1">United States (+1)</option><option value="58">Venezuela (+58)</option><option value="84">Vietnam (+84)</option></select>
+                           <?php echo form_input(array('name'=>'phone','class'=>'longinput','style'=>'width:150px;margin-left:5px;')); 
                              ?>
-                          </span>
+                           </span>
                              </p>
                         
                        

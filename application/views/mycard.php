@@ -25,6 +25,9 @@
 <style>
 .follow  {float:right;margin-right:50px;margin-top:-20px; border-radius:3px; font-family:Verdana, Geneva, sans-serif }
 .follow button {width:80px}
+#buy{border-bottom:1px dashed #c1c1c1;border-top:1px dashed #c1c1c1 ; padding:5px 0 5px 0 ; margin-top:5px}
+#buy:hover{background:#f1f1f1}
+#buy a {text-decoration:none}
 </style>
 </head>
 
@@ -47,23 +50,23 @@
         
         <div class="maincontent">
         	<div class="maincontentinner">
-            	
-               <?php include('company_taps.php');?>
                 
                 <div class="content">
-                <h1>Products</h1>
+                <h1 style="border-bottom:1px dashed #e1e1e1; padding-bottom:10px">My Card List</h1>
                 <br />
                 <?php 
-				$counter=1;
-				if(isset($products) && count($products) != 0){
-				foreach($products as $row){
+				if(isset($products_list) && count($products_list) != 0){
+				foreach($products_list as $r){
+					$product_id=$r->product_id;
+					$all_products = $this->model_company->get_product($product_id);
+					$counter=1;
+				foreach($all_products as $row){
 					$id=$row->id;
 					$name=$row->name;
 					$logo=$row->logo;
 					$details=$row->	product_desc ;
 					$date=$row->date_release;
 					$price = $row->price;
-					
 					 ?>
                 
                 	<div class="one_third <?php if($counter%3 == 0){ echo "last" ; } ?>">
@@ -73,12 +76,13 @@
                                 <img src="<?php echo base_url();?>images/products/<?php echo $logo; ?>" width="100%" height="140" style="border:.1em solid #666" /><br />
                            <h3 style="padding-top:10px"><a href="<?php echo base_url();?>company/product/<?php echo $id; ?>"><?php echo $name; ?></a></h3><span class="radius2" style=" margin-top:-22px ; font-weight:bold ; float:right"><?php echo $date; ?></span>
                                <span><b>Price: </b><?php echo $price; ?></span>
-                                <p><?php echo substr($details,0,60).'...'; ?> <small><a href="<?php echo base_url();?>company/product/<?php echo $id; ?>">Details</a></small></p>
+                                <p><?php echo substr($details,0,50).'...'; ?> <small><a href="<?php echo base_url();?>company/product/<?php echo $id; ?>">Details</a></small></p>
+                               <div id="buy"><center><h3 style=""><a href="#">Buy Now</a></h3></center></div>
                         </div><!--widgetcontent-->
                         </div><!--widgetbox-->
                     </div><!--one_third-->
                     
-                   <?php $counter++;}}else{?>
+                   <?php $counter++;}}}else{?>
                      <center><h1 style="color:#c1c1c1">There Are Not Products Yet</h1></center>
                     <?php } ?>
                    
