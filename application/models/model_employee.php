@@ -686,7 +686,22 @@ function get_chat_messages_last_one($from_id ,$to_id){
         } else {
             return false;
         }
-		}		
+		}	
+	///////////////////////////////////
+	
+	function sub_sector_type($id){
+		$sql='select e.id,s.sub_depart_manager,s.type
+              from employees e 
+			  join sub_department s on e.sub_dept_id=s.id and e.id=?';
+			  $result=$this->db->query($sql,$id);
+		if($result->num_rows() == 1){
+	
+            return $result;
+			
+        } else {
+            return false;
+        }
+		}			
 	///////////////////////////////////////////////////////////////////
 	function show_reports($to_id){
 		$sql='select e.id,e.firstname,e.lastname,e.profile_pic,e.company_id,e.department_id,e.sub_dept_id,e.online,r.sender_id,r.the_reason,r.report_date,r.id as report_id,r.to_id
@@ -713,7 +728,7 @@ function get_chat_messages_last_one($from_id ,$to_id){
 
        LEFT JOIN  report_employee AS r ON  e.id=r.sender_id
 
-       JOIN forward_reports as f ON f.report_id = r.id where  f.emp_id=? and archive=? 
+       JOIN forward_reports as f ON f.report_id = r.id where  f.emp_id=? and archive=? r.report_date DESC
 			  
 			  ';
 			  
@@ -939,9 +954,30 @@ function get_chat_messages_last_one($from_id ,$to_id){
         } else {
             return false;
         }
-		}			
+		}
+	/////////////////////////////////////////////////////////////
+	function count_result_report_emp($id){
+		$sql='select  e.id,e.firstname,e.lastname,e.profile_pic,e.company_id,e.department_id,
+		             e.sub_dept_id,e.online,r.report_id,r.result,r.to_id,r.forward_emp_id,r.date_result,r.id as result_id
+					 
+              from employees e 
+			  join report_results r on e.id=r.lawer_id and forward_emp_id=? and r.archive =? and r.seen=? order by r.date_result DESC ';
+			  $result = $this->db->query($sql,array($id,0,0));
+		if($result->num_rows() >= 1){
+            return $result;
+        } else {
+            return false;
+        }
+		}				
 	/////////////////////////////////////////////////////////////	
 		function result_report_details($id){
+			 $data = array(
+               'seen' => 1,
+            );
+
+			$this->db->where('id', $id);
+			$this->db->update('report_results', $data); 
+			
 		$sql='select  e.id,e.firstname,e.lastname,e.profile_pic,e.company_id,e.department_id,
 		             e.sub_dept_id,e.online,r.report_id,r.result,r.to_id,r.forward_emp_id,r.date_result,r.id as result_id
 					 
@@ -1063,6 +1099,45 @@ function get_chat_messages_last_one($from_id ,$to_id){
 
 			$this->db->where('id', $emp_id);
 			$this->db->update('employees', $data); 
+
+		 if($this->db->affected_rows()==1){
+			 return true;
+			 }else{
+				 return false;
+				 }
+		}	
+	/////////////////////////////////////////////////////////
+	function job_applies($comp_id){
+		$sql='select j.id,j.name,j.company_id,j.description,j.department,j.level,a.user_id,a.job_id
+              from jops j
+			  join apply_job a on j.id=a.job_id and j.company_id=? and reject=?';
+		$result = $this->db->query($sql,array($comp_id,0));
+		if($result->num_rows() >= 1){
+            return $result;
+        } else {
+            return false;
+        }	  
+		}
+	/////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////
+	function job_applies_one($job_id){
+		$sql='select j.id,j.name,j.company_id,j.description,j.department,j.level,a.user_id,a.job_id,j.`date`,a.id as apply_id
+              from jops j
+			  join apply_job a on j.id=a.job_id and j.id=? and reject=?';
+		$result = $this->db->query($sql,array($job_id,0));
+		if($result->num_rows() == 1){
+            return $result;
+        } else {
+            return false;
+        }	  
+		}		
+	////////////////////////////////////////////////////////
+	function ajax_reject_user($apply_id){
+		$data = array(
+               'reject' => 1,
+            );
+		$this->db->where('id', $apply_id);
+			$this->db->update('apply_job',$data); 
 
 		 if($this->db->affected_rows()==1){
 			 return true;

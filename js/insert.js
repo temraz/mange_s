@@ -35,6 +35,36 @@ jQuery(document).ready(function(){
 		insert_salary();
 	});
 	
+	jQuery('#reject_button').click(function(){
+		reject_user();
+	});
+	/////////////////////////////////////////////////////////////////
+		
+		function reject_user() {
+	
+		var job_id=jQuery('#job_id').val();		
+			
+		if(job_id == '' ){
+	jQuery('#report_validate').append(' <div class="notification msgerror"> <a class="close"></a> <p ><strong>Error Message:</strong> Job ID not found try again please !!</p></div>');
+			
+			
+			}
+		if(job_id != '') {
+			
+			jQuery.post(base_url+"employee/ajax_reject_user" ,{ job_id : job_id }, function(data){
+             
+          if(data==='ok'){
+			  jQuery('#success').append(' <div class="notification msgsuccess"> <a class="close"></a><p > The user has been rejected successfully . !!</p></div>');
+			  }else{
+				   jQuery('#fail').append(' <div class="notification msgerror"> <a class="close"></a><p > Error while rejecting the user try again please. !!</p></div>');
+				  }
+			
+			
+			});
+					
+		}
+			
+        }
 /////////////////////////////////////////////////////////////////////	
 function insert_salary(){
 	var salary = jQuery('#salary').val();	

@@ -123,6 +123,7 @@ jQuery(document).ready(function(){
                             <option value="sales">Sales</option>
                             <option value="iT">IT</option>
                             <option value="insurance">Insurance</option>
+                            <option value="personnel">Administrative and Personnel Affairs</option>
                             <option value="customer">Customer Service</option>
                               
                            

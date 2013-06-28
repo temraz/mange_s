@@ -86,8 +86,14 @@ var base_url=" <?php echo base_url();?>";
                                     <a href="<?php echo base_url(); ?>employee/chat/<?php echo  $report->row(0)->id ?>" title="chat with the reporter" ><?php echo $report->row(0)->firstname.				 	 								' '.$report->row(0)->lastname ; ?></a> 
                                         
                                        <br/>
-                                        <span style="font-weight:bold">Department: <?php 
-										echo $this->model_employee->select_deaprtment($report->row(0)->department_id)->row(0)->type; ; ?></span> <br />
+                                        
+                                        
+                                        <?php if(isset($report->row(0)->department_i)){?>
+                                        <span style="font-weight:bold">Department: <?php
+										 echo $this->model_employee->select_deaprtment($report->row(0)->department_id)->row(0)->type; ?></span> <br />
+                                        <?php }else{?>
+                                         <span style="font-weight:bold">From chairman</span> <br />
+                                        <?php }?>
                                         
                         <?php echo $report->row(0)->result ; ?><br />                        
                                         
@@ -230,7 +236,7 @@ var base_url=" <?php echo base_url();?>";
     </div><!--mainwrapper-->
 	<!-- END OF MAIN CONTENT -->
    
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="<?php echo base_url();?>js/jquery-1.7.min.js"></script>
  <script type="text/javascript">
 jQuery(document).ready(function() {
 			  // Button which will activate our modal

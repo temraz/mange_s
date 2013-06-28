@@ -49,36 +49,42 @@
                 
                 <div class="content">
                     
-                  <h1 style="border-bottom:1px dashed #e1e1e1; padding-bottom:10px">reports in employees </h1>
+                  <h1 style="border-bottom:1px dashed #e1e1e1; padding-bottom:10px">Applicants for the jobs</h1>
                 <br />
                  <?php if(isset($no_reports)){?>
                     <div class="notification msgerror">
                         <a class="close"></a>
-                        <p>there is new reports come for you until now</p>
+                        <p>there is no interview for you until now</p>
                     </div>
                     <?php }?>
                 <div class="widgetcontent userlistwidget">
                             <ul>
               
             
-                        <?php if(isset($reports)){foreach($reports as $report){?>
+                        <?php if(isset($jobs)){foreach($jobs as $job){?>
                             	<li>
-                               <div class="avatar"><img src="<?php echo base_url(); ?>images/profile/thumb_profile/<?php echo $report->profile_pic ?>" width="50" height="45" /></div>
+                                <?php $pic=$this->model_users->select_user($job->user_id)->row(0)->pic;?>
+                                  <?php $name=$this->model_users->select_user($job->user_id)->row(0)->name;?>
+                                 <div class="avatar"><img src="<?php echo base_url(); ?>images/profile/<?php echo $pic ?>" width="50" height="45" /></div>
+                            
+                            
+                                         <span style="font-weight:bold">
+                                         <?php
+										 echo $name ?>
+                                          
+                                         </span>
+                                          <br />
                                     <div class="info" style="margin-left:70px">
-                                    	<a href="<?php echo base_url(); ?>employee/chat/<?php echo  $report->id ?>" title="chat with the reporter"><?php echo $report->firstname.' '.$report->lastname ; ?></a> 
+                                    
+                                    	<?php echo $job->name ; ?> 
+                                       
                                        <br/>
-                                       <?php if(isset($report->department_id)){?>
-                                        <span style="font-weight:bold">Department: <?php
-										 echo $this->model_employee->select_deaprtment($report->department_id)->row(0)->type; ?></span> <br />
-                                        <?php }else{?>
-                                         <span style="font-weight:bold">From chairman</span> <br />
-                                        <?php }?>
-                        <?php echo substr($report->the_reason,0,200).'...' ; ?><a href="<?php echo base_url(); ?>employee/report_details/<?php echo  $report->report_id ; if(isset($manager)){ ?>/<?php echo  $report->to_id ;}?>/<?php  if(isset($report->lawer_id)){echo $report->lawer_id;}?>">Details</a><br />                        
+                                      
+                        <?php echo substr($job->description,0,200).'...' ; ?><a href="<?php echo base_url(); ?>employee/job/<?php echo  $job->id ; ?>/<?php echo  $job->company_id ;?>/<?php echo $job->user_id?>">Details</a><br />                      
                                         
                                         
                                         
-                                        <br /> <a href="<?php echo base_url(); ?>employee/report_details/<?php echo  $report->report_id ?>/<?php echo  $report->to_id?>" style="float:right ; color:#c1c1c1"><?php echo $report->report_date; ?></a>
-                                        <br clear="all" />
+                                        
                                     </div><!--info-->
                                 </li>
                           <?php }}?>      
@@ -86,7 +92,7 @@
                                 
                             </ul>
                             <br clear="all" />
-                            
+                     
                         </div><!--widgetcontent-->
                     
                     

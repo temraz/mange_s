@@ -678,6 +678,11 @@ function task_validation(){
             );
 			$query = $this->db->insert('activity', $data);
 			
+					if($this->uri->segment(4) != ''){
+				$activity_id=$this->uri->segment(4);
+			$this->db->where('id',$activity_id);
+		    $result=$this->db->update('activity',array('seen'=>1));
+				}
 					
 		 $comp_id=$this->model_users->select_emp($my_id)->row(0)->company_id;
 		  if($this->uri->segment(3) != ''){
@@ -1436,4 +1441,100 @@ $result=array('status'=>'no');
 				}
 			
 			}
+	/////////////////////////////////////////////////////////
+	function show_jobs(){
+			if($this->session->userdata('employee_logged_in')){
+				 $id=$this->session->userdata('emp_id');
+				 $company_id=$this->session->userdata('company_id');
+	 
+			 if($this->model_employee->is_manager($id)){ 
+			 $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+ }elseif($this->model_employee->is_sub_manager($id)){
+	  $sector_type=$this->model_employee->sector_type_sub_manger($id)->row(0)->type;
+	 }
+ 
+ else{
+	  $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+	
+	 }
+	  
+		$sub_sector_type=$this->model_employee->sub_sector_type($id)->row(0)->type;	 
+	
+	
+	 if(isset($sector_type,$sub_sector_type) && $sector_type=='personnel' && $sub_sector_type=='hr'){   /// start
+	  if($this->model_employee->job_applies($company_id)){
+	$data['jobs']=$this->model_employee->job_applies($company_id)->result();	 
+	  $this->load->view('show_jobs',$data);
+		 }else{
+		   $data['no_reports']=1;
+			   $this->load->view('show_jobs',$data);
+		 }
+	 
+	 }else{
+		  redirect('site/error404');
+		 }
+	}else{
+		 redirect('site/index_employee');	
+		 }	 
+		 
+		 
+		}
+	///////////////////////////////////////////////////////////////////////
+	function job(){
+		if($this->session->userdata('employee_logged_in')){
+			if( $this->uri->segment(3) != '' || $this->uri->segment(4) != '' || $this->uri->segment(5) != ''){
+				 $id=$this->session->userdata('emp_id');
+				 $company_id=$this->session->userdata('company_id');
+				 if($company_id ==$this->uri->segment(4)){
+					 $job_id=$this->uri->segment(3);
+					  if($this->model_employee->job_applies_one($job_id)){
+	$data['job']=$this->model_employee->job_applies_one($job_id);	
+	
+	$id=$this->uri->segment(5);   
+               
+				 if($this->model_users->select_user($id)){
+					 $id=$this->model_users->select_user($id)->row(0)->id;
+				     $data['id']=$id;
+					 $data['user_data']=$this->model_users->get_user_info($id);
+					 $data['cv']=$this->model_users->get_cv($id);
+					$data['cv_edu']=$this->model_users->get_cv_edu($id);
+					$data['cv_exper']=$this->model_users->get_cv_exper($id);
+					$data['cv_skills']=$this->model_users->get_cv_skills($id);
+					$data['following']=$this->model_users->get_following($id);
+				 }
+	 
+	  $this->load->view('job_details',$data);
+		 }else{
+		   $data['no_reports']=1;
+			   $this->load->view('job_details',$data);
+		 }
+					 
+					 }
+					else{
+					redirect('site/error404');
+					}
+				}else{
+					 redirect('site/error404');
+					}
+			}else{
+		 redirect('site/index_employee');	
+		 }	 
+		 
+		}	
+	/////////////////////////////////////////////////////////////////////////
+	function ajax_reject_user(){
+		if($this->session->userdata('employee_logged_in')){
+			
+				$apply_id=$this->input->post('job_id');
+			if($this->model_employee->ajax_reject_user($apply_id)){
+				echo 'ok';
+				}else{
+					echo 'no';
+					}
+			
+			       	
+			}else{
+		 redirect('site/index_employee');	
+		 }
+		}			
 }?>

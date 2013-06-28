@@ -13,8 +13,12 @@ if($this->model_employee->is_chairman($id)){
 	 $sector_type=$this->model_employee->sector_type_sub_manger($id)->row(0)->type;
 	 }else{
 		  $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
-		 
+		 if($this->model_employee->sub_sector_type($id)){
+		$sub_sector_type=$this->model_employee->sub_sector_type($id)->row(0)->type;	 
+			 }
 		 }
+		 
+		 
 ///////////////////////////////////////////////////////		 
 	  if(isset($sector_type) && $sector_type=='legal'){
 		  if(isset($manager)){
@@ -48,8 +52,8 @@ if($this->model_employee->is_chairman($id)){
 		  $reports_results_count=0;
 		  }
 			}else{
-				if($this->model_employee->show_result_report_emp($id)){
-	  $reports_results_count=count($this->model_employee->show_result_report_emp($id)->result());
+				if($this->model_employee->count_result_report_emp($id)){
+	  $reports_results_count=count($this->model_employee->count_result_report_emp($id)->result());
 	  $emp_financial=1;
 	  }else{
 		  $reports_results_count=0;
@@ -57,7 +61,21 @@ if($this->model_employee->is_chairman($id)){
 				
 				}
 	 
-	  }	 
+	  }	
+	   
+//////////////////////////////////////////////////////////////////////
+ if(isset($sector_type,$sub_sector_type) && $sector_type=='personnel' && $sub_sector_type=='hr'){
+	 $hr=1;
+	 $company_id=$this->session->userdata('company_id');
+	 
+	 if($this->model_employee->job_applies($company_id)){
+	$new_applies=count($this->model_employee->job_applies($company_id)->result());	 
+		 }else{
+		 $new_applies=0;
+		 }
+	 
+	 
+	 }	   
 	
 ?>
 <div class="leftmenu">
@@ -85,9 +103,16 @@ if($this->model_employee->is_chairman($id)){
                        <?php if(isset($emp_financial)){?>
                           <li><a href="<?php echo base_url();?>employee/staff_salaries/" class="dashboard" ><span>Edit Staff salaries</span></a></li>
                         <?php }?>
-                        
-                        <?php if(isset($sector_type) && $sector_type=='financial'){?>
+                                                  <?php if(isset($sector_type) && $sector_type=='financial'){?>
                          <li><a href="<?php echo base_url();?>employee/show_result_reports/" class="media" ><span>Reportes results (<?php if(isset($reports_results_count)){echo $reports_results_count;}?>)</span></a></li>
+                        <?php }?>
+                                                <?php if(isset($sector_type) && $sector_type=='legal'){?>
+                         <li><a href="<?php echo base_url();?>employee/show_reports/" class="media" ><span>New Reportes(<?php if(isset($reports_count)){echo $reports_count;}?>)</span></a></li>
+                        <?php }?>
+
+                        
+                          <?php if(isset($hr)){?>
+                         <li><a href="<?php echo base_url();?>employee/show_jobs/" class="media" ><span>Applicants for the jobs (<?php if(isset($new_applies)){echo $new_applies;}?>)</span></a></li>
                         <?php }?>
                         
                      <!--   <li><a href="<?php echo base_url();?>site/editor/" class="media" ><span>File Editor</span></a></li> -->

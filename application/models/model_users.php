@@ -110,7 +110,7 @@ class Model_users extends CI_Model {
     }
 	////////////////////////////////////////////////
 	function select_user($id){
-		$sql='select id,email from users where id=?';
+		$sql='select id,email,pic,name from users where id=?';
 		 $result=$this->db->query($sql,$id);
 		 if($result->num_rows() == 1){
 			 return $result;
