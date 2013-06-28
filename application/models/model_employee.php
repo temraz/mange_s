@@ -457,12 +457,20 @@ function select_sub_departments($comp_id , $dept_id){
 		}
 	//////////////////////////////////////////////
 	function select_avtivity($id){
+	$data=array('emp_id'=>$id);
+	$this->db->order_by("id", "desc"); 
+		$this->db->where($data);
+	$result = $this->db->get('activity',10);
+	  return $result->result();
+		}
+	//////////////////////////////////////////////
+	function count_avtivity($id){
 	$data=array('emp_id'=>$id,'seen'=>0);
 	$this->db->order_by("id", "desc"); 
 		$this->db->where($data);
-	$result = $this->db->get('activity',9);
+	$result = $this->db->get('activity',10);
 	  return $result->result();
-		}
+		}	
 	///////////////////////////////////////////////////////////// employee chat ////////////////////////////////////////////////	
 	function select_dept_contacts($comp_id){
 		$sql='select e.id,e.firstname,e.lastname,e.profile_pic,e.company_id,e.department_id,e.sub_dept_id,e.online
@@ -599,7 +607,7 @@ function get_chat_messages_last_one($from_id ,$to_id){
 		}
 	/////////////////////////////////////////////////////////
 	function select_unseen_messages($id){
-		$sql='select * from employee_chat where to_seen=0 and `to`=?';
+		$sql='select * from employee_chat where `to`=? limit 9';
 		$result=$this->db->query($sql,$id);
 		if($result->num_rows() >= 1){
 	
@@ -609,6 +617,19 @@ function get_chat_messages_last_one($from_id ,$to_id){
             return false;
         }
 		}
+	///////////////////////////////////////////////////////////
+	
+	function count_unseen_messages($id){
+		$sql='select * from employee_chat where to_seen=? and `to`=?';
+		$result=$this->db->query($sql,array(0,$id));
+		if($result->num_rows() >= 1){
+	
+            return $result;
+			
+        } else {
+            return false;
+        }
+		}	
 	///////////////////////////////////////////////////////////
 	function insert_report($emp_id,$reason,$sender_id,$company_id){
 		$type='legal';

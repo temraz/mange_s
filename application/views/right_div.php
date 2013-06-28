@@ -1,3 +1,15 @@
+<?php 
+$emp_id=$this->session->userdata('emp_id');
+			if($this->model_employee->select_avtivity($emp_id)){
+				$activities=$this->model_employee->select_avtivity($emp_id);
+				
+				}else{
+					$datano_activity=1;
+				
+					}
+
+?>
+
   <div class="mainright">
         	<div class="mainrightinner">
             	  <div class="widgetbox">
@@ -10,12 +22,16 @@
                         <div class="title"><h2 class="tabbed"><span>Recent Activity</span></h2></div>
                         <div class="widgetcontent padding0">
                             <ul class="activitylist">
-                            	<li class="message"><a href=""><strong>Temraz</strong> sent a message <span>Just now</span></a></li>
-                                <li class="user"><a href=""><strong>Al hawata</strong> added <strong>23 users</strong> <span>Yesterday</span></a></li>
-                                <li class="user"><a href=""><strong>Sheir</strong> added <strong>2 users</strong> <span>2 days ago</span></a></li>
-                                <li class="message"><a href=""><strong>Gado</strong> sent a message <span>5 days ago</span></a></li>
-                                <li class="media"><a href=""><strong>Badran</strong> uploaded <strong>2 photos</strong> <span>5 days ago</span></a></li>
-                                 <li class="media"><a href=""><strong>Mohamed Temraz</strong> uploaded <strong>2 photos</strong> <span>5 days ago</span></a></li>
+                            
+                            <?php if(isset($activities)){ foreach($activities as $activity){?>
+	
+    
+    <li class="user"><a href="<?php echo $activity->link ?>/<?php echo $activity->id ;?>"><strong style="font-size:12px;"><?php echo substr($activity->activity,0,35)?></strong></a></li>
+    <?php }}elseif(isset($no_activity)){?>
+   <p style="text-align:center"> There are no new activities </p>
+    <?php }?>
+    
+                            	
                             </ul>
                         </div><!--widgetcontent-->
                     </div><!--widgetbox-->

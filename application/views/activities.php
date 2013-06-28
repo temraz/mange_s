@@ -1,7 +1,7 @@
 <html><ul class="msglist">
 <?php if(isset($activities)){ foreach($activities as $activity){?>
 	
-    <li class="calendar">
+    <li class="calendar <?php if($activity->seen==1) echo 'new' ;?>">
         <div class="msg">
             <a href="<?php echo $activity->link ?>/<?php echo $activity->id ;?>"><?php echo $activity->activity?></a>.
         </div>

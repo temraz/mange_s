@@ -5,7 +5,7 @@
         $seder_lastname=$this->model_users->select_emp($message->from)->row(0)->lastname;
     ?>
    
-    <li class="message">
+    <li class="message <?php if($message->to_seen==1) echo 'new' ;?>">
      
         <div class="msg">
             From:<?php echo $seder_firtname.' '.$seder_lastname ?></a> <span><?php echo $message->message_date;?></span>

@@ -347,7 +347,7 @@ function task_validation(){
 		if ($this->session->userdata('employee_logged_in')) {
 			$emp_id=$this->session->userdata('emp_id');
 			if($this->model_employee->select_avtivity($emp_id)){
-			$activity_count=count($this->model_employee->select_avtivity($emp_id));
+			$activity_count=count($this->model_employee->count_avtivity($emp_id));
 			}else{
 				$activity_count=0;
 				}
@@ -571,8 +571,8 @@ function task_validation(){
 	///////////////////////////////////////////////////
 	function select_count_messages(){
 		$id=$this->session->userdata('emp_id');
-			if($this->model_employee->select_unseen_messages($id)){
-				echo count($this->model_employee->select_unseen_messages($id)->result());
+			if($this->model_employee->count_unseen_messages($id)){
+				echo count($this->model_employee->count_unseen_messages($id)->result());
 				
 			
 				}else{
