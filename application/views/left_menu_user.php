@@ -13,7 +13,7 @@ $control=$this->uri->segment(1); ?>
                      <?php } ?>
                        
                         <li><a href="<?php echo base_url();?>user/applied_jobs/" class="calendar"><span>Applied Jobs</span></a></li>
-                       
+                       <li><a href="<?php echo base_url();?>user/event_attend"  class="dashboard"><span>Attend</span></a></li>
                         <li><a href="<?php echo base_url();?>user/mycard"  class="dashboard"><span>My Card</span></a></li>
                         
                         

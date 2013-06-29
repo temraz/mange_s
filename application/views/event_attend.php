@@ -1,9 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Dashboard |Business Linkage</title>
+<link rel="shortcut icon" href="<?php echo base_url();?>images/head.png" type="image/x-icon"/>
 <link rel="stylesheet" href="<?php echo base_url();?>css/style.css"  type="text/css" />
 
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery-1.7.min.js"></script>
@@ -13,37 +13,54 @@
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.flot.resize.min.js" ></script>
 
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery-ui-1.8.16.custom.min.js"></script>
-
-<script type="text/javascript" src="<?php echo base_url();?>js/general.js" ></script>
-
-<script type="text/javascript" src="<?php echo base_url();?>js/dashboard.js" ></script>
-<script type="text/javascript" src="<?php echo base_url();?>js/jquery.alerts.js" ></script>
-
 <script type="text/javascript" >
 var base_url = "<?php echo base_url(); ?>";
 </script>
-<script>
-jQuery(document).ready(function(){
+<script type="text/javascript" src="<?php echo base_url();?>js/general.js" ></script>
 
-var event_id = jQuery('#event_id').val();
-jQuery('#wait_e').hide();
-	jQuery('#attend_event').click(function(){	
-	jConfirm('Do You Really Want to attend this event?', 'Confirm', function(r) {
-                    if( r ){
-		jQuery.post(base_url+"user/attend",{ event_id : event_id }, function(data){
-			if(data.status == 'ok'){
-					jQuery('#apply_e').hide();
-					jQuery('#wait_e').hide().fadeIn(1000);					
-				}
-			},"json");
-					}
-	});
-			
-					
-		});			
+<script type="text/javascript" src="<?php echo base_url();?>js/dashboard.js" ></script>
+<script type="text/javascript" src="<?php echo base_url();?>js/edit_profile.js" ></script>
+<script src='<?php echo base_url();?>js/jquery.autosize.js'></script>
+<script type="text/javascript" src="<?php echo base_url();?>js/jquery.alerts.js" ></script>
+<?php require("all_countries.php");?>
+<style>
+<?php if($this->session->userdata('user_id') == $this->uri->segment(3)){ ?>
+.edit{float:right ; cursor:pointer ; margin-right:15px ; display:none }
+.delete{float:right ; cursor:pointer ; margin-right:10px ; display:none }
+.delete_skill{float:right ; cursor:pointer ; margin-right:10px ; display:none }
+.delete_edu{float:right ; cursor:pointer ; display:none }
+.expr_one{border-radius:5px ;padding:10px 10px 20px 10px}
+.expr_one:hover{ border:1px dashed #CCC ; background:#FDFFFA}
+.expr_one:hover .delete{display:block}
+.one_half:hover .edit{display:block}
+.one_half{border-radius:3px}
+.one_half:hover{}
+.title{margin-left:15px}
+.text{padding:10px}
+
+.skill_one{border-radius:5px ;padding:10px 10px 20px 10px}
+.skill_one:hover{ border:1px dashed #CCC ; background:#FDFFFA}
+.skill_one:hover .delete_skill{display:block}
+
+.edu_one{border-radius:5px ;padding: 10px 20px 10px}
+.edu_one:hover{ border:1px dashed #CCC ; background:#FDFFFA}
+.edu_one:hover .delete_edu{display:block}
+<?php } ?>
+
+</style>
+
+ <script>
+jQuery(document).ready(function() {
+  jQuery(".following_items").hide();
+  //toggle the componenet with class msg_body
+  jQuery(".show_content").click(function()
+  {
+    jQuery(".following_items").slideToggle(700);
+	jQuery('html, body').stop().animate({scrollTop: jQuery(".following_items").offset().top}, 2000);
+  });
 });
-</script>
 
+    </script>
 </head>
 
 <body class="loggedin">
@@ -58,53 +75,48 @@ jQuery('#wait_e').hide();
          	
         <div class="mainleft">
           	<div class="mainleftinner">
-            <?php  if($this->session->userdata('company_logged_in')){ include('left_menu_company.php'); } elseif($this->session->userdata('user_logged_in')){include('left_menu_user.php');}?>
+            
+              	<?php include('left_menu_user.php');?>
             	<div id="togglemenuleft"><a></a></div>
             </div><!--mainleftinner-->
         </div><!--mainleft-->
         
         <div class="maincontent">
         	<div class="maincontentinner">
-            	
                 
                 <div class="content">
-                           <?php 
-						   if(isset($event)){
-				foreach ($event as $row){
+               
+             <h1 style="border-bottom:1px dashed #e1e1e1; padding-bottom:10px">Attends</h1>
+                <br />
+                <?php 
+				$counter = 1;
+				if(isset($events_attend) && count($events_attend) != 0){
+						   foreach($events_attend as $row){ 
+						   $event_id = $row->event_id;
+						   $events = $this->model_company->get_event($event_id);
+				foreach ($events as $row){
 					$id=$row->id;
 					$name=$row->name;
 					$date=$row->date;
 					$details=$row->details;
 					$pic=$row->pic;
-						   }}
-						   ?>
-                           <h1><?php echo $name ?></h1>
-                            <h3 style="float:right ; color:#c1c1c1"><?php echo $date ?></h3>
-                           <br class="all"/>
-                    	<p><img src="<?php echo base_url();?>images/events/<?php echo $pic; ?>" height="200" width="270" style="float:left; border:1px solid #c1c1c1 ; margin:10px ; padding:3px "/><p><?php echo $details; ?></p></p>
-                  <input type="hidden" value="<?php echo $id ?>" id="event_id" /> 
-                      <?php 
-					  $user_id = $this->session->userdata('user_id');
-					$event_id = $this->uri->segment(3);
-					  if(!$this->model_users->is_attend($user_id,$event_id)){ ?><h3 style="float:right;margin-right:40px" id="apply_e"><button class="stdbtn btn_black" id="attend_event" style="width:90px">Attend</button></h3>
-                     <?php }else{ ?>
-                     
-                     <?php 
-						foreach($events_attend as $row){
-							$wait = $row->wait;
-							$accept = $row->accept;
-						?>
-                      
-                     <?php if($accept == 1 && $wait == 1){ ?>
-                      <h3 style="color:#093; float:right;margin-right:40px" >You are aceepted</h3>
-                      <?php }elseif($accept == 0 && $wait == 1){ ?>
-                      <h3  style="color:#F60 ; float:right;margin-right:40px">Wait for Acception</h3>
-                      
-                      <?php }}}?>
-                       <h3 id="wait_e"  style="color:#F60 ; float:right;margin-right:40px">Wait for Acception</h3>
-                      <br />
-                      <br clear="all"/>
-                      
+				}
+					 ?>
+                	<div class="one_half <?php if($counter%2 == 0){ echo "last" ; } ?>">
+                    	<div class="widgetbox uncollapsible">
+                            <div class="title"><h2 class="general"><span><?php echo $name;?></span></h2></div>
+                            <div class="widgetcontent">
+                            <img src="<?php echo base_url();?>images/events/<?php echo $pic;?>" width="100%" height="170" style="border:.1em solid #666" /><br />
+                           <h3 style="padding-top:10px"><a href="<?php echo base_url(); ?>company/event/<?php echo $id; ?>"><?php echo $name ?></a></h3><span class="radius2" style="float:right ; margin-top:-22px ; font-weight:bold"><?php echo $date;?></span>
+                                <p><?php echo substr($details,0,40).'...';?> <small><a href="<?php echo base_url(); ?>company/event/<?php echo $id; ?>">Show Details</a></small></p>
+                            </div><!--widgetcontent-->
+                        </div><!--widgetbox-->
+                    </div><!--one_half-->
+                    <?php $counter++;}}else{?>
+                    <center><h1 style="color:#c1c1c1">There Are Not Attends Yet</h1></center>
+                    <?php } ?>
+                           <br clear="all" /> 
+                   
                 </div><!--content-->
                 
             </div><!--maincontentinner-->
@@ -125,7 +137,12 @@ jQuery('#wait_e').hide();
                         <div class="title"><h2 class="tabbed"><span>Recent Activity</span></h2></div>
                         <div class="widgetcontent padding0">
                             <ul class="activitylist">
-              <?php include('recent_activity.php');?>
+                            	<li class="message"><a href=""><strong>Temraz</strong> sent a message <span>Just now</span></a></li>
+                                <li class="user"><a href=""><strong>Al hawata</strong> added <strong>23 users</strong> <span>Yesterday</span></a></li>
+                                <li class="user"><a href=""><strong>Sheir</strong> added <strong>2 users</strong> <span>2 days ago</span></a></li>
+                                <li class="message"><a href=""><strong>Gado</strong> sent a message <span>5 days ago</span></a></li>
+                                <li class="media"><a href=""><strong>Badran</strong> uploaded <strong>2 photos</strong> <span>5 days ago</span></a></li>
+                                 <li class="media"><a href=""><strong>Mohamed Temraz</strong> uploaded <strong>2 photos</strong> <span>5 days ago</span></a></li>
                             </ul>
                         </div><!--widgetcontent-->
                     </div><!--widgetbox-->
@@ -184,7 +201,6 @@ jQuery('#wait_e').hide();
      	</div><!--mainwrapperinner-->
     </div><!--mainwrapper-->
 	<!-- END OF MAIN CONTENT -->
-    
-
+   
 </body>
 </html>

@@ -422,6 +422,32 @@ class Model_users extends CI_Model {
 				 return false;
 				 }
 			}
-	
+	///////////////////////////////////////////////	
+	public function is_attend($user_id,$event_id){
+		$sql='select * from attend where user_id='.$user_id.' and event_id='.$event_id.'';
+		 $result=$this->db->query($sql);
+		 if($result->num_rows() == 1){
+			 return true;
+			 }else{
+				 return false;
+				 }
+		}
+	/////////////////////////////////////////
+	public function get_event_attend($user_id){
+		$sql='select * from attend where user_id='.$user_id.' ';
+		 $result=$this->db->query($sql);
+		 return $result->result();
+		}
+	///////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+	public function is_event_attend($user_id,$event_id){
+		$sql='select * from attend where user_id='.$user_id.' and event_id='.$event_id.'';
+		 $result=$this->db->query($sql);
+		 if($result->num_rows() == 1){
+			 return $result->result();
+			 }else{
+				 return false;
+				 }
+		} 
 }
 ?>

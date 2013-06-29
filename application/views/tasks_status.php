@@ -48,44 +48,68 @@
                 </ul><!--maintabmenu-->
                 
                 <div class="content">
-                	
-                    
-                    <br clear="all" />
-                     <?php if(isset($finish)&& $finish==1){?>
+              
+                 
+                  
+                      <h1 style="border-bottom:1px dashed #e1e1e1; padding-bottom:10px">Your Tasks for your employees </h1>
+                <br />
+                   <?php if(isset($finish)&& $finish==1){?>
                        <div class="notification msgsuccess">
                         
                         <p >The task has been saved that the employee finish it.</p>
                         <a class="close"></a>
                     </div>
                     <?php }?>
+                    
+                     <?php if(isset($notasks)&& $notasks==1){?>
+                    <div class="notification msgerror">
+                        <a class="close"></a>
+                        <p>There are no tasks have been assigned for you until now.</p>
+                    </div>
+                    <?php }?>
+                <div class="widgetcontent userlistwidget">
+                            <ul>
+              
+            
+                      <?php $i=1; if(isset($tasks)){foreach($tasks as $task){?>
+                            	<li>
+                                
+                                 <div class="avatar"><img src="<?php echo base_url(); ?>images/profile/<?php echo $task->profile_pic ?>" width="50" height="45" /></div>
+                            
+                            
+                                         <span style="font-weight:bold">
+                                         
+                                        <?php echo $task->firstname.' '.$task->lastname ; ?>   
+                                         </span>
+                                          <br />
+                                    <div class="info" style="margin-left:70px">
+                                    
+                                    	Task number #<?php echo $i;?>
+                                       
+                                       <br/>
+                                      
+                        <?php echo substr($task->the_task,0,200).'...' ; ?><a href="<?php echo base_url();?>employee/task_manger/<?php echo $task->id; ?>/<?php echo $task->task_owner; ?>">Details</a><br />                      
+                                        
+                                       <?php if($task->done == 1){ ?>
+                                        <ul class="buttonlist">
+                          <li style="border:none;float:right"><a href="#task" id="forward" class="btn btn_link"><span>Task has been finished</span></a></li>
+                          </ul>
+                          <br clear="all" />
+                            <?php }?> 
+                                        
+                                        
+                                    </div><!--info-->
+                                </li>
+                          <?php  $i++;}}?>      
+                               
+                                
+                            </ul>
+                            <br clear="all" />
+                     
+                     </div><!--widgetcontent-->
+                    
+                    
                    
-                    <?php $i=1; if(isset($tasks)){foreach($tasks as $task){?>
-                    <div class="widgetbox">
-                        <div class="title"><h2 class="tabbed"><span>task <?php echo $i?></span></h2></div>
-                        <div class="widgetcontent announcement">
-                       
-                          
-                            <p>
-                            <a href="<?php echo base_url();?>employee/task_manger/<?php echo $task->id; ?>/<?php echo $task->task_owner; ?>"  > <span class="radius3" style="float:right; ">Details</span> </a>
-                            
-                            
-                             <br /><p style="padding:0px;margin-top:-40px;width:80%;margin-right:5px;">
-							 <a href="<?php echo base_url();?>employee/task_manger/<?php echo $task->id; ?>/<?php echo $task->task_owner; ?>">
-							 <?php echo $task->the_task?></a>
-                             
-                             </span></p>
-                             
-                             
-                            <?php if($task->done == 1){ ?>
-                            <span class="radius3" style="background-color:#0C0;margin-right:5px;padding:5px;">✓ Done</span> 
-                            <?php }?>
-                            <p>
-                            
-                        </div><!--widgetcontent-->
-                    </div><!--widgetbox-->
-                    <?php $i++;}}?>    
-                    
-                    
                    
                   
                     

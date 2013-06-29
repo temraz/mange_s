@@ -357,10 +357,12 @@ public function step2_validation()
 		}
 	///////////////////////////////
 		function event(){
+			$user_id = $this->session->userdata('user_id');
 			$this->load->model('model_company');
 			$vaild = $this->model_company->is_id_valid($this->uri->segment(3),'events');
 		if( $this->uri->segment(3) != '' && $vaild == 1 ){
 			$id=$this->uri->segment(3);
+			$data['events_attend'] = $this->model_users->is_event_attend($user_id,$id);
 			$data['event']=$this->model_company->get_event($id);
 		$this->load->view('event',$data);
 		}
@@ -369,7 +371,7 @@ public function step2_validation()
 			}
 		
 		}
-		///////////////////////////////
+				///////////////////////////////
 		function product(){
 			$this->load->model('model_company');
 			$this->load->model('model_users');

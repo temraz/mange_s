@@ -67,11 +67,13 @@ if($this->model_employee->is_chairman($id)){
  if(isset($sector_type,$sub_sector_type) && $sector_type=='personnel' && $sub_sector_type=='hr'){
 	 $hr=1;
 	 $company_id=$this->session->userdata('company_id');
-	 
-	 if($this->model_employee->job_applies($company_id)){
-	$new_applies=count($this->model_employee->job_applies($company_id)->result());	 
+	 if(!isset($manager,$sub_manager,$chairman)){
+	if($this->model_employee->count_job_applies($company_id)){
+	$new_applies=count($this->model_employee->count_job_applies($company_id)->result());	 
 		 }else{
 		 $new_applies=0;
+		 }
+	 	 
 		 }
 	 
 	 

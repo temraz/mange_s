@@ -979,5 +979,43 @@ public function messages(){
 			}
 	}
 	/////////////////////
+		/////////////////////
+	public function event_attend(){
+	if($this->session->userdata('user_logged_in')){
+		if($this->model_users->is_edit_cv($this->session->userdata('user_id'))){
+		$user_id=$this->session->userdata('user_id');
+		$data['events_attend']= $this->model_users->get_event_attend($user_id);
+		$this->load->view('event_attend' , $data);
+		}else{
+			redirect('user/cv_edit');
+			}
+	}else{
+			redirect('site/error404');
+			}
+	}
+	/////////////////////
+	////////////////
+		
+		public function attend(){
+			$user_id = $this->session->userdata('user_id');
+			$event_id = $this->input->post('event_id');
+			$data = array(
+			'user_id'=>$user_id,
+			'event_id'=>$event_id,
+			'wait'=>1
+			);
+			echo $this->_attend($data);
+			}
+	/////////////////////
+public function _attend($data){
+			
+			if($this->db->insert('attend',$data)){
+			$result=array('status'=>'ok');
+		}else{
+			$result=array('status'=>'no');
+			}
+			return json_encode($result);	
+			}
+		////////////////
 }
 ?>

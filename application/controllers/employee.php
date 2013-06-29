@@ -1482,7 +1482,12 @@ $result=array('status'=>'no');
 	///////////////////////////////////////////////////////////////////////
 	function job(){
 		if($this->session->userdata('employee_logged_in')){
-			if( $this->uri->segment(3) != '' || $this->uri->segment(4) != '' || $this->uri->segment(5) != ''){
+			if( $this->uri->segment(3) != '' || $this->uri->segment(4) != '' || $this->uri->segment(5) != '' || $this->uri->segment(6) != ''){
+				
+					$apply_id=$this->uri->segment(6);
+			$this->db->where('id',$apply_id);
+		    $result=$this->db->update('apply_job',array('emp_seen'=>1));
+				
 				 $id=$this->session->userdata('emp_id');
 				 $company_id=$this->session->userdata('company_id');
 				 if($company_id ==$this->uri->segment(4)){

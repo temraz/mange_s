@@ -366,8 +366,11 @@ function select_sub_departments($comp_id , $dept_id){
 		}
 	////////////////////////////////////////////////
 	function select_tasks($id){
-		$this->db->where('task_owner',$id);
-		$result=$this->db->get('tasks');
+		$sql='select e.id as e_id,e.firstname,e.lastname,e.profile_pic,e.company_id,e.department_id,e.sub_dept_id,e.online,t.id,t.emp_id,t.the_task,t.under_construction,t.done,t.task_owner,t.seen
+              from employees e 
+			  join tasks t on e.id=t.task_owner and t.task_owner=?';
+			  	   
+		$result=$this->db->query($sql,$id);
 		if($result->num_rows() >= 1){
             return $result->result();
         } else {
@@ -377,9 +380,13 @@ function select_sub_departments($comp_id , $dept_id){
 
 	////////////////////////////////////////////////
 	function select_dashbord_tasks($id){
-		$this->db->order_by("id", "DESC"); 
-		$this->db->where('emp_id',$id);
-		$result=$this->db->get('tasks');
+		
+		
+		$sql='select e.id as e_id,e.firstname,e.lastname,e.profile_pic,e.company_id,e.department_id,e.sub_dept_id,e.online,t.id,t.emp_id,t.the_task,t.under_construction,t.done,t.task_owner,t.seen
+              from employees e 
+			  join tasks t on e.id=t.task_owner and t.emp_id=? order by id DESC';
+			  	   
+		$result=$this->db->query($sql,$id);
 		if($result->num_rows() >= 1){
             return $result->result();
         } else {
@@ -388,8 +395,12 @@ function select_sub_departments($comp_id , $dept_id){
 		}
 	///////////////////////////////////////////////					
 	function select_task($id){
-		$this->db->where('id',$id);
-		$result=$this->db->get('tasks');
+		
+		$sql='select e.id as e_id,e.firstname,e.lastname,e.profile_pic,e.company_id,e.department_id,e.sub_dept_id,e.online,t.id,t.emp_id,t.the_task,t.under_construction,t.done,t.task_owner,t.seen,t.deadline
+              from employees e 
+			  join tasks t on e.id=t.task_owner and t.id=?';
+			  	   
+		$result=$this->db->query($sql,$id);
 		if($result->num_rows() == 1){
             return $result;
         } else {
@@ -1129,7 +1140,7 @@ function get_chat_messages_last_one($from_id ,$to_id){
 		}	
 	/////////////////////////////////////////////////////////
 	function job_applies($comp_id){
-		$sql='select j.id,j.name,j.company_id,j.description,j.department,j.level,a.user_id,a.job_id
+		$sql='select j.id,j.name,j.company_id,j.description,j.department,j.level,a.user_id,a.job_id,a.id as apply_id
               from jops j
 			  join apply_job a on j.id=a.job_id and j.company_id=? and reject=?';
 		$result = $this->db->query($sql,array($comp_id,0));
@@ -1140,6 +1151,17 @@ function get_chat_messages_last_one($from_id ,$to_id){
         }	  
 		}
 	/////////////////////////////////////////////////////
+	function count_job_applies($comp_id){
+		$sql='select j.id,j.name,j.company_id,j.description,j.department,j.level,a.user_id,a.job_id,a.id as apply_id
+              from jops j
+			  join apply_job a on j.id=a.job_id and j.company_id=? and reject=? and a.emp_seen=0';
+		$result = $this->db->query($sql,array($comp_id,0));
+		if($result->num_rows() >= 1){
+            return $result;
+        } else {
+            return false;
+        }	  
+		}
 	/////////////////////////////////////////////////////////
 	function job_applies_one($job_id){
 		$sql='select j.id,j.name,j.company_id,j.description,j.department,j.level,a.user_id,a.job_id,j.`date`,a.id as apply_id

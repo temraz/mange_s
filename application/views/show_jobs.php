@@ -80,7 +80,7 @@
                                        
                                        <br/>
                                       
-                        <?php echo substr($job->description,0,200).'...' ; ?><a href="<?php echo base_url(); ?>employee/job/<?php echo  $job->id ; ?>/<?php echo  $job->company_id ;?>/<?php echo $job->user_id?>">Details</a><br />                      
+                        <?php echo substr($job->description,0,200).'...' ; ?><a href="<?php echo base_url(); ?>employee/job/<?php echo  $job->id ; ?>/<?php echo  $job->company_id ;?>/<?php echo $job->user_id?>/<?php echo $job->apply_id?>">Details</a><br />                      
                                         
                                         
                                         
