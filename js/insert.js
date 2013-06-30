@@ -38,8 +38,64 @@ jQuery(document).ready(function(){
 	jQuery('#reject_button').click(function(){
 		reject_user();
 	});
+	jQuery('#submit').click(function(){
+		add_job();
+	});
 	/////////////////////////////////////////////////////////////////
-		
+		function add_job() {
+	
+		var name=jQuery('#job_name').val();
+		var department=jQuery('#department').val();
+		var level=jQuery('#level').val();
+		var desc=jQuery('#desc').val();		
+		/////////////////////////////////////////////////////	
+		if(name == '' ){
+	jQuery('#no_name').html(' <div class="notification msgerror"> <a class="close"></a> <p >Job name is require !!</p></div>');
+			jQuery('#job_name').focus();
+			}
+		////////////////////////////////////////////////////	
+		if(department == '' ){
+	jQuery('#no_name').html(' <div class="notification msgerror"> <a class="close"></a> <p >department is require !!</p></div>');
+			jQuery('#department').focus();
+			}
+		////////////////////////////////////////////////////	
+		if(level == '' ){
+	jQuery('#no_name').html(' <div class="notification msgerror"> <a class="close"></a> <p >Job level is require !!</p></div>');
+			jQuery('#department').focus();
+			}	
+		///////////////////////////////////////////////////		
+		if(desc == '' ){
+	jQuery('#no_name').html(' <div class="notification msgerror"> <a class="close"></a> <p >Job description is require !!</p></div>');
+			jQuery('#department').focus();
+			}	
+		///////////////////////////////////////////////////	
+			
+		if(name != '' && desc != '' && level != '' && department != '') {
+			
+			jQuery.post(base_url+"employee/ajax_add_job" ,{ name : name , department : department , level : level , desc : desc}, function(data){
+             
+          if(data==='ok'){
+			   jQuery('#success').html(' ');
+			  jQuery('#success').append(' <div class="notification msgsuccess"> <a class="close"></a><p > The job has been added successfully . !!</p></div>');
+			  jQuery('#no_name').html(' ');
+			  jQuery('#fail').html(' ');
+			  name.val()='';
+		department.val='';
+		level.val()='';
+		desc.val()='';
+			  }else{
+				   jQuery('#fail').append(' <div class="notification msgerror"> <a class="close"></a><p > Error while inserting the job try again please. !!</p></div>');
+				   jQuery('#no_name').html(' ');
+				   
+				  }
+			
+			
+			});
+					
+		}
+			
+        }
+	///////////////////////////////////////////////////////////////	
 		function reject_user() {
 	
 		var job_id=jQuery('#job_id').val();		

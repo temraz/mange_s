@@ -107,6 +107,11 @@
                             <span class="field"><?php echo form_input(array('name'=>'email','class'=>'longinput')); ?></span>
                         </p>
                         
+                        <p>
+                        	<label>Paypal Email</label>
+                            <span class="field"><?php echo form_input(array('name'=>'paypal_email','class'=>'longinput')); ?></span>
+                        </p>
+                        
                          <p>
                         	<label>Password</label>
                             <span class="field"><?php echo form_password(array('name'=>'password','class'=>'longinput')); ?></span>

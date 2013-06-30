@@ -82,16 +82,9 @@
 
                         <p>
                         	<label>Product Price</label>
-                            <span class="field"><input type="number" name="price" min='1' />&nbsp;&nbsp;&nbsp;
-                            <select name="currencies" size="1"  required>
-                            <option value="">select</option>
-                            <option value="€">€ (European Euro)</option>
-                            <option value="$">$ (American Dollar)</option>
-                            <option value="£">£ (Egyptian Pound)</option>
-                            <option value="ريال">ريال سعودى</option>
-                            </select>
-                            </span>
-                        </p>
+                            <span class="field"><input type="number" name="price" min='1' />
+                            
+                        <input type="hidden" name="currencies" value="$" />
                         
                         <p>
                         	<label>Description</label>

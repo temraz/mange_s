@@ -296,7 +296,7 @@ class Model_employee extends CI_Model {
     }
 ///////////////////////////////////////////////////
 function select_departments($id){
-	$sql='select e.id,e.firstname,e.lastname,e.profile_pic,e.company_id,e.department_id,e.sub_dept_id,e.online,d.depart_manager
+	$sql='select e.id,e.firstname,e.lastname,e.profile_pic,e.company_id,e.department_id,e.sub_dept_id,e.online,d.depart_manager,d.id,d.name
               from employees e 
 			  join department d on e.id=d.depart_manager and d.company_id=?';
 		$result = $this->db->query($sql,array($id));
@@ -1187,6 +1187,36 @@ function get_chat_messages_last_one($from_id ,$to_id){
 			 }else{
 				 return false;
 				 }
+		}	
+	////////////////////////////////////////////////////////
+	function select_event_attends($comp_id){
+				$sql='SELECT
+                            e.id as user_id ,e.name,e.pic,v.name as event_name,v.id as event_id,v.details,v.pic as event_pic,v.`date` as event_date,
+							v.company_id ,t.id as attend_id,e.address
+
+							  FROM
+							users e
+							LEFT JOIN
+							
+							attend t
+							ON t.user_id = e.id
+							LEFT JOIN
+
+							events v
+							ON t.event_id = v.id
+
+
+							where v.company_id=? and t.accept=0
+							';
+							
+							$result = $this->db->query($sql,array($comp_id));
+							if($result->num_rows() >= 1){
+							return $result;
+							} else {
+							return false;
+							}	 			
+							
+				
 		}	
 }
 ?>

@@ -61,7 +61,23 @@ if($this->model_employee->is_chairman($id)){
 				
 				}
 	 
-	  }	
+	  }
+////////////////////////////////////////////////////////////
+	 if(isset($sector_type) && $sector_type=='marketing'){
+		  if(isset($manager)){
+	 // is manager in mrketing sector
+	 
+		}elseif(isset($sub_manager)){
+	// is sub manager in mrketing sector
+	
+	
+	  }else{
+		  // is employee in mrketing sector
+		  }
+				
+	
+	 
+	  }	  	
 	   
 //////////////////////////////////////////////////////////////////////
  if(isset($sector_type,$sub_sector_type) && $sector_type=='personnel' && $sub_sector_type=='hr'){
@@ -111,10 +127,18 @@ if($this->model_employee->is_chairman($id)){
                                                 <?php if(isset($sector_type) && $sector_type=='legal'){?>
                          <li><a href="<?php echo base_url();?>employee/show_reports/" class="media" ><span>New Reportes(<?php if(isset($reports_count)){echo $reports_count;}?>)</span></a></li>
                         <?php }?>
-
+                               <?php if(isset($sector_type) && $sector_type=='marketing'){?>
+                         <li><a href="<?php echo base_url();?>employee/add_product/" class="media" ><span>Add new product</span></a></li>
+                         <li><a href="<?php echo base_url();?>employee/add_event/" class="media" ><span>Add new event</span></a></li>
+                         <li><a href="<?php echo base_url();?>employee/add_media/" class="media" ><span>Add new media</span></a></li>
+                           <li><a href="<?php echo base_url();?>employee/add_news/" class="media" ><span>Add Company news </span></a></li>
+                           <li><a href="<?php echo base_url();?>employee/organize_events/" class="media" ><span>Organize the events </span></a></li>
+                        <?php }?>
                         
                           <?php if(isset($hr)){?>
                          <li><a href="<?php echo base_url();?>employee/show_jobs/" class="media" ><span>Applicants for the jobs (<?php if(isset($new_applies)){echo $new_applies;}?>)</span></a></li>
+                         
+                         <li><a href="<?php echo base_url();?>employee/add_job/" class="media" ><span>Add new job</span></a></li>
                         <?php }?>
                         
                      <!--   <li><a href="<?php echo base_url();?>site/editor/" class="media" ><span>File Editor</span></a></li> -->

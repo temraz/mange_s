@@ -133,6 +133,26 @@ class Edit extends CI_Controller {
             $error = array('error' => $this->upload->display_errors());
             $this->load->view('event_insert', $error);
 	   }
+	   	$gallery_path_thumb = realpath(APPPATH . '../images/events/thumbs/');
+	    $image_data = $this->upload->data();
+	    $config2 = array(
+            'source_image' => $image_data['full_path'],
+            'new_image' => $gallery_path_thumb,
+            'maintain_ratio' => TRUE,
+            'width' => 300,
+            'height' => 200
+        );
+
+        $this->load->library('image_lib', $config2);
+
+
+        if (!$this->image_lib->resize()) {
+             $error = array("error" => $this->upload->display_errors());
+			 $this->load->view('event_insert', $error);
+        }
+
+	   
+	   
 	   $company_id=$this->session->userdata('comp_id');
 					$event_title = $this->input->post('event_title');
 			$event_date = $this->input->post('event_date');
@@ -186,6 +206,7 @@ class Edit extends CI_Controller {
 				$this->load->view("product_insert");
 				}else{
 					$gallery_path = realpath(APPPATH . '../images/products/');
+					$gallery_path_thumb = realpath(APPPATH . '../images/products/thumbs/');
         $config['upload_path'] = $gallery_path;
         $config['allowed_types'] = 'gif|jpg|png|jpeg|bmp';
         $config['max_size'] = '20000';
@@ -197,6 +218,25 @@ class Edit extends CI_Controller {
             $error = array('error' => $this->upload->display_errors());
             $this->load->view('product_insert', $error);
 	   }
+	   	
+	    $image_data = $this->upload->data();
+	    $config2 = array(
+            'source_image' => $image_data['full_path'],
+            'new_image' => $gallery_path_thumb,
+            'maintain_ratio' => TRUE,
+            'width' => 300,
+            'height' => 200
+        );
+
+        $this->load->library('image_lib', $config2);
+
+
+        if (!$this->image_lib->resize()) {
+             $error = array("error" => $this->upload->display_errors());
+			 $this->load->view('product_insert', $error);
+        }
+
+	   
 	   $company_id=$this->session->userdata('comp_id');
 					$product_title = $this->input->post('product_name');
 			$product_date = $this->input->post('date_release');
@@ -265,6 +305,25 @@ public function add_news()
             $error = array('error' => $this->upload->display_errors());
             $this->load->view('news_insert', $error);
 	   }
+	   	$gallery_path_thumb = realpath(APPPATH . '../images/news/thumbs/');
+	    $image_data = $this->upload->data();
+	    $config2 = array(
+            'source_image' => $image_data['full_path'],
+            'new_image' => $gallery_path_thumb,
+            'maintain_ratio' => TRUE,
+            'width' => 300,
+            'height' => 200
+        );
+
+        $this->load->library('image_lib', $config2);
+
+
+        if (!$this->image_lib->resize()) {
+             $error = array("error" => $this->upload->display_errors());
+			 $this->load->view('news_insert', $error);
+        }
+	   
+	   
 					$title = $this->input->post('news_title');
 			$date = $this->input->post('news_date');
 			$details = str_replace("\n","<br>",$this->input->post('news_details'));
@@ -384,6 +443,25 @@ public function add_media()
             $error = array('error' => $this->upload->display_errors());
             $this->load->view('media_insert', $error);
 	   }
+	    	$gallery_path_thumb = realpath(APPPATH . '../images/company_gallery/thumbs/');
+	    $image_data = $this->upload->data();
+	    $config2 = array(
+            'source_image' => $image_data['full_path'],
+            'new_image' => $gallery_path_thumb,
+            'maintain_ratio' => TRUE,
+            'width' => 300,
+            'height' => 200
+        );
+
+        $this->load->library('image_lib', $config2);
+
+
+        if (!$this->image_lib->resize()) {
+             $error = array("error" => $this->upload->display_errors());
+			 $this->load->view('media_insert', $error);
+        }
+	   
+	   
 	   $company_id=$this->session->userdata('comp_id');
 			$caption = $this->input->post('caption');
 			$data = array (

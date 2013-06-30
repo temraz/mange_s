@@ -35,7 +35,7 @@ function dashboard(){
 						redirect('site/error404');
 						}
 						 }else{
-							  $this->load->view('index_employee',$data);	
+							  redirect('site/index_employee');
 							 }
 	}
 //////////////////////////////////////////	
@@ -1542,4 +1542,688 @@ $result=array('status'=>'no');
 		 redirect('site/index_employee');	
 		 }
 		}			
+//////////////////////////////////////////////////////////////////////////
+function add_job(){
+	if($this->session->userdata('employee_logged_in')){
+		$id=$this->session->userdata('emp_id');
+			 if($this->model_employee->is_manager($id)){ 
+			 $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+ }elseif($this->model_employee->is_sub_manager($id)){
+	  $sector_type=$this->model_employee->sector_type_sub_manger($id)->row(0)->type;
+	 }
+ 
+ else{
+	  $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+	 }
+	
+		$sub_sector_type=$this->model_employee->sub_sector_type($id)->row(0)->type;	 
+	if(isset($sector_type,$sub_sector_type) && $sector_type=='personnel' && $sub_sector_type=='hr'){   /// start
+	$comp_id=$this->session->userdata('company_id');
+	$data['all_dept']=$this->model_employee->select_departments($comp_id);
+	$this->load->view('emp_insert_job',$data);
+	 
+	}else{
+		 redirect('site/error404');
+		}
+		}else{
+			redirect('site/index_employee');
+			}
+}
+////////////////////////////////////////////////////////////////
+function ajax_add_job(){
+	if($this->session->userdata('employee_logged_in')){
+		$id=$this->session->userdata('emp_id');
+			$emp_id=$this->session->userdata('emp_id');
+			 if($this->model_employee->is_manager($id)){ 
+			 $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+ }elseif($this->model_employee->is_sub_manager($id)){
+	  $sector_type=$this->model_employee->sector_type_sub_manger($id)->row(0)->type;
+	 }
+ 
+ else{
+	  $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+	 }
+	
+		$sub_sector_type=$this->model_employee->sub_sector_type($id)->row(0)->type;	 
+	if(isset($sector_type,$sub_sector_type) && $sector_type=='personnel' && $sub_sector_type=='hr'){  
+	 /// start
+	///////////////////////////////////////////////////////
+	$this->load->library('form_validation');
+	 $this->form_validation->set_rules('name', ' Job Name ', 'required|trim|xss_clean|max_length[120]');	
+		 $this->form_validation->set_rules('department', ' Department ', 'required|trim|xss_clean');
+		 $this->form_validation->set_rules('level', ' Job Name ', 'required|trim|xss_clean|max_length[120]');	
+		 $this->form_validation->set_rules('desc', ' Department ', 'required|trim|xss_clean');
+			
+			if ($this->form_validation->run() == false) {
+				echo 'no1';
+				}else{
+					$company_id=$this->session->userdata('company_id');
+					$name = $this->input->post('name');
+			$department = $this->input->post('department');
+			$level = $this->input->post('level');
+			$description = str_replace("\n","<br>",$this->input->post('desc'));
+			$data = array (
+	   'company_id' => $company_id,
+	   'name' => $name,
+	   'department' => $department,
+	   'level' => $level,
+	   'description'=>$description,
+	   'emp_post_id'=>$emp_id
+	   );		
+					 if($this->db->insert('jops',$data)){
+						 if($this->db->affected_rows()==1){
+			 echo 'ok';
+			 }else{
+				echo 'no2';
+				 }
+						 
+						 $this->load->model('model_company');
+						 $job_id = $this->model_company->get_feed_id('jops');
+		 foreach($job_id as $row){
+			 $job_id2 = $row->id;
+			 } 
+	   
+	   $news_feed = array (
+	   'company_id' => $company_id,
+	   'title' => $name ,
+	   'details' => $description,
+	   'link'=>base_url().'company/job/'.$job_id2,
+	   'job_id'=>$job_id2
+	   );		
+	   $this->db->insert('news_feed',$news_feed);
+	   
+		  
+		  
+						 }
+						
+				}
+	
+	
+	////////////////////////////////////////////////////////////
+	}else{
+		 redirect('site/error404');
+		}
+		}else{
+			redirect('site/index_employee');
+			}
+            } 
+	//////////////////////////////////////////////////////////////////////
+	function add_product(){
+		if($this->session->userdata('employee_logged_in')){
+		$id=$this->session->userdata('emp_id');
+			 if($this->model_employee->is_manager($id)){ 
+			 $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+ }elseif($this->model_employee->is_sub_manager($id)){
+	  $sector_type=$this->model_employee->sector_type_sub_manger($id)->row(0)->type;
+	 }
+ 
+ else{
+	  $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+	 }
+	
+		$sub_sector_type=$this->model_employee->sub_sector_type($id)->row(0)->type;	 
+	if(isset($sector_type,$sub_sector_type) && $sector_type=='marketing'){   /// start
+	$comp_id=$this->session->userdata('company_id');
+	
+	$this->load->view('emp_insert_product');
+	 
+	}else{
+		 redirect('site/error404');
+		}
+		}else{
+			redirect('site/index_employee');
+			}
+		}		
+	/////////////////////////////////////////////////////////////////////
+	function add_media(){
+		if($this->session->userdata('employee_logged_in')){
+		$id=$this->session->userdata('emp_id');
+			 if($this->model_employee->is_manager($id)){ 
+			 $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+ }elseif($this->model_employee->is_sub_manager($id)){
+	  $sector_type=$this->model_employee->sector_type_sub_manger($id)->row(0)->type;
+	 }
+ 
+ else{
+	  $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+	 }
+	
+		$sub_sector_type=$this->model_employee->sub_sector_type($id)->row(0)->type;	 
+	if(isset($sector_type,$sub_sector_type) && $sector_type=='marketing'){   /// start
+	$comp_id=$this->session->userdata('company_id');
+	
+	$this->load->view('emp_insert_media');
+	 
+	}else{
+		 redirect('site/error404');
+		}
+		}else{
+			redirect('site/index_employee');
+			}
+		}		
+	/////////////////////////////////////////////////////////////////////
+	function add_event(){
+		if($this->session->userdata('employee_logged_in')){
+		$id=$this->session->userdata('emp_id');
+			 if($this->model_employee->is_manager($id)){ 
+			 $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+ }elseif($this->model_employee->is_sub_manager($id)){
+	  $sector_type=$this->model_employee->sector_type_sub_manger($id)->row(0)->type;
+	 }
+ 
+ else{
+	  $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+	 }
+	
+		$sub_sector_type=$this->model_employee->sub_sector_type($id)->row(0)->type;	 
+	if(isset($sector_type,$sub_sector_type) && $sector_type=='marketing'){   /// start
+	$comp_id=$this->session->userdata('company_id');
+	
+	$this->load->view('emp_insert_event');
+	 
+	}else{
+		 redirect('site/error404');
+		}
+		}else{
+			redirect('site/index_employee');
+			}
+		}		
+	/////////////////////////////////////////////////////////////////////
+	function add_news(){
+		if($this->session->userdata('employee_logged_in')){
+		$id=$this->session->userdata('emp_id');
+			 if($this->model_employee->is_manager($id)){ 
+			 $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+ }elseif($this->model_employee->is_sub_manager($id)){
+	  $sector_type=$this->model_employee->sector_type_sub_manger($id)->row(0)->type;
+	 }
+ 
+ else{
+	  $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+	 }
+	
+		$sub_sector_type=$this->model_employee->sub_sector_type($id)->row(0)->type;	 
+	if(isset($sector_type,$sub_sector_type) && $sector_type=='marketing'){   /// start
+	$comp_id=$this->session->userdata('company_id');
+	
+	$this->load->view('emp_insert_news');
+	 
+	}else{
+		 redirect('site/error404');
+		}
+		}else{
+			redirect('site/index_employee');
+			}
+		}		
+	/////////////////////////////////////////////////////////////////////
+	function insert_product(){
+		
+			if($this->session->userdata('employee_logged_in')){
+		$id=$this->session->userdata('emp_id');
+		$emp_id=$this->session->userdata('emp_id');
+			 if($this->model_employee->is_manager($id)){ 
+			 $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+ }elseif($this->model_employee->is_sub_manager($id)){
+	  $sector_type=$this->model_employee->sector_type_sub_manger($id)->row(0)->type;
+	 }
+ 
+ else{
+	  $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+	 }
+	
+		$sub_sector_type=$this->model_employee->sub_sector_type($id)->row(0)->type;	 
+	if(isset($sector_type,$sub_sector_type) && $sector_type=='marketing'){   /// start
+	$comp_id=$this->session->userdata('company_id');
+	
+	////////////////////////////////////////////////////////////// insert it into database
+	$flag['inserted']=0;
+			$this->load->library('form_validation');
+		
+		 $this->form_validation->set_rules('product_name', ' Product Name ', 'required|trim|xss_clean');	
+		  $this->form_validation->set_rules('date_release', ' date release ', 'required|trim|xss_clean');	
+		  $this->form_validation->set_rules('price', ' date release ', 'required|trim|xss_clean|numeric');	
+		 $this->form_validation->set_rules('product_details', ' Product Description ', 'required|trim|xss_clean');
+			
+			if ($this->form_validation->run() == false) {
+				$this->load->view("emp_insert_product");
+				}else{
+					$gallery_path = realpath(APPPATH . '../images/products/');
+					 $gallery_path_thumb = realpath(APPPATH . '../images/products/thumbs/');
+					 
+        $config['upload_path'] = $gallery_path;
+        $config['allowed_types'] = 'gif|jpg|png|jpeg|bmp';
+        $config['max_size'] = '20000';
+        $this->load->library('upload', $config);
+        if($this->upload->do_upload('product_logo')){
+            $phot_data = $this->upload->data();
+            $photo_name = $phot_data['file_name'];
+		   } else {
+            $error = array('error' => $this->upload->display_errors());
+            $this->load->view('emp_insert_product', $error);
+	   }
+	   $image_data = $this->upload->data();
+	    $config2 = array(
+            'source_image' => $image_data['full_path'],
+            'new_image' => $gallery_path_thumb,
+            'maintain_ratio' => TRUE,
+            'width' => 300,
+            'height' => 200
+        );
+
+        $this->load->library('image_lib', $config2);
+
+
+        if (!$this->image_lib->resize()) {
+             $error = array("error" => $this->upload->display_errors());
+			  $this->load->view('emp_insert_product', $error);
+        }
+	   
+	   
+	   $company_id=$this->session->userdata('company_id');
+					$product_title = $this->input->post('product_name');
+			$product_date = $this->input->post('date_release');
+			$product_details = str_replace("\n","<br>",$this->input->post('product_details'));
+			$price = $this->input->post('price');
+			$currencies = $this->input->post('currencies');
+			
+			$data = array (
+	   'company_id' => $company_id,
+	   'name' => $product_title,
+	   'date_release' => $product_date,
+	   'product_desc' => $product_details,
+	   'logo'=>$photo_name,
+	   'price'=>$price." ".$currencies,
+	   'emp_post_id'=>$emp_id
+	   );		
+					 if($this->db->insert('products',$data)){
+						 
+						 $this->load->model('model_company');
+						 $product_id = $this->model_company->get_feed_id('products');
+		 foreach($product_id as $row){
+			 $product_id2 = $row->id;
+			 } 
+	   
+	   $news_feed = array (
+	   'company_id' => $company_id,
+	   'title' => $product_title ,
+	   'details' => $product_details,
+	   'logo'=>'products/'.$photo_name,
+	   'link'=>base_url().'company/product/'.$product_id2,
+	   'product_id'=>$product_id2
+	   );		
+	   $this->db->insert('news_feed',$news_feed);
+						 
+						 $flag['inserted']=1;
+		  $this->load->view('emp_insert_product' , $flag);
+						 }
+						
+				}
+	
+	//////////////////////////////////////////////////////////////
+	 
+	}else{
+		 redirect('site/error404');
+		}
+		}else{
+			redirect('site/index_employee');
+			}
+		
+		
+		
+		}		
+	///////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////
+	function insert_media(){
+		
+			if($this->session->userdata('employee_logged_in')){
+		$id=$this->session->userdata('emp_id');
+		$emp_id=$this->session->userdata('emp_id');
+			 if($this->model_employee->is_manager($id)){ 
+			 $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+ }elseif($this->model_employee->is_sub_manager($id)){
+	  $sector_type=$this->model_employee->sector_type_sub_manger($id)->row(0)->type;
+	 }
+ 
+ else{
+	  $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+	 }
+	
+		$sub_sector_type=$this->model_employee->sub_sector_type($id)->row(0)->type;	 
+	if(isset($sector_type,$sub_sector_type) && $sector_type=='marketing'){   /// start
+	$comp_id=$this->session->userdata('company_id');
+	
+	////////////////////////////////////////////////////////////// insert it into database		
+	
+	$flag['inserted']=0;
+			$this->load->library('form_validation');	
+		 $this->form_validation->set_rules('caption', ' Caption ', 'required|trim|xss_clean');
+			
+			if ($this->form_validation->run() == false) {
+				$this->load->view("emp_insert_media");
+				}else{
+					$gallery_path = realpath(APPPATH . '../images/company_gallery/');
+					 $gallery_path_thumb = realpath(APPPATH . '../images/company_gallery/thumbs/');
+        $config['upload_path'] = $gallery_path;
+        $config['allowed_types'] = 'gif|jpg|png|jpeg|bmp';
+        $config['max_size'] = '20000';
+        $this->load->library('upload', $config);
+        if($this->upload->do_upload('new_media')){
+            $phot_data = $this->upload->data();
+            $photo_name = $phot_data['file_name'];
+		   } else {
+            $error = array('error' => $this->upload->display_errors());
+            $this->load->view('emp_insert_media', $error);
+	   }
+	   
+	   
+	    $image_data = $this->upload->data();
+	    $config2 = array(
+            'source_image' => $image_data['full_path'],
+            'new_image' => $gallery_path_thumb,
+            'maintain_ratio' => TRUE,
+            'width' => 300,
+            'height' => 200
+        );
+
+        $this->load->library('image_lib', $config2);
+
+
+        if (!$this->image_lib->resize()) {
+             $error = array("error" => $this->upload->display_errors());
+			  $this->load->view('emp_insert_media', $error);
+        }
+	   
+	   $company_id=$this->session->userdata('company_id');
+			$caption = $this->input->post('caption');
+			$data = array (
+	   'company_id' => $company_id,
+	   'pic' => $photo_name,
+	   'caption' => $caption,
+	   'emp_post_id'=>$id
+	   );		
+					 if($this->db->insert('media',$data)){
+						 $flag['inserted']=1;
+						 
+						  $this->load->model('model_company');
+						 $pic_id = $this->model_company->get_feed_id('media');
+		 foreach($pic_id as $row){
+			 $pic_id2 = $row->id;
+			 } 
+	   
+	   $news_feed = array (
+	   'company_id' => $company_id,
+	   'title' => "New Photo Added " ,
+	   'details' => $caption,
+	   'logo'=>'company_gallery/'.$photo_name,
+	   'link'=>base_url().'company/gallery/'.$company_id,
+	   'pic_id'=>$pic_id2
+	   );		
+	   $this->db->insert('news_feed',$news_feed);
+						 
+		  $this->load->view('emp_insert_media' , $flag);
+						 }
+						
+				}
+				
+	//////////////////////////////////////////////////////////////
+	 
+	}else{
+		 redirect('site/error404');
+		}
+		}else{
+			redirect('site/index_employee');
+			}
+	}
+	//////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////
+	function insert_event(){
+		
+			if($this->session->userdata('employee_logged_in')){
+		$id=$this->session->userdata('emp_id');
+		$emp_id=$this->session->userdata('emp_id');
+			 if($this->model_employee->is_manager($id)){ 
+			 $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+ }elseif($this->model_employee->is_sub_manager($id)){
+	  $sector_type=$this->model_employee->sector_type_sub_manger($id)->row(0)->type;
+	 }
+ 
+ else{
+	  $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+	 }
+	
+		$sub_sector_type=$this->model_employee->sub_sector_type($id)->row(0)->type;	 
+	if(isset($sector_type,$sub_sector_type) && $sector_type=='marketing'){   /// start
+	$comp_id=$this->session->userdata('company_id');
+	
+	////////////////////////////////////////////////////////////// insert it into database		
+		$flag['inserted']=0;
+			$this->load->library('form_validation');
+		 $this->form_validation->set_rules('event_title', ' Event Name ', 'required|trim|xss_clean');	
+		 $this->form_validation->set_rules('event_details', ' Event Description ', 'required|trim|xss_clean');
+			
+			if ($this->form_validation->run() == false) {
+				$this->load->view("emp_insert_event");
+				}else{
+					$gallery_path = realpath(APPPATH . '../images/events/');
+					 $gallery_path_thumb = realpath(APPPATH . '../images/events/thumbs/');
+        $config['upload_path'] = $gallery_path;
+        $config['allowed_types'] = 'gif|jpg|png|jpeg|bmp';
+        $config['max_size'] = '20000';
+        $this->load->library('upload', $config);
+        if($this->upload->do_upload('event_logo')){
+            $phot_data = $this->upload->data();
+            $photo_name = $phot_data['file_name'];
+		   } else {
+            $error = array('error' => $this->upload->display_errors());
+            $this->load->view('emp_insert_event', $error);
+	   }
+	   
+	    $image_data = $this->upload->data();
+	    $config2 = array(
+            'source_image' => $image_data['full_path'],
+            'new_image' => $gallery_path_thumb,
+            'maintain_ratio' => TRUE,
+            'width' => 300,
+            'height' => 200
+        );
+
+        $this->load->library('image_lib', $config2);
+
+
+        if (!$this->image_lib->resize()) {
+             $error = array("error" => $this->upload->display_errors());
+			  $this->load->view('emp_insert_media', $error);
+        }
+	   
+	   $company_id=$this->session->userdata('company_id');
+					$event_title = $this->input->post('event_title');
+			$event_date = $this->input->post('event_date');
+			$event_details = str_replace("\n","<br>",$this->input->post('event_details'));
+			$data = array (
+	   'company_id' => $company_id,
+	   'name' => $event_title ,
+	   'date' => $event_date,
+	   'details' => $event_details,
+	   'pic'=>$photo_name,
+	   'emp_post_id'=>$id
+	   );		
+	   
+	   
+					 if($this->db->insert('events',$data)){
+						 $flag['inserted']=1;
+						 $this->load->model('model_company');
+						 $event_id = $this->model_company->get_feed_id('events');
+		 foreach($event_id as $row){
+			 $event_id2 = $row->id;
+			 } 
+	   
+	   $news_feed = array (
+	   'company_id' => $company_id,
+	   'title' => $event_title ,
+	   'details' => $event_details,
+	   'logo'=>'events/'.$photo_name,
+	   'link'=>base_url().'company/event/'.$event_id2,
+	   'event_id'=>$event_id2
+	   );		
+	   $this->db->insert('news_feed',$news_feed);
+	   
+		  $this->load->view('emp_insert_event' , $flag);
+						 }
+						
+				}
+	
+	//////////////////////////////////////////////////////////////
+	 
+	}else{
+		 redirect('site/error404');
+		}
+		}else{
+			redirect('site/index_employee');
+			}
+	}
+	///////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////
+	function insert_news(){
+		
+			if($this->session->userdata('employee_logged_in')){
+		$id=$this->session->userdata('emp_id');
+		$emp_id=$this->session->userdata('emp_id');
+			 if($this->model_employee->is_manager($id)){ 
+			 $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+ }elseif($this->model_employee->is_sub_manager($id)){
+	  $sector_type=$this->model_employee->sector_type_sub_manger($id)->row(0)->type;
+	 }
+ 
+ else{
+	  $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+	 }
+	
+		$sub_sector_type=$this->model_employee->sub_sector_type($id)->row(0)->type;	 
+	if(isset($sector_type,$sub_sector_type) && $sector_type=='marketing'){   /// start
+	$comp_id=$this->session->userdata('company_id');
+	
+	////////////////////////////////////////////////////////////// insert it into database
+	$flag['inserted']=0;
+			$this->load->model('model_company');
+			$this->load->library('form_validation');
+		 $this->form_validation->set_rules('news_title', ' News Title ', 'required|trim|xss_clean');	
+		 $this->form_validation->set_rules('news_details', ' News Description ', 'required|trim|xss_clean');
+			
+			if ($this->form_validation->run() == false) {
+				$this->load->view("emp_insert_news");
+				}else{
+					$company_id=$this->session->userdata('company_id');
+				$gallery_path = realpath(APPPATH . '../images/news/');
+				 $gallery_path_thumb = realpath(APPPATH . '../images/news/thumbs/');
+        $config['upload_path'] = $gallery_path;
+        $config['allowed_types'] = 'gif|jpg|png|jpeg|bmp';
+        $config['max_size'] = '20000';
+        $this->load->library('upload', $config);
+        if($this->upload->do_upload('news_logo')){
+            $phot_data = $this->upload->data();
+            $photo_name = $phot_data['file_name'];
+		   } else {
+            $error = array('error' => $this->upload->display_errors());
+            $this->load->view('emp_insert_news', $error);
+	   }
+	   
+	     $image_data = $this->upload->data();
+	    $config2 = array(
+            'source_image' => $image_data['full_path'],
+            'new_image' => $gallery_path_thumb,
+            'maintain_ratio' => TRUE,
+            'width' => 300,
+            'height' => 200
+        );
+
+        $this->load->library('image_lib', $config2);
+
+
+        if (!$this->image_lib->resize()) {
+             $error = array("error" => $this->upload->display_errors());
+			  $this->load->view('emp_insert_news', $error);
+        }
+		
+					$title = $this->input->post('news_title');
+			$date = $this->input->post('news_date');
+			$details = str_replace("\n","<br>",$this->input->post('news_details'));
+			$data = array (
+	   'company_id' => $company_id,
+	   'title' => $title,
+	   'date' => $date,
+	   'details' => $details,
+	   'logo'=>$photo_name,
+	   'emp_post_id'=>$id
+	   );		
+					 if($this->db->insert('news',$data)){
+						 $flag['inserted']=1;
+						 
+						  $this->load->model('model_company');
+						 $news_id = $this->model_company->get_feed_id('news');
+		 foreach($news_id as $row){
+			 $news_id2 = $row->id;
+			 } 
+	   
+	   $news_feed = array (
+	   'company_id' => $company_id,
+	   'title' => $title ,
+	   'details' => $details,
+	   'logo'=>'news/'.$photo_name,
+	   'link'=>base_url().'company/news_show/'.$news_id2,
+	   'news_id'=>$news_id2
+	   );		
+	   $this->db->insert('news_feed',$news_feed);
+						 
+		  $this->load->view('emp_insert_news' , $flag);
+						 }
+						
+				}
+	
+	//////////////////////////////////////////////////////////////
+	 
+	}else{
+		 redirect('site/error404');
+		}
+		}else{
+			redirect('site/index_employee');
+			}
+	}
+	/////////////////////////////////////////////////////////////
+	function organize_events(){
+		if($this->session->userdata('employee_logged_in')){
+		$id=$this->session->userdata('emp_id');
+		$emp_id=$this->session->userdata('emp_id');
+			 if($this->model_employee->is_manager($id)){ 
+			 $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+ }elseif($this->model_employee->is_sub_manager($id)){
+	  $sector_type=$this->model_employee->sector_type_sub_manger($id)->row(0)->type;
+	 }
+ 
+ else{
+	  $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+	 }
+	
+		$sub_sector_type=$this->model_employee->sub_sector_type($id)->row(0)->type;	 
+	if(isset($sector_type,$sub_sector_type) && $sector_type=='marketing'){   /// start
+	$comp_id=$this->session->userdata('company_id');
+	
+	////////////////////////////////////////////////////////////// insert it into database
+	if($this->model_employee->select_event_attends($comp_id)){
+		$data['events']=$this->model_employee->select_event_attends($comp_id)->result();
+	$this->load->view('organize_events',$data);	
+		}else{
+			
+			$this->load->view('organize_events');	
+			}
+	
+	//////////////////////////////////////////////////////////////
+	 
+	}else{
+		 redirect('site/error404');
+		}
+		}else{
+			redirect('site/index_employee');
+			}
+	
+		}
 }?>

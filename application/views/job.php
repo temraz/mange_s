@@ -100,7 +100,7 @@ jQuery('#wait_m').hide();
 						?>
                       
                      <?php if($accept == 1 && $wait == 1){ ?>
-                      <h3 style="color:#093; float:right;margin-right:40px" >You are aceepted</h3>
+                      <h3 style="color:#093; float:right;margin-right:40px" >You are aceepted be ready for the interview</h3>
                       <?php }elseif($accept == 0 && $wait == 1){ ?>
                       <h3  style="color:#F60 ; float:right;margin-right:40px">Wait for Acception</h3>
                       
