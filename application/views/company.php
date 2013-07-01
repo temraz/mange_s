@@ -15,7 +15,9 @@
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.flot.resize.min.js" ></script>
 
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery-ui-1.8.16.custom.min.js"></script>
-
+<script type="text/javascript" >
+var base_url = "<?php echo base_url(); ?>";
+</script>
 <script type="text/javascript" src="<?php echo base_url();?>js/general.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/colorpicker.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/dashboard.js" ></script>
@@ -194,6 +196,18 @@
                             </ul>
                         </div><!--widgetcontent-->
                     </div><!--widgetbox-->
+                    <br />
+                    <?php if($this->session->userdata('comp_id') ==  $this->uri->segment(3)){ ?>
+                <div class="widgetbox" style="border:1px solid #c1c1c1;border-top:hidden">
+                        <div class="title"><h2 class="tabbed"><span>The Bill</span></h2></div>
+                            <center><h1 style="font-size:100px ; color:#c1c1c1 ; margin-top:10px ;word-wrap:break-word"><?php echo $bill; ?> $</h1></center>
+                            <br clear="all" />
+                        <div class="pay" style="padding:10px;border-top:1px solid #c1c1c1;cursor:pointer;">
+                        <center><h1>PAY NOW</h1></center>
+                        </div>
+                        </div>
+                        <br />
+                        <?php } ?>
                  <div class="widgetbox">
                 	<div class="title"><h2 class="tabbed"><span>Tabbed Widget</span></h2></div>
                     <div class="widgetcontent padding0">

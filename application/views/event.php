@@ -82,6 +82,7 @@ jQuery('#wait_e').hide();
                             <h3 style="float:right ; color:#c1c1c1"><?php echo $date ?></h3>
                            <br class="all"/>
                     	<p><img src="<?php echo base_url();?>images/events/<?php echo $pic; ?>" height="200" width="270" style="float:left; border:1px solid #c1c1c1 ; margin:10px ; padding:3px "/><p><?php echo $details; ?></p></p>
+                 <?php if($this->session->userdata('user_logged_in')){?>
                   <input type="hidden" value="<?php echo $id ?>" id="event_id" /> 
                       <?php 
 					  $user_id = $this->session->userdata('user_id');
@@ -102,6 +103,7 @@ jQuery('#wait_e').hide();
                       
                       <?php }}}?>
                        <h3 id="wait_e"  style="color:#F60 ; float:right;margin-right:40px">Wait for Acception</h3>
+                       <?php } ?>
                       <br />
                       <br clear="all"/>
                       

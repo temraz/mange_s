@@ -25,6 +25,7 @@ class User extends CI_Controller {
 					$data['cv_exper']=$this->model_users->get_cv_exper($id);
 					$data['cv_skills']=$this->model_users->get_cv_skills($id);
 					$data['following']=$this->model_users->get_following($id);
+					$data['user_activity']=$this->model_users->get_user_activity($id);
                     $this->load->view('u_profile',$data);
 					 }else{
 				      redirect('site/error404');	 
@@ -54,14 +55,52 @@ class User extends CI_Controller {
 			'user_id' => $user_id
 			);
 			if($this->db->insert('follow',$data)){
+				$comapny_name= $this->model_company->get_company_name($company_id);
+				$user_name = $this->model_users->get_user_name($user_id);
+				$data_activity = array(
+				'user_id'=>$user_id,
+				'title'=>"".$user_name." is following ".$comapny_name."",
+				'link' =>"company/profile/".$company_id.""
+				);
+				$this->db->insert('user_activity',$data_activity);
 				redirect('company/profile/'.$company_id);
 				}
 			}else{
 				redirect('site/error404');
 				}
 		}
-		
 		//////////////
+		public function ajax_follow(){
+			$user_id = $this->session->userdata('user_id');
+	$company_id = $this->input->post('company_id');
+			echo $this->_ajax_follow($user_id,$company_id);
+			}
+		////////////
+		public function _ajax_follow($user_id,$company_id){
+					$data = array(
+				'user_id'=>$user_id,
+				'company_id'=>$company_id
+				);
+				
+			if($this->db->insert('follow',$data)){
+				
+				$comapny_name= $this->model_company->get_company_name($company_id);
+				$user_name = $this->model_users->get_user_name($user_id);
+						$data_activity = array(
+				'user_id'=>$user_id,
+				'title'=>"".$user_name." is following ".$comapny_name."",
+				'link' =>"company/profile/".$company_id.""
+				);
+				$this->db->insert('user_activity',$data_activity);
+				
+			$result=array('status'=>'ok');
+		}else{
+			$result=array('status'=>'no');
+			}
+			return json_encode($result);
+			
+			}
+		//////////////	
 		public function unfollow(){
 		if($this->session->userdata('user_logged_in') && $this->uri->segment(3) && $this->uri->segment(4)){
 			$user_id = $this->uri->segment(3);
@@ -71,6 +110,14 @@ class User extends CI_Controller {
 			'user_id' => $user_id
 			);
 			if($this->db->delete('follow',$data)){
+				$comapny_name= $this->model_company->get_company_name($company_id);
+				$user_name = $this->model_users->get_user_name($user_id);
+				$data_activity = array(
+				'user_id'=>$user_id,
+				'title'=>"".$user_name." is following ".$comapny_name."",
+				);
+				$this->db->delete('user_activity',$data_activity);
+				
 				redirect('company/profile/'.$company_id);
 				}
 			}else{
@@ -128,6 +175,13 @@ class User extends CI_Controller {
 	   'name'=>$full_name
 	   );		
 					if($this->db->update('users' , $data , "id = ".$user_id."")){
+						$user_name = $this->model_users->get_user_name($user_id);
+						$data_activity = array(
+				'user_id'=>$user_id,
+				'title'=>"".$user_name." update his/her profile",
+				'link' =>"user/profile/".$user_id.""
+				);
+				$this->db->insert('user_activity',$data_activity);
 						 $flag['inserted']=1;
 		  $this->load->view('user_edit' , $flag);
 						 }
@@ -147,6 +201,7 @@ class User extends CI_Controller {
 		 $this->load->model('model_users');
 		 $this->load->model('model_company');
 				 $data['following']=$this->model_users->get_following($user_id);
+				 $data['user_activity']=$this->model_users->get_user_activity($user_id);
 		 $this->load->view('user_following' , $data);
 			}else{
 				redirect('user/cv_edit');
@@ -163,6 +218,7 @@ class User extends CI_Controller {
 		 $this->load->model('model_users');
 		 $this->load->model('model_company');
 				 $data['following']=$this->model_users->get_following($user_id);
+				 $data['user_activity']=$this->model_users->get_user_activity($user_id);
 		 $this->load->view('user_news_feed' , $data);
 			}else{
 				redirect('user/cv_edit');
@@ -297,6 +353,13 @@ class User extends CI_Controller {
 		$cv=1;
 		}
 		if($skills==1 && $exper==1 && $edu==1 && $cv==1){
+				$user_name = $this->model_users->get_user_name($user_id);
+						$data_activity = array(
+				'user_id'=>$user_id,
+				'title'=>"".$user_name." wrote his/her CV",
+				'link' =>"user/profile/".$user_id.""
+				);
+				$this->db->insert('user_activity',$data_activity);
 			$flag['inserted']=1;
 			redirect('user/profile/'.$user_id);
 			}
@@ -343,9 +406,27 @@ public function add_card(){
 		"user_id"=>$user_id , 
 		"product_id" => $product_id
 		);
-		
-	$this->db->insert('card' , $data);
+		echo $this->_add_card($data);
+}
 
+public function _add_card($data){
+		
+	if($this->db->insert('card' , $data)){
+		
+			$user_name = $this->model_users->get_user_name($data['user_id']);
+						$data_activity = array(
+				'user_id'=>$data['user_id'],
+				'title'=>"".$user_name." add a new product to his/her card",
+				'link' =>"company/product/".$data['product_id'].""
+				);
+				$this->db->insert('user_activity',$data_activity);
+				 $result=array('status'=>'ok');
+		}else{
+			$result=array('status'=>'no');
+			}
+			return json_encode($result);
+		
+		
 	}	
 ///////////////////////////		
 public function mycard(){
@@ -354,6 +435,7 @@ public function mycard(){
 		$this->load->model('model_users');
 	$user_id = $this->session->userdata('user_id');
 			 $data['products_list']= $this->model_users->mycard_items($user_id);
+			 $data['user_activity']=$this->model_users->get_user_activity($user_id);
 			$this->load->view('mycard',$data);
 	}else{
 					redirect('site');
@@ -399,7 +481,7 @@ public function _update_summary($user_id,$summary){
 		"summary" => $summary
 		);
 	
-	if($this->db->update('cv' , $data , "id = ".$user_id."")){
+	if($this->db->update('cv' , $data , "user_id = ".$user_id."")){
 		$result=array('status'=>'ok');
 		}else{
 			$result=array('status'=>'no');
@@ -886,6 +968,7 @@ public function messages(){
 		if($this->model_users->is_edit_cv($this->session->userdata('user_id'))){
 		$user_id=$this->session->userdata('user_id');
 		$data['messages']= $this->model_users->get_user_messages($user_id);
+		$data['user_activity']=$this->model_users->get_user_activity($user_id);
 		$this->load->view('user_messages' , $data);
 		}else{
 			redirect('user/cv_edit');
@@ -958,6 +1041,15 @@ public function messages(){
 		public function _apply_job($data){
 			
 			if($this->db->insert('apply_job',$data)){
+				
+				$user_name = $this->model_users->get_user_name($data['user_id']);
+						$data_activity = array(
+				'user_id'=>$data['user_id'],
+				'title'=>"".$user_name." apply to a new job",
+				'link' =>"company/job/".$data['job_id'].""
+				);
+				$this->db->insert('user_activity',$data_activity);
+				
 			$result=array('status'=>'ok');
 		}else{
 			$result=array('status'=>'no');
@@ -970,6 +1062,7 @@ public function messages(){
 		if($this->model_users->is_edit_cv($this->session->userdata('user_id'))){
 		$user_id=$this->session->userdata('user_id');
 		$data['applied_jobs']= $this->model_users->get_job_applied($user_id);
+		$data['user_activity']=$this->model_users->get_user_activity($user_id);
 		$this->load->view('applied_jobs' , $data);
 		}else{
 			redirect('user/cv_edit');
@@ -985,6 +1078,7 @@ public function messages(){
 		if($this->model_users->is_edit_cv($this->session->userdata('user_id'))){
 		$user_id=$this->session->userdata('user_id');
 		$data['events_attend']= $this->model_users->get_event_attend($user_id);
+		$data['user_activity']=$this->model_users->get_user_activity($user_id);
 		$this->load->view('event_attend' , $data);
 		}else{
 			redirect('user/cv_edit');
@@ -1010,6 +1104,15 @@ public function messages(){
 public function _attend($data){
 			
 			if($this->db->insert('attend',$data)){
+				
+				$user_name = $this->model_users->get_user_name($data['user_id']);
+						$data_activity = array(
+				'user_id'=>$data['user_id'],
+				'title'=>"".$user_name." attend to a new event",
+				'link' =>"company/event/".$data['event_id'].""
+				);
+				$this->db->insert('user_activity',$data_activity);
+				
 			$result=array('status'=>'ok');
 		}else{
 			$result=array('status'=>'no');
@@ -1017,5 +1120,45 @@ public function _attend($data){
 			return json_encode($result);	
 			}
 		////////////////
+		function get_company_ajax(){
+			 echo $this->get_company_db();
+			 }
+		 
+		 
+		 function get_company_db(){
+			 		$user_id = $this->session->userdata('user_id');
+					$company=$this->model_users->get_suggest();
+					$company_html = '';
+						if(isset($company)){
+						foreach($company as $row){
+							
+							$id= $row->id;
+							$name = $row->name;
+							$field = $row->field;
+							$logo = $row->logo;
+							
+									
+									if($logo != ''){ $pic = $logo ;}else{ $pic = 'defult.jpg';}
+							
+							$company_html .='<li style="padding:10px" class="suggest" id="_'.$id.'"><img src="'.base_url().'images/campanies_logo/'.$pic.'" width="70" height="60" style="float:left ; margin-right:10px ; border:double 1px #999">
+							<span style="float:left"><strong>'.$name.'</strong></span><br>
+                        <span style="float:left"><small>'.$field.'</small></span><br><div style="color:#039;cursor:pointer" class="follow" id="'.$id.'">follow</div></li>';
+								
+ }
+							
+						
+						
+						$result=array('status'=>'ok' ,'content'=>$company_html);
+						return json_encode($result);
+						exit();
+						}else{
+						$result=array('status'=>'no' ,'content'=>'Wait a New Companies');
+						return json_encode($result);
+							exit();
+							}
+					
+			 }
+
+///////////////
 }
 ?>

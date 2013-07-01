@@ -86,6 +86,7 @@ jQuery('#wait_m').hide();
                      <h3><?php echo $country ?></h3><br />
                      <small style="color:#AAA">Department : <?php echo $department;?></small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small style="color:#AAA">Professional level : <?php echo $level;?></small>
                      <p><?php echo $description;?></p><br />
+                     <?php if($this->session->userdata('user_logged_in')){?>
                     <input type="hidden" value="<?php echo $id ?>" id="job_id" /> 
                       <?php 
 					  $user_id = $this->session->userdata('user_id');
@@ -106,6 +107,7 @@ jQuery('#wait_m').hide();
                       
                       <?php }}}?>
                        <h3 id="wait_m"  style="color:#F60 ; float:right;margin-right:40px">Wait for Acception</h3>
+                      <?php }?>
                       <br />
                       <br class="all"/>
                      

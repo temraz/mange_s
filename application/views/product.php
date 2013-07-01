@@ -30,8 +30,10 @@ jConfirm('Do You Want to add This product to Your Card?', 'My Card', function(r)
 						var user_id = jQuery('#user_id').val();
 						var product_id = jQuery('#product_id').val();
 						jQuery.post(base_url+"user/add_card" ,{ product_id : product_id }, function(data){
+							if(data.status == 'ok'){
 							add_card.style.visibility = 'hidden'; 
 							added.style.visibility = 'visible';
+							}
 		},"json");
 						}
 					});
@@ -82,6 +84,7 @@ jConfirm('Do You Want to add This product to Your Card?', 'My Card', function(r)
                     	<p><img src="<?php echo base_url();?>images/products/<?php echo $pic; ?>" height="200" width="270" style="float:left; border:1px solid #c1c1c1 ; margin:10px ; padding:3px "/><p><?php echo $details; ?></p></p>
                     <br clear="all" />
                     <span><b>Price: </b><?php echo $price; ?></span>
+                    <?php if($this->session->userdata('user_logged_in')){?>
                     <input type="hidden" value="<?php echo $id ?>" id="product_id" />
                   
                     <h3 style="float:right;margin-right:60px;visibility:<?php 	
@@ -89,6 +92,7 @@ jConfirm('Do You Want to add This product to Your Card?', 'My Card', function(r)
                     </h3>
                     <h3 id="added" style="float:right; word-spacing:1px ; margin-right:-130px ; color:#F63 ; visibility:<?php 	
 				if($this->model_users->in_my_card($user_id,$id)){echo "visible";}else{echo "hidden";} ?> ">The Product in Your Card</h3>
+                    <?php }?>
                     </div>
                     <br clear="all" />
                       

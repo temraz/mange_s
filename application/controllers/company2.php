@@ -22,8 +22,12 @@ class Company extends CI_Controller {
 	function tree_step1(){
 		$this->load->model('model_users');
 		$company_id = $this->session->userdata('comp_id');
+		if( count($this->model_users->all_emp($company_id)) > 6 ){
 			$data['users']=$this->model_users->all_emp($company_id);
 		$this->load->view("company_tree",$data);		
+			}else{
+				redirect('company/no_employees');
+				}
 	
 		}
 	function profile(){
@@ -39,7 +43,6 @@ class Company extends CI_Controller {
 				
 			$data['pro_data']=$this->model_company->get_company_info($id);
 				$data['id']=$this->uri->segment(3);
-				$data['bill'] = $this->model_company->get_bill_company($this->session->userdata('comp_id'));
 				$this->load->view('company',$data);
 				
 			}else{
@@ -150,25 +153,8 @@ class Company extends CI_Controller {
 		"chairman"=>$chairman , 
 		"department_number" => $depart_num
 		);
-		
-		$date_bill = array(
-		'company_id' => $id,
-		'details' => 'Creating '.$depart_num.' Departments in your own Tree company buliding',
-		'value' => $depart_num * 50 ,
-		'reason' => 'department'
-		);
 
 	if($this->db->update('company' , $data , "id = ".$id."")){
-		$reason = "department";
-		$date_bill_update = array(
-		'details' => 'Creating '.$depart_num.' Departments in your own Tree company buliding',
-		'value' => $depart_num * 50 
-		);
-		if($this->model_company->is_added_bill($id,$reason)){
-		$this->db->update('bill' , $date_bill_update, array('company_id'=>$id,'reason'=>"department"));
-		}else{
-		$this->db->insert('bill' , $date_bill);	
-			}
 			redirect('company/step2');
 	}
 			}
@@ -178,11 +164,14 @@ class Company extends CI_Controller {
 		 $id = $this->session->userdata('comp_id');
 		$this->load->model('model_company');
 		$data['depart_no'] = $this->model_company->get_department_number($id);
-		$data['bill'] = $this->model_company->get_bill_company($id);
 		$this->load->model('model_users');
+		if(count($this->model_users->all_emp($id)) > 6 ){
 			$data['users']=$this->model_users->all_emp($id);
 		$this->load->view("step2",$data);		
-			
+			}else{
+				redirect('company/no_employees');
+				}
+		
 		}
 	
 
@@ -193,9 +182,7 @@ public function step2_validation()
 		$depart_name;
 		$depart_manager;
 		$sub_depart_number;
-		$all_sub_num = 0;
 		$field;
-		$id=$this->session->userdata('comp_id');
 		$depart_number = $this->session->userdata('depart_number');
 		$id=$this->session->userdata('comp_id');
 		$this->load->library('form_validation');
@@ -230,24 +217,8 @@ public function step2_validation()
 		"sub_depart_num" => $sub_depart_num,
 		"type" => $field[$i]
 		);
-		$all_sub_num += $sub_depart_num;
+		
 	$this->db->insert('department' , $data);
-			}
-				$date_bill = array(
-		'company_id' => $this->session->userdata('comp_id'),
-		'details' => 'Creating '.$all_sub_num.' Sub-Departments in your own Tree company buliding',
-		'value' => $all_sub_num * 20 ,
-		'reason' => 'sub_department'
-		);
-		$reason = "sub_department";
-		$date_bill_update = array(
-		'details' => 'Creating '.$all_sub_num.' Sub-Departments in your own Tree company buliding',
-		'value' => $all_sub_num * 20 
-		);
-		if($this->model_company->is_added_bill($id,$reason)){
-		$this->db->update('bill' , $date_bill_update, array('company_id'=>$id,'reason'=>$reason));
-		}else{
-		$this->db->insert('bill' , $date_bill);	
 			}
 			redirect('company/step3');
 	}
@@ -258,11 +229,14 @@ public function step2_validation()
 		$this->load->model('model_company');
 		$this->load->model('model_employee');
 		$data['depart_no'] = $this->model_company->get_department_number($id);
-		$data['bill'] = $this->model_company->get_bill_company($id);
 		$data['depart_info'] = $this->model_company->get_department_info($this->session->userdata('comp_id'));
 		$this->load->model('model_users');
+		if(count($this->model_users->all_emp($id)) > 6 ){
 			$data['users']=$this->model_users->all_emp($id);
 		$this->load->view("step3",$data);		
+			}else{
+				redirect('company/no_employees');
+				}
 		}
 	///////////////////
 	
@@ -295,7 +269,6 @@ public function step2_validation()
 		 	$depart_ids[$k][$i]=$depart_id_array[$k];	
 		 	$sub_depart_name[$k][$i]=$this->input->post('name_'.$k.$i);
 			$sub_depart_manager[$k][$i]= $this->input->post('sub_depart_manager_'.$k.$i);
-			$sub_depart_type[$k][$i]= $this->input->post('sub_depart_type_'.$k.$i);
 				}
 		}
 		}
@@ -320,13 +293,11 @@ public function step2_validation()
 				if(!$sub_depart_name[$k][$i]){
 					continue;
 				}else{
-					if($sub_depart_type[$k][$i] == ''){ $type = '' ;}else{ $type = $sub_depart_type[$k][$i]; }
 			$data= array(
 		"company_id"=>$this->session->userdata('comp_id') , 
 		"department_id"=> $depart_ids[$k][$i] , 
 		"name" => $sub_depart_name[$k][$i],
 		"sub_depart_manager" => $sub_depart_manager[$k][$i],
-		"type" => $type,
 		);
 	
 		
@@ -344,7 +315,6 @@ public function step2_validation()
 		$id = $this->session->userdata('comp_id');
 		$this->load->model('model_employee');
 		$this->load->model('model_company');
-		$data['bill'] = $this->model_company->get_bill_company($id);
 		$data['depart_no'] = $this->model_company->get_department_number($id);
 		$data['depart_info'] = $this->model_company->get_department_info($id);
 		$this->load->view("tree",$data);	
@@ -613,7 +583,6 @@ public function step2_validation()
 		function home(){
 			$this->load->model('model_company');
 			$data['news_feed']=$this->model_company->get_news_feed();
-			$data['bill'] = $this->model_company->get_bill_company($this->session->userdata('comp_id'));
 			$this->load->view('home', $data);
 			}
 	//////////////////////////
@@ -661,16 +630,7 @@ public function _delete_item($item_id,$table){
 		if($this->session->userdata('company_logged_in')){
 			$this->load->view('no_employees');
 			}
-		}
-	/////////////////////////
-	public function mybill(){
-		if($this->session->userdata('company_logged_in')){
-		$data['bill'] = $this->model_company->get_bill($this->session->userdata('comp_id'));
-		$this->load->view('company_bill',$data);
-		}else {
-                $this->load->view('index_company');
-            }
-		}		
+		}	
 }
 
 ?>

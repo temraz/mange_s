@@ -112,6 +112,15 @@ class model_company extends CI_Model {
 				 return $country;
 			}
 		 }
+		 public function get_company_name($id){
+		 $this->db->where('id',$id);
+			 $query= $this->db->get('company');
+				if($query){
+				 $row = $query->row();
+				 $name= $row->name;
+				 return $name;
+			}
+		 } 
 		 
 		 public function is_id_valid($id,$table){
 			 $this->db->where('id',$id);
@@ -158,7 +167,40 @@ class model_company extends CI_Model {
 					 return 0 ;
 					 }
 			 }
-			/////////// 
+	   
+		 public function is_added_bill($id,$reason){
+			$query="SELECT * FROM bill WHERE company_id=$id and reason='$reason' ";
+	$result=$this->db->query($query);
+			 if($result->num_rows() != 0){
+				 return 1;
+				 } else {
+					 
+					 return 0 ;
+					 }
+			 }
+	  ////////////
+	  	  public function get_bill_company($id){
+			$this->db->where('company_id',$id);
+			 $result = $this->db->get('bill');;
+	  $bill=$result->result();
+	  $total=0;
+	  if(isset($bill)){
+		  foreach($bill as $row){
+			  $value = $row->value;
+			  $total += $value;
+			  }
+			  return $total;
+		  }else{
+			  return $total;
+			  }
+	  }
+	  //////////////////
+	  public function get_bill($id){
+			$this->db->where('company_id',$id);
+			 $result = $this->db->get('bill');
+	  return $result->result();
+	  }
+	  //////
 }
 
 ?>

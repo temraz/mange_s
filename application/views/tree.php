@@ -14,7 +14,9 @@
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.flot.resize.min.js" ></script>
 
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery-ui-1.8.16.custom.min.js"></script>
-
+<script type="text/javascript" >
+var base_url = "<?php echo base_url(); ?>";
+</script>
 <script type="text/javascript" src="<?php echo base_url();?>js/general.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/colorpicker.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/dashboard.js" ></script>
@@ -25,6 +27,9 @@
 <style>
 .follow  {float:right;margin-right:50px;margin-top:-20px; border-radius:3px; font-family:Verdana, Geneva, sans-serif }
 .follow button {width:80px}
+.pay:hover{
+	background:#f1f1f1
+	}	
 </style>
 </head>
 
@@ -42,7 +47,15 @@
           	<div class="mainleftinner">
             
               <?php  if($this->session->userdata('company_logged_in')){ include('left_menu_company.php'); }?>
-            	<div id="togglemenuleft"><a></a></div>
+            	<br />
+                <div class="widgetbox" style="border:1px solid #c1c1c1;border-top:hidden">
+                        <div class="title"><h2 class="tabbed"><span>The Bill</span></h2></div>
+                            <center><h1 style="font-size:100px ; color:#c1c1c1 ; margin-top:10px ;word-wrap:break-word"><?php echo $bill; ?> $</h1></center>
+                            <br clear="all" />
+                        <div class="pay" style="padding:10px;border-top:1px solid #c1c1c1;cursor:pointer;">
+                        <center><h1>PAY NOW</h1></center>
+                        </div>
+                    </div><!--widgetbox-->
             </div><!--mainleftinner-->
         </div><!--mainleft-->
         
@@ -84,10 +97,10 @@
 					 $sub_depart_manager = $row->sub_depart_manager;
 					 $sub_depart_number = $row->sub_depart_num;<?php */?>
 
-                    	<div  style="float:left ; width:100%"> <p>
+                    	<div  style="float:left ; width:100% ; border-top:1px dashed #c1c1c1;padding:20px" > <p>
                         	<h2 style="color:#036 ; "><?php echo  $depart_name ; ?></h2>
                          </p>
-                            
+                            <br />
                             <p>
                             <label style="width:100% ; text-align:left"> Dempartment Manager : &nbsp;&nbsp;&nbsp;<span style=" ;font-size:15px ; font-family:Tahoma, Geneva, sans-serif ; color:#777 ; border-radius:3px ; padding:5px ; background:#EEE "><?php echo $manager_name;?></span></label>
                         </p>
@@ -104,14 +117,21 @@
 						 $depart_id_sub = $row->company_id;
 						 $sub_depart_name = $row->name;
 						 $sub_depart_manager = $row->sub_depart_manager;
+						 $sub_depart_type = $row->type;
 							
 							 ?>
-                            <div style="float:left ; width:45% ; padding-bottom:20px " >
-                            <h3 style="margin-left:230px ;  color:#C00"><?php echo $sub_depart_name; ?></h3>
+                            <div style="float:left ; width:45% ;" >
+                            <h3 style="padding:20px ;  color:#C00"><?php echo $sub_depart_name; ?></h3>
                             </p>
                             <p >
-                            <label style="width:100%"> Sub Department Manager : &nbsp;&nbsp;&nbsp;<span style=";font-size:15px ; font-family:Tahoma, Geneva, sans-serif ; color:#777 ; border-radius:3px ; padding:5px ; background:#EEE "><?php echo $sub_depart_manager;?></span></label>
-                            <span class="field"></span>
+                            <label style="width:100%"> Sub Department Manager : &nbsp;&nbsp;&nbsp;<span style=";font-size:15px ; font-family:Tahoma, Geneva, sans-serif ; color:#777 ; border-radius:3px ; padding:5px ; background:#EEE "><?php echo $this->model_users->get_employee_name($sub_depart_manager);?></span></label>
+                        </p>
+                        <br />
+                        <p>
+                         <?php if(isset($sub_depart_type)){ 
+						 if($sub_depart_type != ''){?>
+                         <label style="width:100%"> Type : &nbsp;&nbsp;&nbsp;<span style=";font-size:15px ; font-family:Tahoma, Geneva, sans-serif ; color:#777 ; border-radius:3px ; padding:5px ; background:#EEE "><?php echo $sub_depart_type;?></span></label>
+                        <?php }} ?>
                         </p>
                         </div>
                         <?php 
@@ -125,21 +145,13 @@
                         </p>
 						</div>
                         <br clear="all" />
-                        <hr />
                         <?php 
 				 }
 				 }else{ ?>
 							<center style="margin-top:30px"><h1>Tree is not <a href="<?php echo base_url();?>company/tree_step1">Build</a> Yet.</h1></center>
 							<?php }
 				 ?>
-                        
-                        <br clear="all" />  
-                        
-                        
-                    
-                
-                                  
-                                  <br clear="all" />     
+                     <br clear="all" />     
                     
                     
                 </div><!--content-->

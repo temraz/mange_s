@@ -65,7 +65,14 @@ jQuery(document).ready(function(){
           	<div class="mainleftinner">
             
               	  	<?php  if($this->session->userdata('company_logged_in')){ include('left_menu_company.php'); }?>
-            	<div id="togglemenuleft"><a></a></div>
+                <br />
+                <div class="widgetbox" style="border:1px solid #c1c1c1;border-top:hidden">
+                        <div class="title"><h2 class="tabbed"><span>The Bill</span></h2></div>
+                            <center><h1 style="font-size:100px ; color:#c1c1c1 ; margin-top:10px ;word-wrap:break-word"><?php echo $bill; ?> $</h1></center>
+                            <br clear="all" />
+                        
+                    </div><!--widgetbox-->
+                    
             </div><!--mainleftinner-->
         </div><!--mainleft-->
         
@@ -114,7 +121,7 @@ jQuery(document).ready(function(){
                              <p>
                         	<label>Department Field</label>
                             <span class="field"><select class="field_<?php echo $i; ?>" name="field_<?php echo $i; ?>">
-                            <option value="">Select</option>
+                           <option value="">Select</option>
                             
                             <option value="marketing">Marketing</option>
                             <option value="financial">Financial</option>
