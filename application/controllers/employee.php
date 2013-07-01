@@ -123,7 +123,7 @@ function task_validation(){
 	 if ($this->session->userdata('employee_logged_in')) {
 		$this->load->library('form_validation');
         $this->form_validation->set_rules('depart_manager', 'department manager', 'required|trim|max_length[100]|xss_clean');
-		$this->form_validation->set_rules('task', 'department manager', 'required|trim|max_length[500]|xss_clean');
+		$this->form_validation->set_rules('task', 'the task', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('deadline', 'Deadline', 'required|trim|max_length[200]|xss_clean');
        
 		
@@ -2203,8 +2203,8 @@ function ajax_add_job(){
 	  $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
 	 }
 	
-		$sub_sector_type=$this->model_employee->sub_sector_type($id)->row(0)->type;	 
-	if(isset($sector_type,$sub_sector_type) && $sector_type=='marketing'){   /// start
+		
+	if(isset($sector_type) && $sector_type=='marketing'){   /// start
 	$comp_id=$this->session->userdata('company_id');
 	
 	////////////////////////////////////////////////////////////// insert it into database
@@ -2226,4 +2226,144 @@ function ajax_add_job(){
 			}
 	
 		}
+	/////////////////////////////////////////////////
+	function event_details(){
+		if($this->session->userdata('employee_logged_in')){
+		$id=$this->session->userdata('emp_id');
+		$emp_id=$this->session->userdata('emp_id');
+			 if($this->model_employee->is_manager($id)){ 
+			 $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+ }elseif($this->model_employee->is_sub_manager($id)){
+	  $sector_type=$this->model_employee->sector_type_sub_manger($id)->row(0)->type;
+	 }
+ 
+ else{
+	  $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+	 }
+	
+		
+	if(isset($sector_type) && $sector_type=='marketing' && $this->uri->segment(3) != '' && $this->uri->segment(4) != '' ){   /// start
+	$comp_id=$this->session->userdata('company_id');
+	$event_id=$this->uri->segment(3);
+	$user_id=$this->uri->segment(4);
+	/////////////////////////////////
+	if($this->model_employee->select_event_details($comp_id,$event_id,$user_id)){
+		$data['event']=$this->model_employee->select_event_details($comp_id,$event_id,$user_id);
+		$this->load->view('event_details',$data);
+		}else{
+			$data['event']=1;
+			$this->load->view('event_details',$data);
+			}
+	/////////////////////////////////
+	}else{
+		 redirect('site/error404');
+		}
+		}else{
+			redirect('site/index_employee');
+			}
+	
+		}
+	///////////////////////////////////////////////////////////////////////
+	function ajax_reject_user_attend(){
+		if($this->session->userdata('employee_logged_in')){
+		$id=$this->session->userdata('emp_id');
+		$emp_id=$this->session->userdata('emp_id');
+			 if($this->model_employee->is_manager($id)){ 
+			 $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+ }elseif($this->model_employee->is_sub_manager($id)){
+	  $sector_type=$this->model_employee->sector_type_sub_manger($id)->row(0)->type;
+	 }
+ 
+ else{
+	  $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+	 }
+	
+		$sub_sector_type=$this->model_employee->sub_sector_type($id)->row(0)->type;	 
+	if(isset($sector_type,$sub_sector_type) && $sector_type=='marketing'){   /// start
+	$comp_id=$this->session->userdata('company_id');
+	$attend_id=$this->input->post('attend_id');
+	$event_name=$this->input->post('event_name');
+	$event_id=$this->input->post('event_id');
+	$user_id=$this->input->post('user_id');
+	/////////////////////////////////
+
+	$this->db->where('id',$attend_id);
+	$result=$this->db->update('attend',array('reject'=>1));
+	 if($this->db->affected_rows()==1){
+			 $link='company/event/'.$event_id;
+			$data = array(
+            'user_id' => $user_id,
+            'title' => 'You has been rejected from attending " '.$event_name.' " event',
+			'link'=>$link
+            );
+			$query = $this->db->insert('user_activity', $data);
+			
+				echo 'ok';
+				
+			 exit();
+			 
+			 }
+	
+	/////////////////////////////////
+	}else{
+		 redirect('site/error404');
+		}
+		}else{
+			redirect('site/index_employee');
+			}
+		}		
+		///////////////////////////////////////////////////////////////////////
+	function ajax_accept_user_attend(){
+		if($this->session->userdata('employee_logged_in')){
+		$id=$this->session->userdata('emp_id');
+		$emp_id=$this->session->userdata('emp_id');
+			 if($this->model_employee->is_manager($id)){ 
+			 $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+ }elseif($this->model_employee->is_sub_manager($id)){
+	  $sector_type=$this->model_employee->sector_type_sub_manger($id)->row(0)->type;
+	 }
+ 
+ else{
+	  $sector_type=$this->model_employee->sector_type_employee($id)->row(0)->type;
+	 }
+	
+		$sub_sector_type=$this->model_employee->sub_sector_type($id)->row(0)->type;	 
+	if(isset($sector_type,$sub_sector_type) && $sector_type=='marketing'){   /// start
+	$comp_id=$this->session->userdata('company_id');
+	$attend_id=$this->input->post('attend_id');
+	$event_name=$this->input->post('event_name');
+    $event_id=$this->input->post('event_id');
+	$user_id=$this->input->post('user_id');
+	/////////////////////////////////
+
+	$this->db->where('id',$attend_id);
+	$result=$this->db->update('attend',array('accept'=>1));
+	 if($this->db->affected_rows()==1){
+			 
+			$link='company/event/'.$event_id;
+			$data = array(
+            'user_id' => $user_id,
+            'title' => 'You has been accepted to attend " '.$event_name.' " event',
+			'link'=>$link
+            );
+			$query = $this->db->insert('user_activity', $data);
+			echo 'ok';
+			exit();
+			 }
+	
+	/////////////////////////////////
+	}else{
+		 redirect('site/error404');
+		}
+		}else{
+			redirect('site/index_employee');
+			}
+		}	
+		
+	///////////////////////////////////////////////////////////////////////////////	
+	
+	
+	
+	
+	///////////////////////////////////////////////////////////////////////////////
 }?>

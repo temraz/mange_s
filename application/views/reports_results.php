@@ -52,10 +52,8 @@
                   <h1 style="border-bottom:1px dashed #e1e1e1; padding-bottom:10px">reports in employees </h1>
                 <br />
                  <?php if(isset($no_reports)){?>
-                    <div class="notification msgerror">
-                        <a class="close"></a>
-                        <p>there is new reports come for you until now</p>
-                    </div>
+                   
+                    <center><h1 style="color:#c1c1c1">there is new reports come for you until now</h1></center>
                     <?php }?>
                 <div class="widgetcontent userlistwidget">
                             <ul>

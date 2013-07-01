@@ -43,8 +43,8 @@ class Site extends CI_Controller {
 						 }
 				
 				} else {
-				$data['hide']=1;
-                $this->load->view('index',$data);
+				
+                $this->load->view('index');
 
             }
 				
@@ -253,8 +253,10 @@ class Site extends CI_Controller {
             }else{
 		
                  $this->load->model('model_users');
+				 
                   $email= $this->input->post('email');
-                      $password= $this->input->post('password');
+                  $password= $this->input->post('password');
+				  
                  if($this->model_users->check_can_log_in($email,$password)){
                       $email= $this->input->post('email');
                       $password= $this->input->post('password');
@@ -267,11 +269,34 @@ class Site extends CI_Controller {
 				}else{
 					redirect('user/cv_edit/');
 					}
+               ////////////////////////////////////////////////////////////////////////////////////////
+                }elseif($this->model_employee->check_can_log_in($email,$password)){ // if employee
+                     $email= $this->input->post('email');
+                      $password= $this->input->post('password');
+                      $emp=$this->model_employee->check_can_log_in($email,$password);
+                $login_data = array("employee_logged_in" => true, "emp_id" => $emp['id'], "emp_email"=> $emp['email'],
+				                     "company_id"=> $emp['company_id'],"department_id"=> $emp['department_id'],"username"=> $emp['username'],"sub_dept_id"=> $emp['sub_dept_id']);
+                $this->session->set_userdata($login_data);
+				$id=$emp['id'];
+                redirect('employee/dashboard/'.$id);
                
-                }  else{
+               ////////////////////////////////////////////////////////////////////////////////////////
+			                       
+                }elseif($this->model_employee->check_comp_can_log_in($email,$password)){ // if company
+					$email= $this->input->post('email');
+                      $password= $this->input->post('password');
+                      $comp=$this->model_employee->check_comp_can_log_in($email,$password);
                     
-                    redirect('site/load_404');
-                }
+                $login_data = array("company_logged_in" => true, "comp_id" => $comp['id'], "comp_email"=> $comp['email']);
+                $this->session->set_userdata($login_data);
+				$id=$comp['id'];
+                redirect('company/profile/'.$id);
+               
+					
+               ////////////////////////////////////////////////////////////////////////////////////////					
+					}else{
+					redirect('site/load_404');	
+						}
             }
             
         }
@@ -281,7 +306,7 @@ class Site extends CI_Controller {
         public function validate_credentials(){
             $this->load->model('model_users');
 	
-	if($this->model_users->can_log_in()){
+	if($this->model_users->can_log_in() || $this->model_employee->can_log_in_comp() || $this->model_employee->can_log_in() ){
 		return true;
 	} else {
 		$this->form_validation->set_message('validate_credentials', 'Incrorrect
@@ -302,12 +327,12 @@ class Site extends CI_Controller {
 		        $this->form_validation->set_rules('country','Country','required|trim');
                 $this->form_validation->set_rules('gender','Gender','required|trim');
                 
-		        $this->form_validation->set_message('is_unique', "That email address already exists.");
+		        $this->form_validation->set_message('is_unique', "ُُُEmail address already exists.");
                 
                 if($this->form_validation->run()){
                     $this->load->model('model_users');		
 	if($this->model_users->add_temp_user()){
-		$data['regist']='successfully registration thank you';
+		$data['regist']='Please check your mail';
 	        $this->load->view('index',$data);
 	} else {
 		echo "Problem add to database";
@@ -385,20 +410,20 @@ class Site extends CI_Controller {
                 $this->load->library('form_validation');
                 $this->form_validation->set_rules('firstname','Firstname','required|trim|max_length[25]|xss_clean');
                 $this->form_validation->set_rules('lastname','Lastname','required|trim|max_length[25]|xss_clean');
-		        $this->form_validation->set_rules('email','Email','required|trim|valid_email|is_unique[employees.email]|max_length[100]|xss_clean');
+		        $this->form_validation->set_rules('email','Email','required|trim|valid_email|max_length[100]|xss_clean|is_unique[company.email]|is_unique[users.email]|is_unique[employees.email]');
                 $this->form_validation->set_rules('username','Username','required|trim|max_length[25]|xss_clean|is_unique[employees.username]');
                 $this->form_validation->set_rules('password','Password','required|trim|max_length[200]|xss_clean');
 		        $this->form_validation->set_rules('cpassword','Confirm password','required|trim|matches[password]|max_length[200]|xss_clean');
                 $this->form_validation->set_rules('gender','Gender','required|trim');
-                $this->form_validation->set_rules('country','Country','required|trim|max_length[25]|xss_clean');
-                $this->form_validation->set_rules('mobile','mobile','required|trim|max_length[25]|xss_clean');
-				  $this->form_validation->set_rules('company','Company','required|trim');
-                $this->form_validation->set_rules('phone','Phone','required|trim|max_length[25]|xss_clean');
                
-                $this->form_validation->set_rules('address','Address','required|trim|max_length[255]|xss_clean');
+               
+				  $this->form_validation->set_rules('company','Company','required|trim');
+               
+               
+               
                
                 
-                $this->form_validation->set_rules('about','About_you','required|trim|max_length[255]|xss_clean');
+               
                 
 		        $this->form_validation->set_message('is_unique', "That email address already exists.");
                 
@@ -434,15 +459,16 @@ class Site extends CI_Controller {
         
         public function company_validation(){
                 $this->load->library('form_validation');
-                $this->form_validation->set_rules('name','Name','required|trim');
-                $this->form_validation->set_rules('field','Filed','required|trim');
-		        $this->form_validation->set_rules('email','Email','required|trim|valid_email|is_unique[company.email]');
+                $this->form_validation->set_rules('name','Name','required|trim|is_unique[company.name]');
+               
+		        $this->form_validation->set_rules('email','Email','required|trim|valid_email|is_unique[company.email]|is_unique[users.email]|is_unique[employees.email|xss_clean');
+				
 				$this->form_validation->set_rules('password','Password','required|trim|max_length[200]|xss_clean');
 		        $this->form_validation->set_rules('cpassword','Confirm password','required|trim|matches[password]|max_length[200]|xss_clean');
                 
                 $this->form_validation->set_rules('country','Country','required|trim');
-                $this->form_validation->set_rules('mobile','mobile','required|trim');
-                $this->form_validation->set_rules('phone','Phone','required|trim');
+                
+                
                 $this->form_validation->set_rules('address','Address','required|trim');
                 $this->form_validation->set_rules('location','Current_location','required|trim');
 
@@ -490,7 +516,7 @@ class Site extends CI_Controller {
 			$this->load->library('form_validation');
 			$this->form_validation->set_rules('username', 'Username', 'required|max_length[40]|trim|xss_clean');
 			$this->form_validation->set_rules('address', 'Address', 'required|max_length[50]|trim|xss_clean');
-			$this->form_validation->set_rules('email', 'Email', 'required|trim|xss_clean|valid_email|max_length[100]|is_unique[user_temp.email]|is_unique[user.email]]');
+			$this->form_validation->set_rules('email', 'Email', 'required|trim|xss_clean|valid_email|max_length[100]|is_unique[user_temp.email]|is_unique[company.email]|is_unique[users.email]|is_unique[employees.email]');
 			$this->form_validation->set_rules('password' , 'Password' ,'required|md5|max_length[50]|trim');
 			$this->form_validation->set_message('is_unique',"That email address is already exists ");
 			$this->form_validation->set_rules('c_password' , 'Confirm Password' ,'required|matches[password]|md5|max_length[50]|trim');

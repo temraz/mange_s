@@ -68,10 +68,7 @@
                 <?php if(!isset($chairman)){?> 
                     
                    <?php if(isset($notasks)&& $notasks==1){?>
-                  <div class="notification msgerror">
-                      <a class="close"></a>
-                      <p>There are no tasks have been assigned for you until now.</p>
-                  </div>
+                 <center><h1 style="color:#c1c1c1">There Are No tasks assign for you Yet</h1></center>
                   <?php }?>
                 <div class="widgetcontent userlistwidget">
                             <ul>

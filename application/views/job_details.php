@@ -64,10 +64,8 @@ var base_url=" <?php echo base_url();?>";
                 
                      <?php if(isset($no_reports)){?>
                    
-                    <div class="notification msgerror">
-                        <a class="close"></a>
-                        <p>there is no jobs</p>
-                    </div>
+                  
+                      <center><h1 style="color:#c1c1c1">there is no jobs.</h1></center>
                     <?php }?>
                     <?php if(isset($job)){ $user_id=$job->row(0)->user_id; ?>
                       <?php $user_pic=$this->model_users->select_user($user_id)->row(0)->pic;?>
@@ -344,11 +342,8 @@ var base_url=" <?php echo base_url();?>";
                     <br clear="all"/>
                    
                                 </li>
-                          <?php }?>      
-                               
                                 
-                            </ul>
-                                                
+                                   
                 	<div id="success"></div>
                    
                     <div id="fail"></div>
@@ -364,6 +359,11 @@ var base_url=" <?php echo base_url();?>";
                                               <li style="border:none;"><a href="#reject" id="reject_button" class="btn  btn_trash"><span>Reject this user</span></a></li>
                                       
                                         </ul>
+                          <?php }?>      
+                               
+                                
+                            </ul>
+                                             
                             
                         </div><!--widgetcontent-->
                     

@@ -73,8 +73,15 @@ if($this->model_employee->is_chairman($id)){
 	
 	  }else{
 		  // is employee in mrketing sector
+		  
 		  }
-				
+		 $comp_id=$this->session->userdata('company_id');
+		  if($this->model_employee->select_event_attends($comp_id)){
+		$request_attend=count($this->model_employee->select_event_attends($comp_id)->result());	  
+			  }else{
+			  $request_attend=0;
+			  }
+		 		
 	
 	 
 	  }	  	
@@ -132,7 +139,7 @@ if($this->model_employee->is_chairman($id)){
                          <li><a href="<?php echo base_url();?>employee/add_event/" class="media" ><span>Add new event</span></a></li>
                          <li><a href="<?php echo base_url();?>employee/add_media/" class="media" ><span>Add new media</span></a></li>
                            <li><a href="<?php echo base_url();?>employee/add_news/" class="media" ><span>Add Company news </span></a></li>
-                           <li><a href="<?php echo base_url();?>employee/organize_events/" class="media" ><span>Organize the events </span></a></li>
+                           <li><a href="<?php echo base_url();?>employee/organize_events/" class="media" ><span>Organize the events (<?php if(isset($request_attend)){ echo $request_attend ;} ?>) </span></a></li>
                         <?php }?>
                         
                           <?php if(isset($hr)){?>

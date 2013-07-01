@@ -41,6 +41,67 @@ jQuery(document).ready(function(){
 	jQuery('#submit').click(function(){
 		add_job();
 	});
+		
+	jQuery('#reject_event').click(function(){
+		reject_event();
+	});
+	
+	jQuery('#accept_event').click(function(){
+		accept_event();
+	});
+		///////////////////////////////////////////////////////////////	
+		function accept_event() {
+	
+		var attend_id=jQuery('#attend_id').val();
+		var event_name=jQuery('#event_name').val();
+		var event_id=jQuery('#event_id').val();
+		var user_id=jQuery('#user_id').val();		
+			
+		if(attend_id == '' ){
+	jQuery('#report_validate').append(' <div class="notification msgerror"> <a class="close"></a> <p ><strong>Error Message:</strong> attend_id not found try again please !!</p></div>');
+			
+			
+			}
+		if(attend_id != '') {
+			
+			jQuery.post(base_url+"employee/ajax_accept_user_attend" ,{ attend_id : attend_id , event_name : event_name ,event_id : event_id, user_id : user_id }, function(data){
+             
+          if(data==='ok'){
+			  jQuery('#success').append(' <div class="notification msgsuccess"> <a class="close"></a><p > The user has been accepted from attending the event successfully . !!</p></div>');
+			  }
+			
+			
+			});
+					
+		}
+		}
+	
+		///////////////////////////////////////////////////////////////	
+		function reject_event() {
+	
+		var attend_id=jQuery('#attend_id').val();		
+		var event_name=jQuery('#event_name').val();
+		var event_id=jQuery('#event_id').val();
+		var user_id=jQuery('#user_id').val();
+		if(attend_id == '' ){
+	jQuery('#report_validate').append(' <div class="notification msgerror"> <a class="close"></a> <p ><strong>Error Message:</strong> attend_id not found try again please !!</p></div>');
+			
+			
+			}
+		if(attend_id != '') {
+			
+			jQuery.post(base_url+"employee/ajax_reject_user_attend" ,{ attend_id : attend_id , event_name : event_name ,event_id : event_id, user_id : user_id }, function(data){
+             
+          if(data==='ok'){
+			  jQuery('#success').append(' <div class="notification msgsuccess"> <a class="close"></a><p > The user has been rejected from attending the event successfully . !!</p></div>');
+			  }
+			
+			
+			});
+					
+		}
+		}
+	
 	/////////////////////////////////////////////////////////////////
 		function add_job() {
 	

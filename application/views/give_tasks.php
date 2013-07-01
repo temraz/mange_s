@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="<?php echo base_url();?>css/style.css"  type="text/css" />
 
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="<?php echo base_url();?>js/jquery-1.7.min.js"></script>
 
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery-ui-1.8.16.custom.min.js"></script>
  
@@ -195,7 +195,7 @@ jQuery(document).ready(function() {
      	</div><!--mainwrapperinner-->
     </div><!--mainwrapper-->
 	<!-- END OF MAIN CONTENT -->
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="<?php echo base_url();?>js/jquery-1.7.min.js"></script>
  <script type="text/javascript">
 var base_url=" <?php echo base_url();?>";
 </script>

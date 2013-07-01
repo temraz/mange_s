@@ -43,7 +43,7 @@
         	<div class="maincontentinner">
             	
                   <ul class="maintabmenu">
-                	<li ><a href="<?php echo base_url();?>employee/give_task/" ><?php if(isset($employee->row(0)->firstname,$employee->row(0)->lastname)) echo $employee->row(0)->firstname ." ".$employee->row(0)->lastname?> Settings</a></li>
+                	<li ><a href="<?php echo base_url();?>employee/give_task/" >assign a new task</a></li>
                     <li class="current"><a href="<?php echo base_url();?>employee/tasks_status/" >Tasks status</a></li>
                 </ul><!--maintabmenu-->
                 
@@ -59,13 +59,11 @@
                         <p >The task has been saved that the employee finish it.</p>
                         <a class="close"></a>
                     </div>
+                    
                     <?php }?>
                     
-                     <?php if(isset($notasks)&& $notasks==1){?>
-                    <div class="notification msgerror">
-                        <a class="close"></a>
-                        <p>There are no tasks have been assigned for you until now.</p>
-                    </div>
+                     <?php if(!isset($tasks)){?>
+                      <center><h1 style="color:#c1c1c1">You didn't give your employees any tasks until yet.</h1></center>
                     <?php }?>
                 <div class="widgetcontent userlistwidget">
                             <ul>
@@ -92,7 +90,7 @@
                                         
                                        <?php if($task->done == 1){ ?>
                                         <ul class="buttonlist">
-                          <li style="border:none;float:right"><a href="#task" id="forward" class="btn btn_link"><span>Task has been finished</span></a></li>
+                          <li style="border:none;float:right"><a href="#task" style="cursor:default"  id="forward" class="btn btn_link"><span>Task has been finished</span></a></li>
                           </ul>
                           <br clear="all" />
                             <?php }?> 

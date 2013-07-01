@@ -63,10 +63,8 @@ var base_url=" <?php echo base_url();?>";
                 
                 
                      <?php if(isset($no_reports)){?>
-                    <div class="notification msgerror">
-                        <a class="close"></a>
-                        <p>there is new report until now</p>
-                    </div>
+                   
+                     <center><h1 style="color:#c1c1c1">there is new report until now</h1></center>
                     <?php }?>
                   <h1 style="border-bottom:1px dashed #e1e1e1; padding-bottom:10px">
                    <?php if(isset($report)){?>

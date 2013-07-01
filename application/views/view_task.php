@@ -50,10 +50,7 @@
                 	
                     
                      <?php if(isset($notasks)&& $notasks==1){?>
-                    <div class="notification msgerror">
-                        <a class="close"></a>
-                        <p>There is no tasks have been assigned for you until now.</p>
-                    </div>
+                     <center><h1 style="color:#c1c1c1">There is no tasks have been assigned for you until now.</h1></center>
                     <?php }?>
                     
                   
@@ -86,11 +83,11 @@
                                          <?php if($task->row(0)->under_construction == 1 && $task->row(0)->done == 0){ ?>
                             
                             
-                             <li style="border:none;"><a href="#task" id="forward" class="btn btn_link"><span>Task is under construction</span></a></li>
+                             <li style="border:none;"><a href="#task" style="cursor:default"  id="forward" class="btn btn_link"><span>Task is under construction</span></a></li>
                             <?php }?>
                             <?php if($task->row(0)->done == 1){ ?>
                             
-                             <li style="border:none;"><a href="#task" id="forward" class="btn btn_link"><span>Task has been finished</span></a></li>
+                             <li style="border:none;"><a href="#task" style="cursor:default"  id="forward" class="btn btn_link"><span>Task has been finished</span></a></li>
                             <?php }?>
                            
                               <?php if($task->row(0)->under_construction == 0 && $task->row(0)->done == 0){ ?>

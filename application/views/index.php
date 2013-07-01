@@ -64,22 +64,7 @@
         
         </div><!--headerinner-->
 	</div><!--header-->
-        <?php if(isset($hide)){if($hide==1){?>
-         <div id="modal">
-	<div id="heading">
-		Are you....?
-	</div>
-
-	<div id="content">
-		<p>choose the correct answer </p>
-        <a href="<?php echo base_url();?>site/index_user"               class="button green close"><img src="<?php echo base_url();?>images/tick.png">Normal User!</a>
-		<a href="<?php echo base_url();?>site/index_employee" class="button green close"><img src="<?php echo base_url();?>images/tick.png">Employee!</a>
-        <a href="<?php echo base_url();?>site/index_company" class="button green close"><img src="<?php echo base_url();?>images/tick.png">Company!</a>
-        
-
-	</div>
-</div>
-<?php }}?>
+       
     <!-- START OF MAIN CONTENT -->
     <div class="mainwrapper">
      	<div class="mainwrapperinner">
@@ -168,7 +153,7 @@ and send it to campanies. Because of You can do all these services electronic , 
                         <div class="widgetcontent stdform stdformwidget">
                          <?php echo form_open('site/login_validation');
                                  ?>
-                                 <div style="color:#F30">
+                                 <div style="color:#F30;text-align:center">
                                  <?php if(isset($login)){ echo validation_errors()  ;  } ?>
                                  </div> 
                         
@@ -200,7 +185,7 @@ and send it to campanies. Because of You can do all these services electronic , 
                                 </div>
                             </div><!--par-->
                             </form>
-                         <small><a href="#" >Forget My Password</a></small>
+                         <small style="text-align:center"><a href="<?php echo base_url();?>site/company_sign_up/" > Company sign up</a> Or <a href="<?php echo base_url();?>site/emp_sign_up/">employee sign up</a></small>
                                                    
                      <br clear="all" />
                     </div><!--widgetcontent-->
@@ -208,49 +193,76 @@ and send it to campanies. Because of You can do all these services electronic , 
                 
                 
                 <div class="widgetbox" style="">
-                        <div class="title"><h2 class="general"><span>Registration</span></h2></div>
+                        <div class="title"><h2 class="general"><span>User Registration</span></h2></div>
                         <div class="widgetcontent stdform stdformwidget">
                         <?php echo form_open('site/signup_validation');  ?>
                           <div style="color:#F30">
                               
-                                 <?php if(! isset($login)) { echo validation_errors();}  if(isset($regist)){echo $regist ;}  ?>
+                                 <?php if(! isset($login)) {
+									 if(validation_errors()){
+									 ?>
+                                 
+								   <div class="notification msgerror">
+                        <a class="close"></a>
+                        <p>   
+								 <?php  echo validation_errors();?> 
+                                 </p></div>
+								 
+								<?php }} if(isset($regist)){?> 
+								<div class="notification msgsuccess">
+                        <a class="close"></a>
+                        <p>   
+								<?php echo $regist ?> 
+                                 </p></div>
+								 <?php ;}  ?>
                                  
                                  </div> 
                             <div class="par">
                             	<label>Username</label>
                                 <div class="field">
-                                    <?php echo form_input(array('name'=>'username','class'=>'longinput')); ?>
+                                    <?php echo form_input(array('name'=>'username','class'=>'longinput','value'=>$this->input->post('username'),'required'=>'required')); ?>
                                 	
                                 </div>
                             </div><!--par-->
                              <div class="par">
                             	<label>Email</label>
                                 <div class="field">
-                                    <?php echo form_input(array('name'=>'email','class'=>'longinput')); ?><br />
+                                    <?php echo form_input(array('name'=>'email','class'=>'longinput','required'=>'required','value'=>$this->input->post('email'))); ?><br />
                                 </div>
                                 </div><!--par-->
                             <div class="par">
                             	<label>Password</label>
                                 <div class="field">
-                                   <?php echo form_password(array('name'=>'password','class'=>'longinput')); ?><br />
+                                   <?php echo form_password(array('name'=>'password','class'=>'longinput','required'=>'required')); ?><br />
                                 </div>
                                 </div><!--par-->
                                 <div class="par">
-                            	<label>Confirm Password</label>
+                            	<label style="margin-top:-9px;">Confirm Password</label>
                                 <div class="field">
-                                 <?php echo form_password(array('name'=>'cpassword','class'=>'longinput')); ?><br />
+                                 <?php echo form_password(array('name'=>'cpassword','class'=>'longinput','required'=>'required'));?><br />
                                 </div>
                               
                                 <div class="par" style="float:left">
                             	<label>Country</label>
                                 <div  class="field">
-                             <?php $options = array(
-                            'egypt'  => 'egypt',
-                            'usa'    => 'usa',
-                            'england'   => 'england',
-                            'moroco' => 'moroco',
-                             );
-                             echo form_dropdown('country', $options, 'large');?><br />
+                          <select name="country" size="1" required>
+                   <?php if($this->input->post('country')){?>
+				   <option selected="selected" value="<?php echo $this->input->post('country') ;?>"><?php echo $this->input->post('country') ?></option>
+                             <?php require("all_countries.php");?>
+   <?php for($i=0;$i< count($country_list);$i++) {
+  echo " <option value=\"$country_list[$i]\"";
+    echo ">$country_list[$i]</option>";
+   } ?>
+				   <?php }else{ ?>
+					   <option value="">select your country</option>
+					   
+                   <?php require("all_countries.php");?>
+   <?php for($i=0;$i< count($country_list);$i++) {
+  echo " <option value=\"$country_list[$i]\"";
+    echo ">$country_list[$i]</option>";
+   } ?>
+   <?php }?>
+   </select>
                             </div><!--par-->
                             
                             <div class="par" >
@@ -264,7 +276,7 @@ and send it to campanies. Because of You can do all these services electronic , 
                                 </div>
                             </div><!--par-->
                         </form>
-                         <small><a href="<?php echo base_url();?>site/employee" >Employees Registration Page</a></small>
+                         <small style="text-align:center"><a href="<?php echo base_url();?>site/company_sign_up/" > Company sign up</a> Or <a href="<?php echo base_url();?>site/emp_sign_up/">employee sign up</a></small>
                     </div><!--widgetcontent-->
                 </div><!--widgetbox-->
                 

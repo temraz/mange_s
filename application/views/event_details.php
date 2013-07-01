@@ -22,7 +22,7 @@
 
 
 
-<script type="text/javascript" src="<?php echo base_url();?>js/elements.js" ></script>
+
 
 <script type="text/javascript">
 var base_url=" <?php echo base_url();?>";
@@ -73,29 +73,26 @@ var base_url=" <?php echo base_url();?>";
                    <div id="report_validate">
                    
                    </div>
-                    <?php if(isset($no_events)){?>
-                    <div class="notification msgerror">
-                        <a class="close"></a>
-                        <p>there is new reports come for you until now</p>
-                    </div>
-                    <?php }?>
+                    
                             <ul>
                          
                 
                 
                  <?php 
 				$counter = 1;
-				if(isset($events) && count($events) != 0){
-				foreach ($events as $row){
-					$id=$row->user_id;
-					$username=$row->name;
-					$address=$row->address;
-					$user_pic=$row->pic;
-					$event_name=$row->event_name;
-					$event_id=$row->event_id;
-					$date=$row->event_date;
-					$details=$row->details;
-					$event_pic=$row->event_pic;
+				if(isset($event)){
+				
+					$id=$event->row(0)->user_id;
+					$username=$event->row(0)->name;
+					$address=$event->row(0)->address;
+					$user_pic=$event->row(0)->pic;
+					$event_name=$event->row(0)->event_name;
+					$event_id=$event->row(0)->event_id;
+					$date=$event->row(0)->event_date;
+					$details=$event->row(0)->details;
+					$event_pic=$event->row(0)->event_pic;
+					$about=$event->row(0)->event_pic;
+					$attend_id=$event->row(0)->attend_id;
 					
 					 ?>
                      <li>
@@ -104,9 +101,12 @@ var base_url=" <?php echo base_url();?>";
                     
                     
                     
-         
+                                 <h3 style="float:right;padding-right:10px;"><?php echo $event_name;?></h3></br>
                     
-                                 
+                               <div class="avatar" style="float:right;"><img src="<?php echo base_url(); ?>images/events/thumbs/<?php echo $event_pic ?>" width="150" height="125" />
+                               
+                               </div>  
+                              
                                <div class="avatar"><img src="<?php echo base_url(); ?>images/profile/thumb_profile/<?php echo $user_pic ?>" width="50" height="45" /></div>
                                     <div class="info" style="margin-left:70px;font-size:13px;margin-top:-5px;">
                                     	<a href="#user" style="cursor:default;"><?php echo $username; ?></a> 
@@ -118,21 +118,40 @@ var base_url=" <?php echo base_url();?>";
                                        <span >
                                        Want to attend : <span><?php echo $event_name;?></span>
                                        </span>
-                                          <p><?php echo substr($details,0,100).'...';?><a href="<?php echo base_url(); ?>employee/event_details/<?php echo $event_id?>/<?php echo $id?>">Details</a></p>
+                                       <br/>
+                                       <br/>
+                                       <?php if(isset($about)){?>
+                                       <span>
+                                       about <?php echo $username?> : <?php echo $about?>
+                                       </span>
+                                       <?php }?>
+                                         <br/>
+                                       <br/>
+                                          <p><?php echo $details.'...';?></p>
                                           
                                           
-                                          <br/>
+                                          <br/><br/>
                                           <span class="radius2" style="float:right ; margin-top:-22px ; font-weight:bold"><?php echo $date;?></span>
                                         
                                      
                                         
-                            
+                              <ul class="buttonlist">
+                                         <input type="hidden" id="attend_id" value="<?php echo $attend_id ?>" />
+                                          <input type="hidden" id="event_name" value="<?php echo $event_name ?>" />
+                                          <input type="hidden" id="event_id" value="<?php echo $event_id ?>" />
+                                          <input type="hidden" id="user_id" value="<?php echo $id ?>" />
+                   		                <li style="border:none;"><a href="#accept" id="accept_event" class="btn  btn_link"><span>Accept</span></a></li>
+                                        <li style="border:none;"><a href="#reject" id="reject_event" class="btn  btn_trash"><span>Reject</span></a></li>
+                                        
+                                        
+                                        
+                                        </ul>
                     
                     </li>
-                    <?php $counter++;}}else{?>
-                    <center><h1 style="color:#c1c1c1">There Are Not Events Yet</h1></center>
+                    <?php }else{?>
+                    <center><h1 style="color:#c1c1c1">There Are Not Event Yet</h1></center>
                     <?php } ?>
-                
+                   
                     
                 
                 

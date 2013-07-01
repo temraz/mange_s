@@ -7,7 +7,7 @@ class Model_employee extends CI_Model {
        
 	      $query = "select id ,company_id,department_id,sub_dept_id,email,firstname,lastname,username from employees where email=? and password=? and confirm=1";
       $result=$this->db->query($query,array($email,$password));
-       if ( $result) {
+       if ( $result->num_rows() == 1) {
           $result=array('id'=>$result->row(0)->id,'email'=>$result->row(0)->email,'company_id'=>$result->row(0)->company_id,
 		                'department_id'=>$result->row(0)->department_id,'sub_dept_id'=>$result->row(0)->sub_dept_id,'username'=>$result->row(0)->username);
 						
@@ -78,7 +78,7 @@ class Model_employee extends CI_Model {
        
 	      $query = "select id ,email from company where email=? and password=?";
       $result=$this->db->query($query,array($email,$password));
-       if ( $result) {
+       if ( $result->num_rows() == 1) {
           $result=array('id'=>$result->row(0)->id, 'email'=>$result->row(0)->email);
 	   return  $result; 
         } else {
@@ -760,7 +760,7 @@ function get_chat_messages_last_one($from_id ,$to_id){
 
        LEFT JOIN  report_employee AS r ON  e.id=r.sender_id
 
-       JOIN forward_reports as f ON f.report_id = r.id where  f.emp_id=? and archive=? r.report_date DESC
+       JOIN forward_reports as f ON f.report_id = r.id where  f.emp_id=? and archive=? order by r.report_date DESC
 			  
 			  ';
 			  
@@ -1206,7 +1206,7 @@ function get_chat_messages_last_one($from_id ,$to_id){
 							ON t.event_id = v.id
 
 
-							where v.company_id=? and t.accept=0
+							where v.company_id=? and t.reject=0 and t.accept=0
 							';
 							
 							$result = $this->db->query($sql,array($comp_id));
@@ -1214,9 +1214,39 @@ function get_chat_messages_last_one($from_id ,$to_id){
 							return $result;
 							} else {
 							return false;
-							}	 			
+							}
+
+							}	
+/////////////////////////////////////////////////////////////					
+			
+	function select_event_details($comp_id,$event_id,$user_id){
+				$sql='SELECT
+                            e.id as user_id ,e.name,e.pic,v.name as event_name,e.about,v.id as event_id,v.details,v.pic as event_pic,v.`date` as event_date,
+							v.company_id ,t.id as attend_id,e.address
+
+							  FROM
+							users e
+							LEFT JOIN
 							
-				
-		}	
-}
-?>
+							attend t
+							ON t.user_id = e.id
+							LEFT JOIN
+
+							events v
+							ON t.event_id = v.id
+
+
+							where v.company_id=?  and t.event_id=? and t.user_id=?
+							';
+							
+							$result = $this->db->query($sql,array($comp_id,$event_id,$user_id));
+							if($result->num_rows() >= 1){
+							return $result;
+							} else {
+							return false;
+							}
+							}
+							
+////////////////////////////////////////////////////////////
+							
+}?>
