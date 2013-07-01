@@ -2,6 +2,10 @@ jQuery.noConflict();
 
 jQuery(document).ready(function(){
 	
+	jQuery('.pay').click(function(){
+window.location = ""+base_url+"company/mybill";
+});
+	
 	//search box of header
 	jQuery('#keyword').bind('focusin focusout', function(e){
 		var t = jQuery(this);

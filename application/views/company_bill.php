@@ -74,26 +74,36 @@ var base_url = "<?php echo base_url(); ?>";
                             <th class="head1">#</th>
                             <th class="head0">Details</th>
                             <th class="head1">Value</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
                     <?php 
 				$counter = 1;
+				$total=0;
 				if(isset($bill) && count($bill) != 0){
 				foreach ($bill as $row){
 					$details=$row->details;
-					$value=$row->value;			
+					$value=$row->value;	
+					$total+=$value;		
 					 ?>
                         <tr>
                             <td class="center"><?php echo $counter ; ?></td>
                             <td class="center"><?php echo $details ; ?></td>
                             <td class="center"><?php echo $value.' $' ; ?></td>
+                          
                         </tr>
                         <?php $counter++;}?>
+                        
                           </tbody>
                 </table>
                 <br />
-                <button class="stdbtn btn_black" style="width:90px;float:right;margin-right:40px">Pay</button>
+             <h3 style="float:left;padding:5px;border:1px dashed #ccc;"> Total amount = <?php echo $total.' $' ; ?></h3>
+                              <ul class="buttonlist" style="float:left;padding-left:10px;">
+                 <li style="border:none;"><a href="#" id="forward" class="btn  btn_link"><span>Pay the bill now with PayPal</span></a></li></ul>
+                <br/>
+                
+
                 <br clear="all"/>
 						<?php }else{?>
                         </tbody></table>

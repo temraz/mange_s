@@ -125,6 +125,8 @@ class Company extends CI_Controller {
 	{
         $this->load->library('form_validation');
         $this->form_validation->set_rules('chairman', 'chairman', 'required|trim|max_length[100]|xss_clean');
+		$this->form_validation->set_rules('department_number', 'department number', 'required|trim|max_length[10]|numeric|xss_clean');
+		
         $chairman = $this->input->post('chairman');
 	    $depart_num = $this->input->post('department_number');
 		$id = $this->session->userdata('comp_id');

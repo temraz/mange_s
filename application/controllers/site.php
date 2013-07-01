@@ -34,7 +34,7 @@ class Site extends CI_Controller {
 				 $id=$this->session->userdata('comp_id');
 				 $this->load->model('model_users');
 				 if($this->model_users->select_company($id)){
-					 $id=$this->model_users->select_company($id)->row(0)->id;
+			     $id=$this->model_users->select_company($id)->row(0)->id;
 				 
                 redirect('company/profile/'.$id);	 
 					 }else{
