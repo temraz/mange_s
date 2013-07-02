@@ -105,7 +105,10 @@ if($this->model_employee->is_chairman($id)){
 ?>
 <div class="leftmenu">
             		<ul>
+                     <li ><a href="<?php echo base_url();?>company/profile/<?php echo $this->session->userdata('company_id'); ;?>"  class="dashboard"><span>My company Profile</span></a></li>
+                    <li ><a href="<?php echo base_url();?>company/home"  class="dashboard"><span>News Feed</span></a></li>
                     	<li ><a href="<?php echo base_url();?>employee/dashboard/<?php echo $id;?>"  class="dashboard"><span>Dashboard</span></a></li>
+
                         
                         <?php if(isset($chairman) && $chairman==1){?>
                         <li><a href="<?php echo base_url();?>employee/give_task/" class="buttons" ><span>Give taskes to the managers</span></a></li> 

@@ -37,7 +37,10 @@ var base_url = "<?php echo base_url(); ?>";
 <body class="loggedin">
 
 	<!-- START OF HEADER -->
-	<?php include('header.php');?>
+	
+              	<?php  if($this->session->userdata('company_logged_in')){ include('header.php'); }
+				
+				elseif($this->session->userdata('employee_logged_in')){include('header2.php'); }?>
     <!-- END OF HEADER -->
         
     <!-- START OF MAIN CONTENT -->
@@ -47,7 +50,9 @@ var base_url = "<?php echo base_url(); ?>";
         <div class="mainleft">
           	<div class="mainleftinner">
             
-              	<?php  if($this->session->userdata('company_logged_in')){ include('left_menu_company.php'); }?>
+              	<?php  if($this->session->userdata('company_logged_in')){ include('left_menu_company.php'); }
+				
+				elseif($this->session->userdata('employee_logged_in')){include('left_menu.php'); }?>
             	<div id="togglemenuleft"><a></a></div>
             </div><!--mainleftinner-->
         </div><!--mainleft-->
@@ -104,7 +109,7 @@ var base_url = "<?php echo base_url(); ?>";
            <?php include('footer.php');?>
             
         </div><!--maincontent-->
-        
+        	<?php if($this->session->userdata('company_logged_in')){ ?>
         <div class="mainright">
         	<div class="mainrightinner">
             	  <div class="widgetbox">
@@ -182,7 +187,11 @@ var base_url = "<?php echo base_url(); ?>";
               
                
                </div><!--mainrightinner-->
+               
         </div><!--mainright-->  
+        <?php }elseif($this->session->userdata('employee_logged_in')){
+         include('right_div.php');
+       }?>
      	</div><!--mainwrapperinner-->
     </div><!--mainwrapper-->
 	<!-- END OF MAIN CONTENT -->

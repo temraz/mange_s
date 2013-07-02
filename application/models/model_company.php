@@ -150,7 +150,7 @@ class model_company extends CI_Model {
 	  
 	  ///////////////
 	    public function feed_by_id($id){
-			$query="SELECT * FROM news_feed WHERE company_id=$id ORDER BY id DESC ";
+			$query="SELECT * FROM news_feed WHERE company_id=$id ORDER BY id DESC limit 4 ";
 	$result=$this->db->query($query);
 	  return $result->result();
 	  

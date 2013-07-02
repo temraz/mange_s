@@ -1,5 +1,8 @@
 <?php 
-$emp_id=$this->session->userdata('emp_id');
+$id=$this->session->userdata('emp_id');
+$employee=$this->model_users->select_emp($id);
+$emp_id=$employee->row(0)->id;
+
 			if($this->model_employee->select_avtivity($emp_id)){
 				$activities=$this->model_employee->select_avtivity($emp_id);
 				

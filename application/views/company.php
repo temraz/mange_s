@@ -179,7 +179,7 @@ var base_url = "<?php echo base_url(); ?>";
            <?php include('footer.php');?>
             
         </div><!--maincontent-->
-        
+        <?php if($this->session->userdata('company_logged_in')){ ?>
         <div class="mainright">
         	<div class="mainrightinner">
             	  <div class="widgetbox">
@@ -260,6 +260,9 @@ var base_url = "<?php echo base_url(); ?>";
                
                </div><!--mainrightinner-->
         </div><!--mainright-->  
+        <?php }elseif($this->session->userdata('employee_logged_in')){
+         include('right_div.php');
+       }?>
      	</div><!--mainwrapperinner-->
     </div><!--mainwrapper-->
 	<!-- END OF MAIN CONTENT -->

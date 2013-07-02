@@ -97,12 +97,37 @@ var base_url = "<?php echo base_url(); ?>";
                         
                           </tbody>
                 </table>
+                
                 <br />
              <h3 style="float:left;padding:5px;border:1px dashed #ccc;"> Total amount = <?php echo $total.' $' ; ?></h3>
-                              <ul class="buttonlist" style="float:left;padding-left:10px;">
-                 <li style="border:none;"><a href="#" id="forward" class="btn  btn_link"><span>Pay the bill now with PayPal</span></a></li></ul>
-                <br/>
-                
+             <br clear="all"/>
+             <div style="margin-top:15px;">
+         <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_xclick">
+<input type="hidden" name="business" value="mohamedtemraz92@gmail.com">
+<input type="hidden" name="item_name" value="<?php echo $name ;?> Staff Tree">
+
+<input type="hidden" name="amount" value="<?php echo $total ;?>">
+<input type="hidden" name="tax" value="0">
+<input type="hidden" name="quantity" value="1">
+<input type="hidden" name="no_note" value="1">
+<input type="hidden" name="currency_code" value="USD">
+
+<!-- Enable override of buyers's address stored with PayPal . -->
+<input type="hidden" name="address_override" value="1">
+<!-- Set variables that override the address stored with PayPal. -->
+<input type="hidden" name="first_name" value="<?php echo $name ?>">
+<input type="hidden" name="last_name" value="Company">
+
+
+
+
+
+<input type="image" name="submit" border="0"
+src="https://www.paypalobjects.com/en_US/i/btn/btn_buynow_LG.gif"
+alt="PayPal - The safer, easier way to pay online">
+</form>
+</div>
 
                 <br clear="all"/>
 						<?php }else{?>

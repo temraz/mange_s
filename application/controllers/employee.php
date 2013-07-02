@@ -35,7 +35,7 @@ function dashboard(){
 						redirect('site/error404');
 						}
 						 }else{
-							  redirect('site/index_employee');
+							   redirect('site/');
 							 }
 	}
 //////////////////////////////////////////	
@@ -44,7 +44,7 @@ function settings(){
 		
 		$this->load->view('employee_settings');
 		}else{
-		redirect('site/index_employee');	
+		 redirect('site/');	
 		}
 	}
 
@@ -59,7 +59,7 @@ function settings(){
 			 $data['pic']=$employee->row(0)->profile_pic;
             	$this->load->view('employee_settings',$data);
         } else {
-            redirect('site/index_employee');	
+             redirect('site/');	
         }
     }
 	
@@ -115,7 +115,7 @@ function give_task(){
 			 
 	
 	}else{
-         redirect('site/index_employee');	
+          redirect('site/');	
         }
 	}
 //////////////////////////////////////////////////
@@ -160,7 +160,7 @@ function task_validation(){
 				}
 		 
 	}else{
-         redirect('site/index_employee');	
+          redirect('site/');	
         }
 	}	
 	///////////////////////////////////////////
@@ -180,7 +180,7 @@ function task_validation(){
 				redirect('site/error404');
 				 }
 				}else{
-         redirect('site/index_employee');	
+          redirect('site/');	
         }
 		}
 	/////////////////////////////////////////////
@@ -216,7 +216,7 @@ function task_validation(){
 			redirect('site/error404');
 			}
 				}else{
-         redirect('site/index_employee');	
+          redirect('site/');	
         }
 		}
 	/////////////////////////////////////////////
@@ -257,7 +257,7 @@ function task_validation(){
 			redirect('site/error404');
 			}
 				}else{
-         redirect('site/index_employee');	
+          redirect('site/');	
         }
 		}
 	/////////////////////////////////////////////
@@ -287,7 +287,7 @@ function task_validation(){
 			redirect('site/error404');
 			}
 				}else{
-         redirect('site/index_employee');	
+          redirect('site/');	
         }
 		}
 	/////////////////////////////////////////////
@@ -323,7 +323,7 @@ function task_validation(){
 			redirect('site/error404');
 			}
 		}else{
-         redirect('site/index_employee');	
+          redirect('site/');	
         }
 	}		
 	///////////////////////////////////////////	
@@ -339,7 +339,7 @@ function task_validation(){
 					}
 			
 			}else{
-         redirect('site/index_employee');	
+          redirect('site/');	
         }
 		}
 	/////////////////////////////////////////////
@@ -353,7 +353,7 @@ function task_validation(){
 				}
 				echo $activity_count;
 		}else{
-         redirect('site/index_employee');	
+          redirect('site/');	
         }
 		}
 	////////////////////////////////////////////////////// employees chat/////////////////////////////////////
@@ -440,7 +440,7 @@ function task_validation(){
 		
 	
 		}else{
-         redirect('site/index_employee');	
+          redirect('site/');	
         }
 	}
 	///////////////////////////////////////////////////////////////////////
@@ -468,7 +468,7 @@ function task_validation(){
 		
 		
 		}else{
-         redirect('site/index_employee');	
+          redirect('site/');	
         }
 		}
 	//////////////////////////////////////////////////////////////
@@ -655,7 +655,7 @@ function task_validation(){
 		
 	
 		}else{
-         redirect('site/index_employee');	
+          redirect('site/');	
         }
 	}
 	///////////////////////////////////////////////////////////////////////
@@ -755,7 +755,7 @@ function task_validation(){
 		
 	
 		}else{
-         redirect('site/index_employee');	
+          redirect('site/');	
         }
 	}
 	///////////////////////////////////////////////////////////////////////
@@ -836,7 +836,7 @@ function task_validation(){
 		
 
 		  	}else{
-           redirect('site/index_employee');	
+            redirect('site/');	
         }
 		
 		}
@@ -872,7 +872,7 @@ function task_validation(){
 			 
 			    
 				}else{
-           redirect('site/index_employee');	
+            redirect('site/');	
         }  
 			
 		}
@@ -910,7 +910,7 @@ if($this->model_employee->is_manager($id)){
 			 redirect('site/error404');
 			 }
 	 	}else{
-           redirect('site/index_employee');	
+            redirect('site/');	
         }  
 		}	
 	//////////////////////////////////////////////////////////////
@@ -977,7 +977,7 @@ if($this->model_employee->is_manager($id)){
 			redirect('site/error404');
 			 } 
 			}else{
-           redirect('site/index_employee');	
+            redirect('site/');	
         }  
 		}	
 	///////////////////////////////////////////////
@@ -1007,7 +1007,7 @@ if($this->model_employee->is_manager($id)){
 			 } 
 
 		}else{
-           redirect('site/index_employee');	
+            redirect('site/');	
         }  
 		}	
 /////////////////////////////////////////////////////////////
@@ -1040,7 +1040,7 @@ function ajax_forward_report(){
 			}
 		 
 		}else{
-           redirect('site/index_employee');	
+            redirect('site/');	
         }  
 	}	
 	///////////////////////////////////////////////////////////////////////
@@ -1074,7 +1074,7 @@ function ajax_forward_report(){
 			}
 		 
 		}else{
-           redirect('site/index_employee');	
+            redirect('site/');	
         }  
 	}
 	//////////////////////////////////////////////
@@ -1108,7 +1108,7 @@ function ajax_forward_report(){
 			}
 		 
 		}else{
-           redirect('site/index_employee');	
+            redirect('site/');	
         } 
 		}
 	////////////////////////////////////////////
@@ -1159,7 +1159,7 @@ function ajax_forward_report(){
 			 redirect('site/error404');
 			}
 			}else{
-				 redirect('site/index_employee');	
+				  redirect('site/');	
 				}
 		
 		}
@@ -1247,7 +1247,7 @@ function ajax_forward_report(){
 					 }
 			
 			}else{
-				 redirect('site/index_employee');	
+				  redirect('site/');	
 				}
 		}
 	////////////////////////////////////////////////////////////
@@ -1287,7 +1287,7 @@ function ajax_forward_report(){
 			}
 				
 				}else{
-					 redirect('site/index_employee');	
+					  redirect('site/');	
 					}
 		}	
 	////////////////////////////////////////////////////////////////
@@ -1302,7 +1302,7 @@ function ajax_forward_report(){
               echo 'no2';
 					}
 					}else{
-				    redirect('site/index_employee');	
+				     redirect('site/');	
 					}
 		
 		}	
@@ -1318,7 +1318,7 @@ function ajax_forward_report(){
               echo 'no2';
 					}
 					}else{
-				    redirect('site/index_employee');	
+				     redirect('site/');	
 					}
 		}	
 	//////////////////////////////////////////////////
@@ -1350,7 +1350,7 @@ function ajax_forward_report(){
 		   }
 			
 			}else{
-				redirect('site/index_employee');	
+				 redirect('site/');	
 				}
 		
 		}
@@ -1394,7 +1394,7 @@ $result=array('status'=>'no');
 		   }
 			
 			}else{
-				redirect('site/index_employee');	
+				 redirect('site/');	
 				}
 			}
 		//////////////////////////////////////////////////	
@@ -1437,7 +1437,7 @@ $result=array('status'=>'no');
 		   }
 			
 			}else{
-				redirect('site/index_employee');	
+				 redirect('site/');	
 				}
 			
 			}
@@ -1474,7 +1474,7 @@ $result=array('status'=>'no');
 		  redirect('site/error404');
 		 }
 	}else{
-		 redirect('site/index_employee');	
+		  redirect('site/');	
 		 }	 
 		 
 		 
@@ -1522,7 +1522,7 @@ $result=array('status'=>'no');
 					 redirect('site/error404');
 					}
 			}else{
-		 redirect('site/index_employee');	
+		  redirect('site/');	
 		 }	 
 		 
 		}	
@@ -1539,7 +1539,7 @@ $result=array('status'=>'no');
 			
 			       	
 			}else{
-		 redirect('site/index_employee');	
+		  redirect('site/');	
 		 }
 		}			
 //////////////////////////////////////////////////////////////////////////
@@ -1566,7 +1566,7 @@ function add_job(){
 		 redirect('site/error404');
 		}
 		}else{
-			redirect('site/index_employee');
+			 redirect('site/');
 			}
 }
 ////////////////////////////////////////////////////////////////
@@ -1644,7 +1644,7 @@ function ajax_add_job(){
 		 redirect('site/error404');
 		}
 		}else{
-			redirect('site/index_employee');
+			 redirect('site/');
 			}
             } 
 	//////////////////////////////////////////////////////////////////////
@@ -1671,7 +1671,7 @@ function ajax_add_job(){
 		 redirect('site/error404');
 		}
 		}else{
-			redirect('site/index_employee');
+			 redirect('site/');
 			}
 		}		
 	/////////////////////////////////////////////////////////////////////
@@ -1698,7 +1698,7 @@ function ajax_add_job(){
 		 redirect('site/error404');
 		}
 		}else{
-			redirect('site/index_employee');
+			 redirect('site/');
 			}
 		}		
 	/////////////////////////////////////////////////////////////////////
@@ -1725,7 +1725,7 @@ function ajax_add_job(){
 		 redirect('site/error404');
 		}
 		}else{
-			redirect('site/index_employee');
+			 redirect('site/');
 			}
 		}		
 	/////////////////////////////////////////////////////////////////////
@@ -1752,7 +1752,7 @@ function ajax_add_job(){
 		 redirect('site/error404');
 		}
 		}else{
-			redirect('site/index_employee');
+			 redirect('site/');
 			}
 		}		
 	/////////////////////////////////////////////////////////////////////
@@ -1865,7 +1865,7 @@ function ajax_add_job(){
 		 redirect('site/error404');
 		}
 		}else{
-			redirect('site/index_employee');
+			 redirect('site/');
 			}
 		
 		
@@ -1971,7 +1971,7 @@ function ajax_add_job(){
 		 redirect('site/error404');
 		}
 		}else{
-			redirect('site/index_employee');
+			 redirect('site/');
 			}
 	}
 	//////////////////////////////////////////////////////////////////
@@ -2078,7 +2078,7 @@ function ajax_add_job(){
 		 redirect('site/error404');
 		}
 		}else{
-			redirect('site/index_employee');
+			 redirect('site/');
 			}
 	}
 	///////////////////////////////////////////////////////////
@@ -2185,7 +2185,7 @@ function ajax_add_job(){
 		 redirect('site/error404');
 		}
 		}else{
-			redirect('site/index_employee');
+			 redirect('site/');
 			}
 	}
 	/////////////////////////////////////////////////////////////
@@ -2222,7 +2222,7 @@ function ajax_add_job(){
 		 redirect('site/error404');
 		}
 		}else{
-			redirect('site/index_employee');
+			 redirect('site/');
 			}
 	
 		}
@@ -2259,7 +2259,7 @@ function ajax_add_job(){
 		 redirect('site/error404');
 		}
 		}else{
-			redirect('site/index_employee');
+			 redirect('site/');
 			}
 	
 		}
@@ -2309,7 +2309,7 @@ function ajax_add_job(){
 		 redirect('site/error404');
 		}
 		}else{
-			redirect('site/index_employee');
+			 redirect('site/');
 			}
 		}		
 		///////////////////////////////////////////////////////////////////////
@@ -2356,7 +2356,7 @@ function ajax_add_job(){
 		 redirect('site/error404');
 		}
 		}else{
-			redirect('site/index_employee');
+			 redirect('site/');
 			}
 		}	
 		

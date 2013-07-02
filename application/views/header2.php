@@ -2,7 +2,7 @@
 
 $id=$this->session->userdata('emp_id');
 $employee=$this->model_users->select_emp($id);
-
+$emp_id=$employee->row(0)->id;
 	if(isset($employee->row(0)->profile_pic)){
 		$pic=$employee->row(0)->profile_pic;
 		}

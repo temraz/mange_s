@@ -31,7 +31,9 @@
 <body class="loggedin">
 
 	<!-- START OF HEADER -->
-	<?php include('header.php');?>
+	<?php  if($this->session->userdata('company_logged_in')){ include('header.php'); }
+				
+				elseif($this->session->userdata('employee_logged_in')){include('header2.php'); }?>
     <!-- END OF HEADER -->
         
     <!-- START OF MAIN CONTENT -->
@@ -40,7 +42,7 @@
          	
         <div class="mainleft">
           	<div class="mainleftinner">
-            <?php  if($this->session->userdata('company_logged_in')){ include('left_menu_company.php'); } elseif($this->session->userdata('user_logged_in')){include('left_menu_user.php');}?>
+            <?php  if($this->session->userdata('company_logged_in')){ include('left_menu_company.php'); } elseif($this->session->userdata('user_logged_in')){include('left_menu_user.php');}elseif($this->session->userdata('employee_logged_in')){include('left_menu.php'); }?>
             	<div id="togglemenuleft"><a></a></div>
             </div><!--mainleftinner-->
         </div><!--mainleft-->
@@ -95,7 +97,7 @@
            <?php include('footer.php');?>
             
         </div><!--maincontent-->
-        
+        <?php if($this->session->userdata('company_logged_in')){ ?>
         <div class="mainright">
         	<div class="mainrightinner">
             	  <div class="widgetbox">
@@ -112,6 +114,16 @@
                             </ul>
                         </div><!--widgetcontent-->
                     </div><!--widgetbox-->
+                    <br />
+                <div class="widgetbox" style="border:1px solid #c1c1c1;border-top:hidden">
+                        <div class="title"><h2 class="tabbed"><span>The Bill</span></h2></div>
+                            <center><h1 style="font-size:100px ; color:#c1c1c1 ; margin-top:10px ;word-wrap:break-word"><?php echo $bill; ?> $</h1></center>
+                            <br clear="all" />
+                        <div class="pay" style="padding:10px;border-top:1px solid #c1c1c1;cursor:pointer;">
+                        <center><h1>PAY NOW</h1></center>
+                        </div>
+                        </div>
+                        <br />
                  <div class="widgetbox">
                 	<div class="title"><h2 class="tabbed"><span>Tabbed Widget</span></h2></div>
                     <div class="widgetcontent padding0">
@@ -163,7 +175,11 @@
               
                
                </div><!--mainrightinner-->
+               
         </div><!--mainright-->  
+        <?php }elseif($this->session->userdata('employee_logged_in')){
+         include('right_div.php');
+       }?>
      	</div><!--mainwrapperinner-->
     </div><!--mainwrapper-->
 	<!-- END OF MAIN CONTENT -->

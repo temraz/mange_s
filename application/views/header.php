@@ -64,7 +64,7 @@ if(isset($user)){
 <div class="header radius3">
     	<div class="headerinner">
         	
-            <a href="<?php echo base_url();?>company/home"><img src="<?php echo base_url();?>images/logo.png"  alt="" /></a>
+            <a href="<?php echo base_url();?>site/"><img src="<?php echo base_url();?>images/logo.png"  alt="" /></a>
             
               
             <div class="headright">

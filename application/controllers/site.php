@@ -10,7 +10,7 @@ class Site extends CI_Controller {
 				 $id=$this->session->userdata('user_id');
 				 $this->load->model('model_users');
 				 if($this->model_users->select_user($id)){
-					 $id=$this->model_users->select_user($id)->row(0)->id;
+					
 				 
                 redirect('user/profile/'.$id);	 
 					 }else{
@@ -22,7 +22,7 @@ class Site extends CI_Controller {
 				 $id=$this->session->userdata('emp_id');
 				 $this->load->model('model_users');
 				 if($this->model_users->select_emp($id)){
-					 $id=$this->model_users->select_emp($id)->row(0)->id;
+					
 				 
                 redirect('employee/dashboard/'.$id);	 
 					 }else{
@@ -34,7 +34,7 @@ class Site extends CI_Controller {
 				 $id=$this->session->userdata('comp_id');
 				 $this->load->model('model_users');
 				 if($this->model_users->select_company($id)){
-			     $id=$this->model_users->select_company($id)->row(0)->id;
+			    
 				 
                 redirect('company/profile/'.$id);	 
 					 }else{

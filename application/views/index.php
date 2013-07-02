@@ -52,13 +52,9 @@
             
               
             <div class="headright">
-            	<div class="headercolumn">&nbsp;</div>
+            	
             	<div id="searchPanel" class="headercolumn">
-                	<div class="searchbox">
-                        <form action="" method="post">
-                            <input type="text" id="keyword" name="keyword" class="radius2" value="Search here" /> 
-                        </form>
-                    </div><!--searchbox-->
+                	
                  </div><!--headercolumn-->
             </div><!--headright-->
         
@@ -150,25 +146,25 @@ and send it to campanies. Because of You can do all these services electronic , 
             	
                 <div class="widgetbox" style="">
                         <div class="title"><h2 class="general"><span>Log In</span></h2></div>
-                        <div class="widgetcontent stdform stdformwidget">
-                         <?php echo form_open('site/login_validation');
+                        <div class="widgetcontent stdform stdformwidget" style="text-align:left">
+                         <?php echo form_open('site/login_validation',array('style'=>'text-align:left'));
                                  ?>
                                  <div style="color:#F30;text-align:center">
                                  <?php if(isset($login)){ echo validation_errors()  ;  } ?>
                                  </div> 
                         
                             <div class="par">
-                            	<label>Email</label>
+                            	<label style="text-align:left">Your Email</label>
                                 <div class="field">
-                                <?php  echo form_input(array('name'=>'email','class'=>'longinput')); ?>
+                                <?php  echo form_input(array('name'=>'email','class'=>'longinput','required'=>'required')); ?>
                                 	
                                 </div>
                             </div><!--par-->
                             <div class="par">
-                            	<label>Password</label>
+                            	<label style="text-align:left">Password</label>
                                 <div class="field">
                                 
-                                <?php echo form_password(array('name'=>'password','class'=>'longinput')); ?><br />
+                                <?php echo form_password(array('name'=>'password','class'=>'longinput','required'=>'required')); ?><br />
                                 </div>
                                 <br />
                                 <div class="field">
