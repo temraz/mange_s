@@ -26,7 +26,7 @@ class Model_users extends CI_Model {
        
         $query = "select id ,email from users where email=? and password=?";
       $result=$this->db->query($query,array($email,$password));
-       if ( $result) {
+       if ( $result->num_rows() == 1) {
           $result=array('id'=>$result->row(0)->id, 'email'=>$result->row(0)->email);
 	   return  $result; 
         } else {
@@ -448,6 +448,69 @@ class Model_users extends CI_Model {
 			 }else{
 				 return false;
 				 }
-		} 
+		}
+		
+	/////////////////////////
+	 public function get_user_name($id){
+		 $this->db->where('id',$id);
+			 $query= $this->db->get('users');
+				if($query){
+				 $row = $query->row();
+				 $name= $row->username;
+				 return $name;
+			}
+		 } 	 
+		 /////////////////////////////////
+		 public function get_employee_name($id){
+		 $this->db->where('id',$id);
+			 $query= $this->db->get('employees');
+				if($query){
+				 $row = $query->row();
+				 $name= $row->username;
+				 return $name;
+			}
+		 } 	 
+	///////////////////////	 
+		 public function get_user_activity($user_id){
+		$sql='select * from user_activity where user_id='.$user_id.' order by id desc ';
+		 $result=$this->db->query($sql);
+		 return $result->result();
+		}
+	///////////////////
+	///////////////////
+	public function get_suggest(){
+		$user_id = $this->session->userdata('user_id');
+		$following = $this->get_following($user_id);
+		if(isset($following)){
+		foreach($following as $row){
+			$f_company[]= $row->company_id;
+			}
+		}
+		if(isset($f_company)){
+		$string_version = implode(',', $f_company);
+			$sql='SELECT * FROM company where id not in ('.$string_version.') limit 3';
+		 $result=$this->db->query($sql);
+		 return $result->result();
+		}else{
+			 $sql='SELECT * FROM company limit 3 ';
+		 $result=$this->db->query($sql);
+		 return $result->result();
+			}
+		}
+		//////////////
+			/////////////////////////////////
+	 public function get_last_comment($user_id){
+	$query = "select * from event_comments where user_id=".$user_id." ORDER BY id desc limit 1 ";
+					$result=$this->db->query($query);
+				return $result->result();
+	
+	}
+	////////////////////////////////
+	public function get_commemts($event_id){
+	$query = "select * from event_comments where event_id=".$event_id." ORDER BY id desc ";
+					$result=$this->db->query($query);
+				 return $result->result();
+	  }	
+	  ////////////////////////////////
 }
 ?>
