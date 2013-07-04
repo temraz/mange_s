@@ -394,30 +394,30 @@ public function step2_validation()
 			}
 		
 		}
-	///////////////////////////////
-		function event(){
-			
-			if($this->uri->segment(4) != ''){
-				$id=$this->uri->segment(4);
-			$this->db->where('id',$id);
-		    $result=$this->db->update('user_activity',array('seen'=>1));
-				}
-			$user_id = $this->session->userdata('user_id');
-			$this->load->model('model_company');
-			$vaild = $this->model_company->is_id_valid($this->uri->segment(3),'events');
-		if( $this->uri->segment(3) != '' && $vaild == 1 ){
-			$id=$this->uri->segment(3);
-			if($this->session->userdata('user_logged_in')){
-			$data['events_attend'] = $this->model_users->is_event_attend($user_id,$id);
-			}
-			$data['event']=$this->model_company->get_event($id);
-		$this->load->view('event',$data);
-		}
-		else{
-			redirect('site/error404');
-			}
-		
-		}
+	function event(){
+
+if($this->uri->segment(4) != ''){
+$id=$this->uri->segment(4);
+$this->db->where('id',$id);
+$result=$this->db->update('user_activity',array('seen'=>1));
+}
+$user_id = $this->session->userdata('user_id');
+$this->load->model('model_company');
+$vaild = $this->model_company->is_id_valid($this->uri->segment(3),'events');
+if( $this->uri->segment(3) != '' && $vaild == 1 ){
+$id=$this->uri->segment(3);
+if($this->session->userdata('user_logged_in')){
+$data['events_attend'] = $this->model_users->is_event_attend($user_id,$id);
+}
+$data['event_comment'] = $this->model_users->get_commemts($id);
+$data['event']=$this->model_company->get_event($id);
+$this->load->view('event',$data);
+}
+else{
+redirect('site/error404');
+}
+
+}
 				///////////////////////////////
 		function product(){
 			$this->load->model('model_company');

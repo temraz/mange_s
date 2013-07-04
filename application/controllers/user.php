@@ -1165,6 +1165,70 @@ public function _attend($data){
 
 
 
+///////////////
+function insert_comment(){
+	$event_id = $this->input->post('event_id');
+	$comment = str_replace("\n","<br>",$this->input->post('comment'));
+	$user_id = $this->session->userdata('user_id');
+	$data = array(
+	'user_id'=>$user_id,
+	'event_id'=>$event_id,
+	'comment'=>$comment
+	);
+	if($this->db->insert('event_comments',$data)){
+			 echo $this->get_comment_db($user_id,$event_id);
+	}
+			 }
+		 
+		 
+		 function get_comment_db($user_id,$event_id){
+			 		
+					$comment_db=$this->model_users->get_last_comment($user_id);
+					$comment_count = count($this->model_users->get_commemts($event_id));
+					$comment_html = '';
+						if(isset($comment_db)){
+						foreach($comment_db as $row){
+							
+							$id= $row->id;
+							$comment = $row->comment;
+							$c_date = $row->c_date;
+							$user_id = $row->user_id;
+							
+							$user_info = $this->model_users->get_user_info($user_id);
+							foreach($user_info as $r)
+							{
+								$logo = $r->pic;
+								$username = $r->username;
+								$gender = $r->gender;
+								}
+								
+									
+									if($logo == '' && $gender == 'male'){ $pic = 'male.gif' ;}
+									elseif($logo == '' && $gender == 'female'){ $pic = 'female.gif' ;}
+									else{$pic = $logo ;}
+							
+							$comment_html .='<li style="padding:20px;border-top:1px solid #c1c1c1">
+                      <div id="user_img_db"><img src="'.base_url().'images/profile/'.$pic.'" width="60" height="60" style="border:1px solid #919191; float:left"/></div>
+                      <div id="comment_user"><strong style="margin-left:10px">'.$username.'</strong></div>
+					  <div id="comment_db" style="margin-left:80px"><span>'.$comment.'</span></div>
+                      <div id="comment_date" style="float:right"><small style="color:#c1c1c1">'.$c_date.'</small></div>
+					  <br />
+                      </li>';
+								
+ }
+							
+						
+						
+						$result=array('status'=>'ok' ,'content'=>$comment_html , 'comment_count'=>$comment_count);
+						return json_encode($result);
+						exit();
+						}else{
+						$result=array('status'=>'no' ,'content'=>'There is No Comment');
+						return json_encode($result);
+							exit();
+							}
+					
+			 }
 
 //////////////////////////////////////////////
 function select_user_activity(){

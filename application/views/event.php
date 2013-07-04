@@ -18,6 +18,7 @@
 
 <script type="text/javascript" src="<?php echo base_url();?>js/dashboard.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.alerts.js" ></script>
+<script type="text/javascript" src="<?php echo base_url();?>js/jquery.flot.resize.min.js" ></script>
 
 <script type="text/javascript" >
 var base_url = "<?php echo base_url(); ?>";
@@ -43,13 +44,15 @@ jQuery('#wait_e').hide();
 		});			
 });
 </script>
-
+<script type="text/javascript" src="<?php echo base_url();?>js/insert_comment.js" ></script>
 </head>
 
 <body class="loggedin">
 
 	<!-- START OF HEADER -->
-	<?php include('header.php');?>
+<?php  if($this->session->userdata('company_logged_in') || $this->session->userdata('user_logged_in')){ include('header.php'); }
+				
+				elseif($this->session->userdata('employee_logged_in')){include('header2.php'); }?>
     <!-- END OF HEADER -->
         
     <!-- START OF MAIN CONTENT -->
@@ -58,7 +61,7 @@ jQuery('#wait_e').hide();
          	
         <div class="mainleft">
           	<div class="mainleftinner">
-            <?php  if($this->session->userdata('company_logged_in')){ include('left_menu_company.php'); } elseif($this->session->userdata('user_logged_in')){include('left_menu_user.php');}?>
+           <?php  if($this->session->userdata('company_logged_in')){ include('left_menu_company.php'); } elseif($this->session->userdata('user_logged_in')){include('left_menu_user.php');}elseif($this->session->userdata('employee_logged_in')){include('left_menu.php'); }?>
             	<div id="togglemenuleft"><a></a></div>
             </div><!--mainleftinner-->
         </div><!--mainleft-->
@@ -105,6 +108,64 @@ jQuery('#wait_e').hide();
                        <h3 id="wait_e"  style="color:#F60 ; float:right;margin-right:40px">Wait for Acception</h3>
                        <?php } ?>
                       <br />
+                      <br clear="all" />
+                      <div id="comment_area">
+                      <h1 style="color:#09C;padding:10px ; border-bottom:1px solid #c1c1c1">Comments ( <strong id="comment_count"><?php  echo count($event_comment); ?></strong> ) </h1>
+                      <br />
+                      <?php if($this->session->userdata('user_id')){ ?>
+                      <div id="write_comment" style="padding-bottom:20px">
+                      <input type="hidden" id="user_id" value="<?php echo $this->uri->segment(3); ?>" />
+                      <?php 
+					   $user_info = $this->model_users->get_user_info($this->session->userdata('user_id'));
+							foreach($user_info as $r)
+							{
+								$logo = $r->pic;
+								$username = $r->username;
+								$gender = $r->gender;
+								} 
+								if($logo == '' && $gender == 'male'){ $pic = 'male.gif' ;}
+									elseif($logo == '' && $gender == 'female'){ $pic = 'female.gif' ;}
+									else{$pic = $logo ;}
+					  
+					  ?>
+                      <div id="user_img" style="float:left "><img src="<?php echo base_url();?>images/profile/<?php echo $pic ;?>" width="60" height="60" style="border:1px solid #919191;"/></div>
+                      <div id="comment_input"><textarea id="comment_text"  style="resize:none; height:55px ; width:70%; margin-left:20px;float:left" placeholder="Type a Comment..."></textarea>
+                      <div id="insert_btn"><button class="stdbtn btn_blue small" id="insert_comment" style="width:75px ; margin-left:20px">comment</button></div>
+                      </div>
+                      <br clear="all" />
+                      </div>
+                      <?php } ?>
+                      <div id="comments" style="margin-left:80px">
+                      <ul id="comment_list" style="list-style:none">
+                      <?php if(isset($event_comment)){
+						  foreach($event_comment as $row){
+							  $id = $row->id;
+							  $user_id = $row->user_id;
+							  $comment = $row->comment;
+							  $c_date = $row->c_date;
+							  $user_info = $this->model_users->get_user_info($user_id);
+							foreach($user_info as $r)
+							{
+								$logo = $r->pic;
+								$username = $r->username;
+								$gender = $r->gender;
+								} 
+								if($logo == '' && $gender == 'male'){ $pic = 'male.gif' ;}
+									elseif($logo == '' && $gender == 'female'){ $pic = 'female.gif' ;}
+									else{$pic = $logo ;}
+									?>
+                      <li style="padding:20px;border-top:1px solid #c1c1c1">
+                      <div id="user_img_db" ><img src="<?php echo base_url();?>images/profile/<?php echo $pic; ?>" width="60" height="60" style="border:1px solid #919191; float:left"/>
+                      </div>
+                      <div id="comment_user"><strong style="margin-left:10px"><?php echo $username; ?></strong></div>
+                      <div id="comment_db" style="margin-left:80px"><span><?php echo $comment ; ?></span></div>
+                      <div id="comment_date" style="float:right"><small style="color:#c1c1c1"><?php echo $c_date ; ?></small></div>
+                      <br />
+                      </li>
+                      <?php }}?>
+                      </ul>
+                      </div>
+                      </div>
                       <br clear="all"/>
                       
                 </div><!--content-->
@@ -115,6 +176,7 @@ jQuery('#wait_e').hide();
             
         </div><!--maincontent-->
         
+        <?php if($this->session->userdata('company_logged_in')){ ?>
         <div class="mainright">
         	<div class="mainrightinner">
             	  <div class="widgetbox">
@@ -127,10 +189,20 @@ jQuery('#wait_e').hide();
                         <div class="title"><h2 class="tabbed"><span>Recent Activity</span></h2></div>
                         <div class="widgetcontent padding0">
                             <ul class="activitylist">
-              <?php include('recent_activity.php');?>
+                        <?php include('recent_activity.php');?>
                             </ul>
                         </div><!--widgetcontent-->
                     </div><!--widgetbox-->
+                    <br />
+                <div class="widgetbox" style="border:1px solid #c1c1c1;border-top:hidden">
+                        <div class="title"><h2 class="tabbed"><span>The Bill</span></h2></div>
+                            <center><h1 style="font-size:100px ; color:#c1c1c1 ; margin-top:10px ;word-wrap:break-word"><?php echo $bill; ?> $</h1></center>
+                            <br clear="all" />
+                        <div class="pay" style="padding:10px;border-top:1px solid #c1c1c1;cursor:pointer;">
+                        <center><h1>PAY NOW</h1></center>
+                        </div>
+                        </div>
+                        <br />
                  <div class="widgetbox">
                 	<div class="title"><h2 class="tabbed"><span>Tabbed Widget</span></h2></div>
                     <div class="widgetcontent padding0">
@@ -182,7 +254,14 @@ jQuery('#wait_e').hide();
               
                
                </div><!--mainrightinner-->
+               
         </div><!--mainright-->  
+        <?php }elseif($this->session->userdata('employee_logged_in')){
+         include('right_div.php');
+       }elseif($this->session->userdata('user_logged_in')){
+		    include('user_right.php');
+		   }?>
+       
      	</div><!--mainwrapperinner-->
     </div><!--mainwrapper-->
 	<!-- END OF MAIN CONTENT -->
