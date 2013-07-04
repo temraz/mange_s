@@ -53,7 +53,9 @@ var base_url = "<?php echo base_url(); ?>";
         <div class="mainleft">
           	<div class="mainleftinner">
             
-              	<?php  if($this->session->userdata('company_logged_in')){ include('left_menu_company.php'); } elseif($this->session->userdata('user_logged_in')){include('left_menu_user.php');}elseif($this->session->userdata('employee_logged_in')){include('left_menu.php');}?>
+              	<?php  if($this->session->userdata('company_logged_in')){ include('left_menu_company.php'); } 
+				elseif($this->session->userdata('user_logged_in')){include('left_menu_user.php');}
+				elseif($this->session->userdata('employee_logged_in')){include('left_menu.php');}?>
             	<div id="togglemenuleft"><a></a></div>
             </div><!--mainleftinner-->
         </div><!--mainleft-->
@@ -262,7 +264,9 @@ var base_url = "<?php echo base_url(); ?>";
         </div><!--mainright-->  
         <?php }elseif($this->session->userdata('employee_logged_in')){
          include('right_div.php');
-       }?>
+       }elseif($this->session->userdata('user_logged_in')){
+		    include('user_right.php');
+		   }?>
      	</div><!--mainwrapperinner-->
     </div><!--mainwrapper-->
 	<!-- END OF MAIN CONTENT -->

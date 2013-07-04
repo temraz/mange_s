@@ -49,7 +49,42 @@ jQuery(document).ready(function(){
 	jQuery('#accept_event').click(function(){
 		accept_event();
 	});
+	
+	jQuery('#start_interview').click(function(){
+		start_interview();
+	});
 		///////////////////////////////////////////////////////////////	
+		///////////////////////////////////////////////////////////////	
+		function start_interview() {
+	
+		var job_id=jQuery('#job_id').val();
+		var job_id2=jQuery('#job_id2').val();
+		var job_name=jQuery('#job_name').val();		
+		var user_id=jQuery('#user_id').val();
+			
+		if(job_id == '' ){
+	jQuery('#report_validate').append(' <div class="notification msgerror"> <a class="close"></a> <p ><strong>Error Message:</strong> Job ID not found try again please !!</p></div>');
+			
+			
+			}
+		if(job_id != '') {
+			
+			jQuery.post(base_url+"employee/ajax_start_interview" ,{ job_id : job_id , job_id2 : job_id2 , job_name : job_name , user_id : user_id}, function(data){
+             
+          if(data==='ok'){
+			  jQuery('#success').append(' <div class="notification msgsuccess"> <a class="close"></a><p > The user has been rejected successfully . !!</p></div>');
+			  }else{
+				   jQuery('#fail').append(' <div class="notification msgerror"> <a class="close"></a><p > Error while rejecting the user try again please. !!</p></div>');
+				  }
+			
+			
+			});
+					
+		}
+			
+        }
+/////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////
 		function accept_event() {
 	
 		var attend_id=jQuery('#attend_id').val();
@@ -159,7 +194,10 @@ jQuery(document).ready(function(){
 	///////////////////////////////////////////////////////////////	
 		function reject_user() {
 	
-		var job_id=jQuery('#job_id').val();		
+		var job_id=jQuery('#job_id').val();
+		var job_id2=jQuery('#job_id2').val();
+		var job_name=jQuery('#job_name').val();		
+		var user_id=jQuery('#user_id').val();
 			
 		if(job_id == '' ){
 	jQuery('#report_validate').append(' <div class="notification msgerror"> <a class="close"></a> <p ><strong>Error Message:</strong> Job ID not found try again please !!</p></div>');
@@ -168,10 +206,12 @@ jQuery(document).ready(function(){
 			}
 		if(job_id != '') {
 			
-			jQuery.post(base_url+"employee/ajax_reject_user" ,{ job_id : job_id }, function(data){
+			jQuery.post(base_url+"employee/ajax_reject_user" ,{ job_id : job_id , job_id2 : job_id2 , job_name : job_name , user_id : user_id}, function(data){
              
           if(data==='ok'){
 			  jQuery('#success').append(' <div class="notification msgsuccess"> <a class="close"></a><p > The user has been rejected successfully . !!</p></div>');
+			  jQuery('#reject_div').hide();
+			  jQuery('#accept_div').hide();
 			  }else{
 				   jQuery('#fail').append(' <div class="notification msgerror"> <a class="close"></a><p > Error while rejecting the user try again please. !!</p></div>');
 				  }

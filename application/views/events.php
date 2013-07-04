@@ -31,7 +31,7 @@
 <body class="loggedin">
 
 	<!-- START OF HEADER -->
-<?php  if($this->session->userdata('company_logged_in')){ include('header.php'); }
+<?php  if($this->session->userdata('company_logged_in') || $this->session->userdata('user_logged_in')){ include('header.php'); }
 				
 				elseif($this->session->userdata('employee_logged_in')){include('header2.php'); }?>
     <!-- END OF HEADER -->
@@ -190,7 +190,9 @@
         </div><!--mainright-->  
         <?php }elseif($this->session->userdata('employee_logged_in')){
          include('right_div.php');
-       }?>
+       }elseif($this->session->userdata('user_logged_in')){
+		    include('user_right.php');
+		   }?>
      	</div><!--mainwrapperinner-->
     </div><!--mainwrapper-->
 	<!-- END OF MAIN CONTENT -->

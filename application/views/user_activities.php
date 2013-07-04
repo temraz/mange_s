@@ -3,10 +3,10 @@
 	
     <li class="calendar <?php if($activity->seen==1) echo 'new' ;?>">
         <div class="msg">
-            <a href="<?php echo $activity->link ?>/<?php echo $activity->id ;?>"><?php echo $activity->activity?></a>.
+            <a href="<?php echo base_url().$activity->link ?>/<?php echo $activity->id ;?>"><?php echo $activity->title?></a>.
         </div>
     </li>
-    <?php }}elseif(isset($no_activity)){?>
+    <?php }}else{?>
    <p style="text-align:center"> There are no new activities </p>
     <?php }?>
 </ul>

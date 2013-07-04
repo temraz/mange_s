@@ -1,24 +1,37 @@
 <script type="text/javascript" >
 var base_url = "<?php echo base_url(); ?>";
+var user_id ="<?php echo $this->session->userdata('user_id'); ?>";
 </script>
 <script>
 jQuery(document).ready(function(){
-	
+	//setInterval(function(){get_activites();},1000);
+	get_activites();
+	function get_activites(){
 	jQuery.post(base_url+"user/count_messages",{}, function(data){
-			if(data.status == 'ok'){
-				if(data.messages_count != 0);
+			
+				
 					jQuery('.count_seen').html(data.messages_count);					
-				}else{
-					jQuery('.count_seen').html('N');
-					}
+					jQuery.post(base_url +"user/count_user_activity",{user_id : user_id }, function(data2){
+					
+						jQuery(".activity").html(data2);
+							
+						var sum=data.messages_count+data2;
+			            jQuery(".sum").html(sum);
+			  
+						},"json");
+				
+					
+		
+					
 			},"json");
 	jQuery('#nog_btn').click(function(){		
 jQuery.post(base_url+"user/seen_messages",{}, function(data){
 			if(data.status == 'ok'){
-					jQuery('.count_seen').html('N');					
+					jQuery('.count_seen').html('0');					
 				}
 			},"json");
 	});
+	}
 });
 </script>
 <?php
@@ -78,13 +91,13 @@ if(isset($user)){
                 </div><!--headercolumn-->
             	<div id="notiPanel" class="headercolumn">
                     <div class="notiwrapper">
-                        <a href="<?php echo base_url();?>user/select_user_messages/" class="notialert radius2" id="nog_btn"><span class="count_seen"></span></a>
+                        <a href="<?php echo base_url();?>user/select_user_messages/" class="notialert radius2" id="nog_btn"><span class="sum"></span></a>
                         <div class="notibox">
                             <ul class="tabmenu">
                                 <li class="current"><a href="<?php echo base_url();?>user/select_user_messages/" class="msg">Messages
                                  (<span  class="count_seen"></span>)</a></li>
                                
-                                <li><a href="<?php echo base_url();?>site/activities/"  class="act">Recent Activity (3)</a></li>
+                                <li><a href="<?php echo base_url();?>user/select_user_activity/"  class="act">Recent Activity (<span class="activity"></span>) </a></li>
                             </ul>
                             <br clear="all" />
                             <div class="loader"><img src="<?php echo base_url();?>images/loader3.gif"  alt="Loading Icon" /> Loading...</div>

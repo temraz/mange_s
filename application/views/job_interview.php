@@ -86,31 +86,47 @@ jQuery(document).ready(function() {
                 
                 <div class="content">
                
-               <h1 style="border-bottom:1px dashed #e1e1e1; padding-bottom:10px">Applied Jobs</h1>
-                           <?php 
-						   if(isset($applied_jobs) && count($applied_jobs) != 0){
-						   foreach($applied_jobs as $row){ 
-						   $job_id = $row->job_id;
-						   $job = $this->model_company->get_job($job_id);
-						   foreach($job as $r){
-						   $company_id = $r->company_id;
-						   $name = $r->name;
-						   $description = $r->description;
-						   $department = $r->department;
-						   $level = $r->level;
-						   $date = $r->date;
-						    $country=$this->model_company->get_company_city($company_id);
-						   ?>
- <div class="field" style="padding-top:40px; padding-bottom:25px; border-bottom:.1em solid #CCC">
-                     <h2><a href="<?php echo base_url();?>employee/job_interview/<?php echo $job_id; ?>/<?php echo $company_id?>/<?php echo $this->session->userdata('user_id')?>"> <?php echo $name;?></a></h2><small style="float:right"><?php echo $date;?></small><br />
-                     <h3><?php echo $country ; ?></h3><br />
-                     <p><?php echo substr($description,0,80);?></p><br />
-                    <small style="color:#AAA">Department : <?php echo $department;?></small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small style="color:#AAA">Professional level : <?php echo $level;?></small>                      
-                     </div>
-                     <?php }}}else{?>
-                     <br />
-                    <center><h1 style="color:#c1c1c1">There Are Not Applied Jobs Yet</h1></center>
-                    <?php } ?>
+               
+                        <div id="reject_div">
+                         <ul class="maintabmenu">
+                	<li class="current" style="border:none"><a href="#">date of the interview and other details</a></li>
+                </ul><!--maintabmenu-->
+                
+                <div class="content chatcontent" style="height:600px;">
+                   
+                   <div id="chatmessage" class="chatmessage" style="height:530px;">
+                   		<div id="chatmessageinner">
+                        <?php if(isset($chat_messages)){foreach($chat_messages as $chat_message){
+							
+							?>
+                       
+                       
+                       
+                        <li style="padding:5px;border-bottom: 1px dashed #ddd;;list-style:none">
+                               <div class="avatar" style="padding: 2px; border: 1px solid #eee;width:50px">
+                               <img src="<?php echo base_url() ;?>images/profile/thumb_profile/<?php $chat_message->profile_pic ;?>" width="50" height="45" /></div>
+                                <div class="info" style="margin-left:60px;margin-top:-54px;">
+                                    	<a href="#" title="chat with the reporter"><?php echo $chat_message->firstname ;?> <?php $chat_message->lastname ;?> </a> 
+                                       <br/>
+                                       
+                                         <?php $chat_message->message ?>
+                                         <span style="float:right;color:#369;margin-top:10px"><?php $chat_message->message_date ;?></span>
+                                        <br clear="all" />
+                                    </div><!--info-->
+                                </li>
+                        <?php }}else{ ?>
+				
+						<h2 style="text-align:center;color:#369;margin-top:230px">Sorry there is no messages about this job<br />Until now</h2>
+						<?php }?>
+                        </div><!--chatmessageinner-->
+                   </div><!--chatmessage-->
+                   	
+                 
+                    
+                        </div><!--widgetcontent-->
+                        </div>
+                    
+                    
                
                     <br clear="all" />
                    

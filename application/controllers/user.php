@@ -1021,7 +1021,7 @@ public function messages(){
 		if($messages_count){
 		$result=array('status'=>'ok','messages_count'=>$messages_count);
 		}else{
-			$result=array('status'=>'no');
+			$result=array('status'=>'ok','messages_count'=>0);
 			}
 			return json_encode($result);
 		}
@@ -1160,5 +1160,45 @@ public function _attend($data){
 			 }
 
 ///////////////
+
+
+
+
+
+
+//////////////////////////////////////////////
+function select_user_activity(){
+	if($this->session->userdata('user_logged_in')){
+		$user_id = $this->session->userdata('user_id');
+		
+		if($this->model_employee->select_user_activity($user_id)){
+			$data['activities']=$this->model_employee->select_user_activity($user_id);
+			$this->load->view('user_activities',$data);
+			}
+	
+		
+		}else{
+			redirect('site/');
+			}
+	
+	}
+//////////////////////////////////////////////
+function count_user_activity(){
+	if($this->session->userdata('user_logged_in')){
+		$user_id = $this->session->userdata('user_id');
+		
+		if($this->model_employee->select_user_activity($user_id)){
+			$activities=count($this->model_employee->select_user_activity($user_id));
+			}else{
+				$activities=0;
+				}
+	     
+		echo $activities;
+		}else{
+			redirect('site/');
+			}
+	
+	}	
+//////////////////////////////////////////////
 }
 ?>

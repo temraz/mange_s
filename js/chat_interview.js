@@ -1,6 +1,6 @@
 jQuery(document).ready(function(){
 
-	setInterval(function(){get_chat_messages();},1000);
+	//setInterval(function(){get_chat_messages();},1000);
 //window.setTimeout(function() { });
 	
 	jQuery('.messagebox button').click(function(){
@@ -22,7 +22,7 @@ jQuery(document).ready(function(){
 			}
 		if(msg != '') {
 			
-			jQuery.post(base_url+"employee/ajax_add_chat" ,{ from_id : from_id , to_id : to_id , msg : msg }, function(data){
+			jQuery.post(base_url+"employee/ajax_add_chat_with_user" ,{ from_id : from_id , to_id : to_id , msg : msg , job_id : job_id}, function(data){
 
             jQuery('.messagebox input').val('');
 			jQuery('.messagebox input').focus();

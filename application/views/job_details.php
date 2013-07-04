@@ -33,6 +33,36 @@ var base_url=" <?php echo base_url();?>";
 <link rel="stylesheet" href="<?php echo base_url();?>css/chosen.css" />
 
 
+<script type="text/javascript">
+<?php if($this->session->userdata('employee_logged_in')){?>
+
+var base_url=" <?php echo base_url();?> ";
+
+var from_id=" <?php echo $this->session->userdata('emp_id') ;?> ";
+
+var to_id="<?php echo $this->uri->segment(5);?>"
+var job_id="<?php echo $this->uri->segment(3);?>"
+
+var my_id="<?php echo $this->session->userdata('emp_id') ;?>"
+
+<?php }elseif($this->session->userdata('user_logged_in')){?>
+var base_url=" <?php echo base_url();?> ";
+
+var from_id=" <?php echo $this->session->userdata('user_id') ;?> ";
+
+var to_id="<?php echo $this->uri->segment(7);?>"
+
+var my_id="<?php echo $this->session->userdata('user_id') ;?>"
+
+<?php }elseif($this->session->userdata('user_logged_in')){?>
+
+<?php }?>
+</script>
+
+
+
+
+<script type="text/javascript" src="<?php echo base_url();?>js/chat_interview.js" ></script>
 
 </head>
 
@@ -69,7 +99,12 @@ var base_url=" <?php echo base_url();?>";
                     <?php }?>
                     <?php if(isset($job)){ $user_id=$job->row(0)->user_id; ?>
                       <?php $user_pic=$this->model_users->select_user($user_id)->row(0)->pic;?>
-                        <?php $name=$this->model_users->select_user($user_id)->row(0)->name;?>
+                        <?php $name=$this->model_users->select_user($user_id)->row(0)->name;
+						
+						$accept = $job->row(0)->accept;
+							$reject= $job->row(0)->reject;
+							
+						?>
                   <h1 style="border-bottom:1px dashed #e1e1e1; padding-bottom:10px">
                   job details
                   </h1>
@@ -86,7 +121,9 @@ var base_url=" <?php echo base_url();?>";
                                     <div class="info" style="margin-left:70px">
                                        <?php
 										 echo $job->row(0)->name ?>
-                                        
+                                        <input type="hidden" id="job_name" value=" <?php echo $job->row(0)->name ?>" />
+                                        <input type="hidden" id="user_id" value="<?php echo $job->row(0)->user_id?>" />
+                                        <input type="hidden" id="job_id2" value="<?php echo $job->row(0)->job_id?>" />
                                        <br/>
                                         <span style="font-weight:bold">level: <?php 
 										echo $job->row(0)->level ?></span> <br />
@@ -314,6 +351,7 @@ var base_url=" <?php echo base_url();?>";
 							$field_study = $row->field_study;
 							$degree = $row->degree;
 							$edu_details = $row->details;
+							
 						?>
                     <div class="edu_one" id="<?php echo $id ;?>"  style="font-size:14px">
                     <?php if($this->session->userdata('user_id') == $this->uri->segment(3)){ ?>
@@ -353,19 +391,42 @@ var base_url=" <?php echo base_url();?>";
                    
                    </div>
                    
-                           <ul class="buttonlist">
+                           <ul class="buttonlist" style="padding-left:15px;">
                                        
-											  <li style="border:none;"><a href="#" id="forward" class="btn  btn_link"><span>Start Interview</span></a></li>
+                                       <span id="accept_div">
                                               <li style="border:none;"><a href="#reject" id="reject_button" class="btn  btn_trash"><span>Reject this user</span></a></li>
+                                              Or &ensp; <li >
+                    <a href="<?php echo base_url(); ?>employee/interview_metting/<?php echo $this->uri->segment(5);?>"
+                     class="btn  btn_chat" id="video_call"><span>Invite to a video call</span></a></li>
+                   	 </span>
                                       
                                         </ul>
-                          <?php }?>      
+                           
                                
                                 
                             </ul>
                                              
+                            <br clear="all" />
+                             <div id="reject_div">
+                         <ul class="maintabmenu">
+                	<li class="current"><a href="#">Message The user the date of the interview and other details</a></li>
+                </ul><!--maintabmenu-->
+                
+                <div class="content chatcontent" style="height:600px;">
+                   
+                   <div id="chatmessage" class="chatmessage" style="height:530px;">
+                   		<div id="chatmessageinner"></div><!--chatmessageinner-->
+                   </div><!--chatmessage-->
+                   	
+                   <div class="messagebox">
+                   	 
+                        	<input type="text"  id="msgbox" name="msgbox" />
+                            <button>Send</button> 
                             
+                   </div>
+                    <?php }?>    
                         </div><!--widgetcontent-->
+                        </div>
                     
                     
                     
@@ -388,83 +449,7 @@ var base_url=" <?php echo base_url();?>";
      	</div><!--mainwrapperinner-->
     </div><!--mainwrapper-->
 	<!-- END OF MAIN CONTENT -->
-   
-<script type="text/javascript" src="<?php echo base_url();?>js/jquery-1.7.min.js"></script>
- <script type="text/javascript">
-jQuery(document).ready(function() {
-			  // Button which will activate our modal
-			   	jQuery('#forward_form').hide();
-				//jQuery('#forward').click(function(){
-				//	jQuery('#forward_form').fadeIn('slow', function() {
-// Animation complete
-//});
-
-
-				jQuery('#forward').toggle(
-function () {
-jQuery('#forward_form').fadeIn('slow', function() {
-// Animation complete
-
-});
-},
-function () {
-jQuery('#forward_form').fadeOut('slow', function() {
-// Animation complete
-});
-}
-);
-
-////////////////////////////////////////////////
-
-		   	jQuery('#result_form').hide();
-				//jQuery('#forward').click(function(){
-				//	jQuery('#forward_form').fadeIn('slow', function() {
-// Animation complete
-//});
-
-
-				jQuery('#report_result2').toggle(
-function () {
-jQuery('#result_form').fadeIn('slow', function() {
-// Animation complete
-
-});
-},
-function () {
-jQuery('#result_form').fadeOut('slow', function() {
-// Animation complete
-});
-}
-);
-////////////////////////////////////////////////
-		
-			});
-		
-</script>
-<script type="text/javascript">
-var base_url=" <?php echo base_url();?>";
-</script>
-<script type="text/javascript" src="<?php echo base_url();?>js/jquery-ui-1.8.16.custom.min.js"></script>
  
- 
-
-<script src="<?php echo base_url();?>js/insert.js" type="text/javascript" ></script>
-<script src="<?php echo base_url();?>js/activity.js" type="text/javascript" ></script>
-
-
-  <script src="<?php echo base_url();?>js/chosen.jquery.js" type="text/javascript"></script>
-  <script type="text/javascript"> 
-    var config = {
-      '.chzn-select'           : {},
-      '.chzn-select-deselect'  : {allow_single_deselect:true},
-      '.chzn-select-no-single' : {disable_search_threshold:10},
-      '.chzn-select-no-results': {no_results_text:'Oops, nothing found!'},
-      '.chzn-select-width'     : {width:"95%"}
-    }
-    for (var selector in config) {
-      $(selector).chosen(config[selector]);
-    }
-  </script>
 
 
 </body>

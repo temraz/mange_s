@@ -34,7 +34,12 @@
 <body class="loggedin">
 
 	<!-- START OF HEADER -->
-	<?php include('header.php');?>
+	
+    <?php if($this->session->userdata('employee_logged_in')){
+         include('header2.php');
+       }elseif($this->session->userdata('user_logged_in')){
+		    include('header.php');
+		   }?>
     <!-- END OF HEADER -->
         
     <!-- START OF MAIN CONTENT -->
@@ -43,7 +48,8 @@
          	
         <div class="mainleft">
           	<div class="mainleftinner">
-            <?php  if($this->session->userdata('company_logged_in')){ include('left_menu_company.php'); } elseif($this->session->userdata('user_logged_in')){include('left_menu_user.php');}?>
+            <?php  if($this->session->userdata('employee_logged_in')){ include('left_menu.php'); } 
+			elseif($this->session->userdata('user_logged_in')){include('left_menu_user.php');}?>
             	<div id="togglemenuleft"><a></a></div>
             </div><!--mainleftinner-->
         </div><!--mainleft-->
@@ -52,64 +58,13 @@
         	<div class="maincontentinner">
                 
                 <div class="content">
-                <h1 style="border-bottom:1px dashed #e1e1e1; padding-bottom:10px">My Card List</h1>
-                <br />
-                                            <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-<input type="hidden" name="cmd" value="_xclick">
-<input type="hidden" name="business" value="mohamedtemraz92@gmail.com">
-
-                <?php 
-				if(isset($products_list) && count($products_list) != 0){
-				foreach($products_list as $r){
-					$product_id=$r->product_id;
-					$all_products = $this->model_company->get_product($product_id);
-					$counter=1;
-				foreach($all_products as $row){
-					$id=$row->id;
-					$name=$row->name;
-					$logo=$row->logo;
-					$details=$row->	product_desc ;
-					$date=$row->date_release;
-					$price = $row->price;
-					 ?>
-                
-                	<div class="one_third <?php if($counter%3 == 0){ echo "last" ; } ?>">
-                    	<div class="widgetbox">
-                            <div class="title"><h2 class="general"><span><?php echo $name; ?></span></h2></div>
-                            <div class="widgetcontent">
-                                <img src="<?php echo base_url();?>images/products/<?php echo $logo; ?>" width="100%" height="140" style="border:.1em solid #666" /><br />
-                           <h3 style="padding-top:10px"><a href="<?php echo base_url();?>company/product/<?php echo $id; ?>"><?php echo $name; ?></a></h3><span class="radius2" style=" margin-top:-22px ; font-weight:bold ; float:right"><?php echo $date; ?></span>
-                               <span><b>Price: </b><?php echo $price; ?></span>
-                                <p><?php echo substr($details,0,50).'...'; ?> <small><a href="<?php echo base_url();?>company/product/<?php echo $id; ?>">Details</a></small></p>
-                               <div id="buy"><center><h3 style=""><input type="image" name="submit" border="0"
-src="https://www.paypalobjects.com/en_US/i/btn/btn_buynow_LG.gif"
-alt="PayPal - The safer, easier way to pay online"></h3></center></div>
-                        </div><!--widgetcontent-->
-                        </div><!--widgetbox-->
-                    </div><!--one_third-->
-                    <input type="hidden" name="item_name" value="<?php echo $name ;?>">
-                    <input type="hidden" name="tax" value="0">
-                    <input type="hidden" name="amount" value="<?php echo $price ;?>">
-                    <input type="hidden" name="quantity" value="1">
-                   <?php $counter++;}}}else{?>
-                     <center><h1 style="color:#c1c1c1">There Are Not Products Yet</h1></center>
-                    <?php } ?>
-
-
-
-
-
-<input type="hidden" name="no_note" value="1">
-<input type="hidden" name="currency_code" value="USD">
-
-<!-- Enable override of buyers's address stored with PayPal . -->
-<input type="hidden" name="address_override" value="1">
-<!-- Set variables that override the address stored with PayPal. -->
-
-
-</form>
-                                  
-                                  <br clear="all" />     
+                      
+                 <div id="chatmessage" class="chatmessage" style="height:480px;">
+                   		<div style="width:600px;margin:auto;padding-top:20px;"> 
+                        <script id="TB_embed_js" src="http://api.opentok.com/hl/embed/2emb4f6d08de1586228a87313cff4c85e08f161d/embed.js?width=600&height=440" type="text/javascript" charset="utf-8"></script>
+                        </div>
+                 
+                   </div><!--chatmessage-->
                                   
                                  
                     <br clear="all" /><br />
@@ -123,7 +78,11 @@ alt="PayPal - The safer, easier way to pay online"></h3></center></div>
             
         </div><!--maincontent-->
         
-        <?php include('user_right.php');?>
+       <?php if($this->session->userdata('employee_logged_in')){
+         include('right_div.php');
+       }elseif($this->session->userdata('user_logged_in')){
+		    include('user_right.php');
+		   }?>
         
      	</div><!--mainwrapperinner-->
     </div><!--mainwrapper-->

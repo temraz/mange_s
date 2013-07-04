@@ -1164,7 +1164,7 @@ function get_chat_messages_last_one($from_id ,$to_id){
 		}
 	/////////////////////////////////////////////////////////
 	function job_applies_one($job_id){
-		$sql='select j.id,j.name,j.company_id,j.description,j.department,j.level,a.user_id,a.job_id,j.`date`,a.id as apply_id
+		$sql='select j.id,j.name,j.company_id,j.description,j.department,j.level,a.user_id,a.job_id,j.`date`,a.id as apply_id,a.accept,a.reject
               from jops j
 			  join apply_job a on j.id=a.job_id and j.id=? and reject=?';
 		$result = $this->db->query($sql,array($job_id,0));
@@ -1175,14 +1175,23 @@ function get_chat_messages_last_one($from_id ,$to_id){
         }	  
 		}		
 	////////////////////////////////////////////////////////
-	function ajax_reject_user($apply_id){
+	function ajax_reject_user($apply_id,$job_id,$job_name,$user_id){
 		$data = array(
                'reject' => 1,
+			   'accept' => 0,
             );
 		$this->db->where('id', $apply_id);
-			$this->db->update('apply_job',$data); 
+		$this->db->update('apply_job',$data); 
+		
 
 		 if($this->db->affected_rows()==1){
+			 $link='company/job/'.$job_id;
+			$data = array(
+            'user_id' => $user_id,
+            'title' => 'You has been rejected in this job " '.$job_name.' "',
+			'link'=>$link
+            );
+			$query = $this->db->insert('user_activity', $data);
 			 return true;
 			 }else{
 				 return false;
@@ -1248,5 +1257,65 @@ function get_chat_messages_last_one($from_id ,$to_id){
 							}
 							
 ////////////////////////////////////////////////////////////
-							
+function select_user_activity($user_id){
+	$this->db->where(array('user_id'=>$user_id,'seen'=>'0'));
+	$this->db->order_by("id", "desc"); 
+			 $result = $this->db->get('user_activity',9);
+			 
+			 if($result->num_rows() > 0){
+	              return $result->result();
+				 } else {
+					 
+					 return false ;
+					 }
+	}							
+/////////////////////////////////////////////////////////////////////////
+
+function add_chat_message_with_user($from_id , $to_id, $chat_message_content,$job_id){
+	$data = array(
+            'from' => $from_id,
+            'to' => $to_id,
+            'message' => $chat_message_content,
+			'job_id' => $job_id,
+			
+            );
+        $query = $this->db->insert('employee_user_chat', $data);
+        if($this->db->affected_rows()==1){
+			 
+			return true;
+			}else{
+				return false;
+				}	
+	}
+
+////////////////////////////////////////////////////////////////////////
+function get_chat_messages_user($user_id,$job_id){
+	$sql='
+			  SELECT
+					e.id ,e.firstname,e.lastname,e.profile_pic, a.user_id,a.job_id,m.id,m.`from`,m.`to`,m.message,m.message_date,m.to_seen
+					
+		             FROM
+					employees e
+					LEFT JOIN
+					
+					employee_user_chat m 
+					ON m.`from` = e.id
+					LEFT JOIN
+
+					apply_job a
+					ON  m.`to`=a.user_id 
+
+
+					where a.job_id=? and a.user_id=? and m.job_id=?
+			  ';
+		$result = $this->db->query($sql,array($job_id,$user_id,$job_id));
+		if($result->num_rows() >= 1){
+            return $result;
+        } else {
+            return false;
+        }	
+						
+	}
+
+///////////////////////////////////////////////////////////////////////////	
 }?>

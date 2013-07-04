@@ -49,7 +49,7 @@ jQuery('#wait_m').hide();
 <body class="loggedin">
 
 	<!-- START OF HEADER -->
-		<?php  if($this->session->userdata('company_logged_in')){ include('header.php'); }
+	<?php  if($this->session->userdata('company_logged_in') || $this->session->userdata('user_logged_in')){ include('header.php'); }
 				
 				elseif($this->session->userdata('employee_logged_in')){include('header2.php'); }?>
     <!-- END OF HEADER -->
@@ -100,14 +100,17 @@ jQuery('#wait_m').hide();
 						foreach($applied_job as $row){
 							$wait = $row->wait;
 							$accept = $row->accept;
+							$reject = $row->reject;
 						?>
                       
                      <?php if($accept == 1 && $wait == 1){ ?>
                       <h3 style="color:#093; float:right;margin-right:40px" >You are aceepted be ready for the interview</h3>
-                      <?php }elseif($accept == 0 && $wait == 1){ ?>
+                      <?php }elseif($accept == 0 && $wait == 1 && $reject==0){ ?>
                       <h3  style="color:#F60 ; float:right;margin-right:40px">Wait for Acception</h3>
                       
-                      <?php }}}?>
+                      <?php }elseif($accept == 0 && $wait == 1){ ?>
+					  <h3  style="color:#F60 ; float:right;margin-right:40px">We are Sorry You have been rejected in this job </h3>
+					 <?php }}}?>
                        <h3 id="wait_m"  style="color:#F60 ; float:right;margin-right:40px">Wait for Acception</h3>
                       <?php }?>
                       <br />
@@ -204,7 +207,9 @@ jQuery('#wait_m').hide();
         </div><!--mainright-->  
         <?php }elseif($this->session->userdata('employee_logged_in')){
          include('right_div.php');
-       }?>
+       }elseif($this->session->userdata('user_logged_in')){
+		    include('user_right.php');
+		   }?>
      	</div><!--mainwrapperinner-->
     </div><!--mainwrapper-->
 	<!-- END OF MAIN CONTENT -->

@@ -672,7 +672,7 @@ function task_validation(){
 		$link=base_url().'employee/report_metting/'.$my_id;
 			$data = array(
             'emp_id' => $to_id,
-            'activity' => ''.$first.' '.$last.' Invites you to sart a video call ',
+            'activity' => ''.$first.' '.$last.' Invite you to sart a video call ',
 			
 		    'link'=>$link
             );
@@ -1531,7 +1531,10 @@ $result=array('status'=>'no');
 		if($this->session->userdata('employee_logged_in')){
 			
 				$apply_id=$this->input->post('job_id');
-			if($this->model_employee->ajax_reject_user($apply_id)){
+				$job_id=$this->input->post('job_id2');
+				$job_name=$this->input->post('job_name');
+				$user_id=$this->input->post('user_id');
+			if($this->model_employee->ajax_reject_user($apply_id,$job_id,$job_name,$user_id)){
 				echo 'ok';
 				}else{
 					echo 'no';
@@ -2361,9 +2364,108 @@ function ajax_add_job(){
 		}	
 		
 	///////////////////////////////////////////////////////////////////////////////	
-	
+	function interview_metting(){
+		if($this->session->userdata('employee_logged_in')|| $this->session->userdata('user_logged_in')){
+			
+			if($this->uri->segment(4) != ''){
+				$activity_id=$this->uri->segment(4);
+			$this->db->where('id',$activity_id);
+		    $result=$this->db->update('user_activity',array('seen'=>1));
+		
+		}
+		
+			if($this->uri->segment(3) != ''){
+			
+			////////////////////////////////////////
+			$user_id=$this->uri->segment(3);
+			
+	if($this->session->userdata('employee_logged_in')){
+		
+		$link='employee/interview_metting/'.$user_id;
+			$data = array(
+            'user_id' => $user_id,
+            'title' => 'You have been Invited to sart a video call for job interview ',
+			
+		    'link'=>$link
+            );
+			$query = $this->db->insert('user_activity', $data);
+		
+				}
+				
+			/////////////////////////////////////////
+			
+			
+		$this->load->view('interview_mettings');		
+			}else{
+				redirect('site/error404');
+				}
+			}else{
+			 redirect('site/');
+			}
+		}
 	
 	
 	
 	///////////////////////////////////////////////////////////////////////////////
+	function ajax_add_chat_with_user(){
+	
+		if ($this->session->userdata('employee_logged_in') ) {
+	  
+        
+		$from_id=$this->input->post('from_id');
+		$to_id=$this->input->post('to_id');
+		$job_id=$this->input->post('job_id');
+        $chat_message_content=$this->input->post("msg", true);
+		
+		
+		if($this->model_employee->add_chat_message_with_user($from_id , $to_id, $chat_message_content,$job_id)){
+			            $result=array('status'=>'ok');
+						
+						return $result;
+					
+						}else{
+							 $result=array('status'=>'no');
+						
+						return $result;
+					
+						
+							}
+		
+		
+		}else{
+          redirect('site/');	
+        }
+		
+		
+		}
+	///////////////////////////////////////////////////////////////////////////
+	function ajax_get_chat_messages_user(){
+		if ($this->session->userdata('employee_logged_in') || $this->session->userdata('user_logged_in')) {
+		
+		}else{
+          redirect('site/');	
+        }
+		}	
+	//////////////////////////////////////////////////////////////////////////////
+	function job_interview(){
+		if ($this->session->userdata('user_logged_in')) {
+			if( $this->uri->segment(3) != '' ||$this->uri->segment(4) !='' ||$this->uri->segment(5) !=''){
+			        $job_id=$this->uri->segment(3);
+					$user_id=$this->uri->segment(5);
+					if($this->model_employee->get_chat_messages_user($user_id,$job_id)){
+			$date['chat_messages']=$this->model_employee->get_chat_messages_user($user_id,$job_id)->result();
+			$this->load->view('job_interview',$date);
+					}else{
+						$this->load->view('job_interview');
+						}
+						
+			}else{
+				redirect('site/error404');
+				}
+			}else{
+				redirect('site/');	
+				}
+		}
+	////////////////////////////////////////////////////////////////////
+		
 }?>

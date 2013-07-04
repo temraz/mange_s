@@ -33,13 +33,6 @@ var my_id="<?php echo $this->session->userdata('emp_id') ;?>"
 
 
 
-    <script type="text/javascript">
-jQuery(function(){  
-  jQuery('<audio id="chatAudio" ><source src="<?php echo base_url();?>images/sounds/notify.ogg" type="audio/ogg"><source src="<?php echo base_url();?>images/sounds/notify.mp3" type="audio/mpeg"><source src="<?php echo base_url();?>images/sounds/notify.wav" type="audio/wav"></audio>').appendTo('body');
-   
-});
-
-</script>
 
 <script type="text/javascript" src="<?php echo base_url();?>js/chat.js" ></script>
 

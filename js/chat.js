@@ -1,6 +1,6 @@
 jQuery(document).ready(function(){
 
-	setInterval(function(){get_chat_messages();},1000);
+	//setInterval(function(){get_chat_messages();},1000);
 //window.setTimeout(function() { });
 	
 	jQuery('.messagebox button').click(function(){

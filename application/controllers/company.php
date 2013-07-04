@@ -358,6 +358,11 @@ public function step2_validation()
 		//////////////////////
 		
 		function job(){
+			if($this->uri->segment(4) != ''){
+				$id=$this->uri->segment(4);
+			$this->db->where('id',$id);
+		    $result=$this->db->update('user_activity',array('seen'=>1));
+				}
 		$this->load->model('model_company');
 		$user_id = $this->session->userdata('user_id');
 		$job_id = $this->uri->segment(3);
@@ -391,6 +396,12 @@ public function step2_validation()
 		}
 	///////////////////////////////
 		function event(){
+			
+			if($this->uri->segment(4) != ''){
+				$id=$this->uri->segment(4);
+			$this->db->where('id',$id);
+		    $result=$this->db->update('user_activity',array('seen'=>1));
+				}
 			$user_id = $this->session->userdata('user_id');
 			$this->load->model('model_company');
 			$vaild = $this->model_company->is_id_valid($this->uri->segment(3),'events');
