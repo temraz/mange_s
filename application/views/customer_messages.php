@@ -49,29 +49,28 @@
                 
                 <div class="content">
                     
-                  <h1 style="border-bottom:1px dashed #e1e1e1; padding-bottom:10px">reports in employees </h1>
+                  <h1 style="border-bottom:1px dashed #e1e1e1; padding-bottom:10px">Customer Messages</h1>
                 <br />
-                 <?php if(isset($no_reports)){?>
+                 <?php if(isset($no_messages)){?>
                    
-                    <center><h1 style="color:#c1c1c1">there is new reports come for you until now</h1></center>
+                    <center><h1 style="color:#c1c1c1">there is new Messages come for you until now</h1></center>
                     <?php }?>
                 <div class="widgetcontent userlistwidget">
                             <ul>
               
             
-                        <?php if(isset($reports)){foreach($reports as $report){?>
+                        <?php if(isset($messages)){foreach($messages as $message){?>
                             	<li>
-                               <div class="avatar"><img src="<?php echo base_url(); ?>images/profile/thumb_profile/<?php echo $report->profile_pic ?>" width="50" height="45" /></div>
+                               <div class="avatar"><img src="<?php echo base_url(); ?>images/profile/thumb_profile/<?php echo $message->pic ?>" width="50" height="45" /></div>
                                     <div class="info" style="margin-left:70px">
-                                    	<a href="<?php echo base_url(); ?>employee/chat/<?php echo  $report->id ?>" title="chat with the reporter"><?php echo $report->firstname.' '.$report->lastname ; ?></a> 
+                                    	<?php echo $message->name; ?> 
                                        <br/>
-                                        <span style="font-weight:bold">Department: <?php
-										 echo $this->model_employee->select_deaprtment($report->department_id)->row(0)->type; ?></span> <br />
+                                        <span style="font-weight:bold"></span>
                                         
-                        <?php echo substr($report->result,0,200).'...' ; ?><a href="<?php echo base_url(); ?>employee/report_result_details/<?php echo  $report->result_id ;  ?>/<?php if(isset($manager)){ echo  $report->to_id ;}elseif(isset($sub_manager)){ echo $report->forward_sub_id ; }else{ echo $report->forward_emp_id ;}?>">Details</a><br />
+                        <?php echo substr($message->message,0,200).'...' ; ?><a href="<?php echo base_url(); ?>employee/customer_message_details/<?php echo  $message->mesg_id ?>/<?php echo  $message->to_c ?>">Details</a><br />
                                         
                                         
-                                        <br /> <a href="<?php echo base_url(); ?>employee/report_details/<?php echo  $report->report_id ?>/<?php echo  $report->to_id?>" style="float:right ; color:#c1c1c1"><?php echo $report->date_result; ?></a>
+                                        <br /> <a href="<?php echo base_url(); ?>employee/customer_message_details/<?php echo  $message->mesg_id ?>/<?php echo  $message->to_c ?>" style="float:right ; color:#c1c1c1"><?php echo $message->date_m; ?></a>
                                         <br clear="all" />
                                     </div><!--info-->
                                 </li>
@@ -80,7 +79,7 @@
                                 
                             </ul>
                             <br clear="all" />
-                           
+                          
                         </div><!--widgetcontent-->
                     
                     

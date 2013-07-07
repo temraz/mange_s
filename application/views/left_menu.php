@@ -84,7 +84,32 @@ if($this->model_employee->is_chairman($id)){
 		 		
 	
 	 
-	  }	  	
+	  }
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+	 if(isset($sector_type) && $sector_type=='customer'){
+		  if(isset($manager)){
+	 // is manager in mrketing sector
+	 
+		}elseif(isset($sub_manager)){
+	// is sub manager in mrketing sector
+	
+	
+	  }else{
+		  // is employee in mrketing sector
+		  
+		  }
+		 $comp_id=$this->session->userdata('company_id');
+		  if($this->model_employee->select_message_comp($comp_id)){
+		$customer_message=count($this->model_employee->select_message_comp($comp_id)->result());	  
+			  }else{
+			  $customer_message=0;
+			  }
+		 		
+	
+	 
+	  }	  
+	  	  	
 	   
 //////////////////////////////////////////////////////////////////////
  if(isset($sector_type,$sub_sector_type) && $sector_type=='personnel' && $sub_sector_type=='hr'){
@@ -157,7 +182,9 @@ if($this->model_employee->is_chairman($id)){
                        
                      <!--   <li><a href="<?php echo base_url();?>site/calendar/" class="calendar"><span>Calendar</span></a></li>-->
                        
-                     
+                     <?php if(isset($sector_type) && $sector_type=='customer'){ ?>
+                     <li><a href="<?php echo base_url();?>employee/customer_messages/" class="media" ><span>Customer Messages(<?php if(isset($customer_message)){echo $customer_message;}?>)</span></a></li>
+                     <?php } ?>
                         
                     
                     

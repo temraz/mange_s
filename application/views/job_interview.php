@@ -96,7 +96,7 @@ jQuery(document).ready(function() {
                    
                    <div id="chatmessage" class="chatmessage" style="height:530px;">
                    		<div id="chatmessageinner">
-                        <?php if(isset($chat_messages)){foreach($chat_messages as $chat_message){
+                        <?php if(isset($messages)){foreach($messages as $message){
 							
 							?>
                        
@@ -104,13 +104,13 @@ jQuery(document).ready(function() {
                        
                         <li style="padding:5px;border-bottom: 1px dashed #ddd;;list-style:none">
                                <div class="avatar" style="padding: 2px; border: 1px solid #eee;width:50px">
-                               <img src="<?php echo base_url() ;?>images/profile/thumb_profile/<?php $chat_message->profile_pic ;?>" width="50" height="45" /></div>
+                               <img src="<?php echo base_url() ;?>images/profile/thumb_profile/<?php echo  $message->profile_pic ;?>" width="50" height="45" /></div>
                                 <div class="info" style="margin-left:60px;margin-top:-54px;">
-                                    	<a href="#" title="chat with the reporter"><?php echo $chat_message->firstname ;?> <?php $chat_message->lastname ;?> </a> 
+                                    	<?php echo $message->firstname ;?> <?php echo $message->lastname ;?> 
                                        <br/>
                                        
-                                         <?php $chat_message->message ?>
-                                         <span style="float:right;color:#369;margin-top:10px"><?php $chat_message->message_date ;?></span>
+                                         <?php echo $message->message ?>
+                                         <span style="float:right;color:#369;margin-top:10px"><?php echo $message->message_date ;?></span>
                                         <br clear="all" />
                                     </div><!--info-->
                                 </li>

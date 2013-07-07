@@ -102,7 +102,7 @@ jQuery(document).ready(function() {
 						    $country=$this->model_company->get_company_city($company_id);
 						   ?>
  <div class="field" style="padding-top:40px; padding-bottom:25px; border-bottom:.1em solid #CCC">
-                     <h2><a href="<?php echo base_url();?>employee/job_interview/<?php echo $job_id; ?>/<?php echo $company_id?>/<?php echo $this->session->userdata('user_id')?>"> <?php echo $name;?></a></h2><small style="float:right"><?php echo $date;?></small><br />
+                     <h2><a href="<?php echo base_url();?>employee/job_interview/<?php echo $job_id; ?>/<?php echo $this->session->userdata('user_id')?>"> <?php echo $name;?></a></h2><small style="float:right"><?php echo $date;?></small><br />
                      <h3><?php echo $country ; ?></h3><br />
                      <p><?php echo substr($description,0,80);?></p><br />
                     <small style="color:#AAA">Department : <?php echo $department;?></small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small style="color:#AAA">Professional level : <?php echo $level;?></small>                      

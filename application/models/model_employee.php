@@ -1,5 +1,4 @@
 <?php
-
 class Model_employee extends CI_Model {
    //////////////////////////////////////////////
     
@@ -591,6 +590,19 @@ function select_sub_departments($comp_id , $dept_id){
             return false;
         }	
 		}
+		
+	////////////////////////////////////////////////			
+	function get_chat_messages_user_emp($from_id ,$to_id){
+	$sql='select * from employee_user_chat where `from`=? and `to`=? or `from`=? and `to`=? order by message_date ASC';
+	$result=$this->db->query($sql,array($from_id,$to_id,$to_id,$from_id));
+	if($result->num_rows() >= 1){
+	
+            return $result;
+        } else {
+            return false;
+        }	
+		}
+			
 		
 	
 /////////////////////////////////////////////////////////
@@ -1281,7 +1293,13 @@ function add_chat_message_with_user($from_id , $to_id, $chat_message_content,$jo
             );
         $query = $this->db->insert('employee_user_chat', $data);
         if($this->db->affected_rows()==1){
-			 
+			 $link='employee/job_interview/'.$job_id.'/'.$to_id;
+			$data = array(
+            'user_id' => $to_id,
+            'title' => 'You have a message about applied for a job"'.substr_replace($chat_message_content,0,30).' "',
+			'link'=>$link
+            );
+			$query = $this->db->insert('user_activity', $data);
 			return true;
 			}else{
 				return false;
@@ -1318,4 +1336,122 @@ function get_chat_messages_user($user_id,$job_id){
 	}
 
 ///////////////////////////////////////////////////////////////////////////	
+
+function add_chat_message_with_user_emp($user_id , $company_id, $chat_message_content){
+		$data = array(
+            'from_u' => $user_id,
+            'to_c' => $company_id,
+            'message' => $chat_message_content,
+			
+            );
+        $query = $this->db->insert('user_messages', $data);
+        if($this->db->affected_rows()==1){
+			 
+			return true;
+			}else{
+				return false;
+				}
+	
+	}
+///////////////////////////////////////////////////////////////////////
+
+	  function select_message_comp($comp_id){
+		  	$this->db->where('to_c',$comp_id);
+			 $result = $this->db->get('user_messages');
+			 	if($result->num_rows() >= 1){
+                return $result;
+			} else {
+				return false;
+			}	
+			
+		  }
+////////////////////////////////////////////////////////////////////////
+
+      function select_message_customer($comp_id){
+		  	$sql='SELECT u.id as user_id ,u.name,u.pic,u.username,m.id as mesg_id ,m.from_u,m.message,m.date_m,m.to_c
+			from users u
+			join user_messages m on u.id=m.from_u where to_c=? order by m.date_m DESC
+			';
+			$result = $this->db->query($sql,array($comp_id));
+				if($result->num_rows() >= 1){
+                return $result;
+			} else {
+				return false;
+			}	
+		  }
+////////////////////////////////////////////////////////////////////////
+
+      function select_message_customer_details($comp_id){
+		  	$sql='SELECT u.id as user_id ,u.name,u.pic,u.username,m.id as mesg_id ,m.from_u,m.message,m.date_m,m.to_c
+			from users u
+			join user_messages m on u.id=m.from_u where m.id=?
+			';
+			$result = $this->db->query($sql,array($comp_id));
+				if($result->num_rows() == 1){
+                return $result;
+			} else {
+				return false;
+			}	
+		  }		  
+//////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////	
+
+function comp_message_to_user($user_id , $company_id, $chat_message_content){
+		$data = array(
+            'from_c' => $company_id,
+            'to_u' => $user_id,
+            'message' => $chat_message_content,
+			
+            );
+        $query = $this->db->insert('user_messages', $data);
+        if($this->db->affected_rows()==1){
+			return true;
+			
+			
+			// $link='employee/comp_messages/'.$message_id;
+			//$data = array(
+            //'user_id' => $user_id,
+            //'title' => 'There is a new message for you  " '.substr($chat_message_content,0,20).'',
+			//'link'=>$link
+            //);
+			//$query = $this->db->insert('user_activity', $data);
+			
+			
+			}else{
+				return false;
+				}
+	
+	}	
+	/////////////////////////////////////////////////////////////
+	
+	function comp_mesg($user_id){
+			$sql='SELECT c.id,c.name,c.logo,
+			       m.id as mesg_id ,m.from_u,m.message,m.date_m,m.to_c
+			from company c
+			join user_messages m on m.from_c=c.id where m.to_u=? order by m.date_m DESC
+			';
+			$result = $this->db->query($sql,array($user_id));
+				if($result->num_rows() >= 1){
+                return $result;
+			} else {
+				return false;
+			}	
+		}
+	///////////////////////////////////////////////////////////////////
+			  		  
+     	
+	function comp_mesg_details($mesg_id){
+			$sql='SELECT c.id,c.name,c.logo,
+			       m.id as mesg_id ,m.from_u,m.message,m.date_m,m.to_c
+			from company c
+			join user_messages m on m.from_c=c.id where m.id=? order by m.date_m DESC
+			';
+			$result = $this->db->query($sql,array($mesg_id));
+				if($result->num_rows() >= 1){
+                return $result;
+			} else {
+				return false;
+			}	
+		}
+		
 }?>

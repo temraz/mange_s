@@ -53,7 +53,59 @@ jQuery(document).ready(function(){
 	jQuery('#start_interview').click(function(){
 		start_interview();
 	});
+	
+	jQuery('#send_message').click(function(){
+		send_message_to_company();
+	});
+	jQuery('#replay_button').click(function(){
+		comp_message_to_user();
+	});
 		///////////////////////////////////////////////////////////////	
+			function comp_message_to_user() {
+	
+		var comp_id=jQuery('#comp_id').val();
+		var mesg=jQuery('#mesg').val();
+
+		var user_id=jQuery('#user_id').val();		
+			
+		if(mesg == '' ){
+	jQuery('#report_validate').append(' <div class="notification msgerror"> <p >Please Enter Your message !!</p></div>');
+	}
+		if(comp_id != '' && mesg != '' && user_id != '') {
+			
+			jQuery.post(base_url+"employee/comp_message_to_user" ,{ comp_id : comp_id , mesg : mesg , user_id : user_id}, function(data){
+             
+          if(data==='ok'){
+			  jQuery('#success').append(' <div class="notification msgsuccess"> <p > The message has been sent successfully . !!</p></div>');
+			  }
+			jQuery('#mesg').val('');
+			
+			});
+					
+		}
+		}
+		///////////////////////////////////////////////////////////////
+		function send_message_to_company() {
+		var msg = jQuery('#message_content').val();	
+		
+
+		if(msg != '' && user_id != '' && comp_id !='') {
+			
+			jQuery.post(base_url+"employee/send_message_to_company" ,{ user_id : user_id , comp_id : comp_id , msg : msg}, function(data){
+ if(data==='ok'){
+			  jQuery('#success').append(' <div class="notification msgsuccess"><p > The user has been rejected successfully . !!</p></div>');
+			  
+			  setInterval(function(){jQuery('#modal_message').hide(1000);},1000);
+			  
+			  }else{
+				   jQuery('#fail').append(' <div class="notification msgerror"> <a class="close"></a><p > Error while rejecting the user try again please. !!</p></div>');
+				  }
+			
+			});
+			
+		}	
+        }
+	
 		///////////////////////////////////////////////////////////////	
 		function start_interview() {
 	

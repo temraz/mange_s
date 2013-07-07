@@ -1,5 +1,4 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-
 class Site extends CI_Controller {
 	
 	public function index()
@@ -261,7 +260,7 @@ class Site extends CI_Controller {
                       $email= $this->input->post('email');
                       $password= $this->input->post('password');
                       $user=$this->model_users->check_can_log_in($email,$password);
-                $login_data = array("user_logged_in" => true, "user_id" => $user['id'], "user_email"=> $user['email'], "company_id"=> $user['company_id']);
+                $login_data = array("user_logged_in" => true, "user_id" => $user['id'], "user_email"=> $user['email']);
                 $this->session->set_userdata($login_data);
 				$id=$user['id'];
 				if($this->model_users->is_edit_cv($this->session->userdata('user_id'))){

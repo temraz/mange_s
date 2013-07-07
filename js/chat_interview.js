@@ -28,7 +28,7 @@ jQuery(document).ready(function(){
 			jQuery('.messagebox input').focus();
 			jQuery('#chatmessageinner').animate({scrollTop: jQuery('#chatmessageinner').height()});
 			
-			
+			get_chat_messages();
 			
 			});
 			
@@ -51,7 +51,7 @@ jQuery(document).ready(function(){
 		function get_chat_messages(){
 		
         
-		jQuery.post(base_url +"employee/ajax_get_chat_messages",{ from_id : from_id , to_id : to_id }, function(data){
+		jQuery.post(base_url +"employee/ajax_get_chat_messages_user",{ from_id : from_id , to_id : to_id }, function(data){
 			if(data.status == 'ok'){
 				jQuery('#chatmessageinner').html(data.content);
 				//jQuery('#chatAudio')[0].play();
@@ -62,18 +62,6 @@ jQuery(document).ready(function(){
 			},"json");
 	        }
 			get_chat_messages();
-			
-		jQuery('.messagebox input').focus(function(){
-			
-			update();
-			
-			});	
-			
-			function update(){
-				jQuery.post(base_url+"employee/ajax_select_last_message" ,{ from_id : from_id , to_id : to_id }, function(data2){
-				
-				
-				});
-				}
+		
 	
 });

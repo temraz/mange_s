@@ -15,6 +15,7 @@ $control=$this->uri->segment(1); ?>
                         <li><a href="<?php echo base_url();?>user/applied_jobs/" class="calendar"><span>Applied Jobs</span></a></li>
                        <li><a href="<?php echo base_url();?>user/event_attend"  class="dashboard"><span>Attend</span></a></li>
                         <li><a href="<?php echo base_url();?>user/mycard"  class="dashboard"><span>My Card</span></a></li>
+                         <li><a href="<?php echo base_url();?>employee/comp_mesg"  class="chat"><span>Company Messages</span></a></li>
                         
                         
                        

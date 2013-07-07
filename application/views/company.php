@@ -6,18 +6,14 @@
 <link rel="shortcut icon" href="<?php echo base_url();?>images/head.png" type="image/x-icon"/>
 <title>Dashboard |Business Linkage</title>
 <link rel="stylesheet" href="<?php echo base_url();?>css/style.css"  type="text/css" />
-
-
+<link rel="stylesheet" href="<?php echo base_url();?>css/styles.css"  media="screen" />
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery-1.7.min.js"></script>
- 
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.flot.min.js" ></script>
 
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.flot.resize.min.js" ></script>
 
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery-ui-1.8.16.custom.min.js"></script>
-<script type="text/javascript" >
-var base_url = "<?php echo base_url(); ?>";
-</script>
+
 <script type="text/javascript" src="<?php echo base_url();?>js/general.js" ></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/colorpicker.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>js/dashboard.js" ></script>
@@ -25,6 +21,22 @@ var base_url = "<?php echo base_url(); ?>";
 <script type="text/javascript" src="<?php echo base_url();?>js/jquery.alerts.js" ></script>
 
 <script type="text/javascript" src="<?php echo base_url();?>js/elements.js" ></script>
+
+ 
+
+<script type="text/javascript">
+var base_url=" <?php echo base_url();?>";
+<?php if($this->session->userdata('user_logged_in')){?>
+var user_id=" <?php echo $this->session->userdata('user_id');?>";
+var comp_id=" <?php echo $this->uri->segment(3);?>";
+
+
+<?php } ?>
+</script>
+
+
+  <script src="<?php echo base_url();?>js/insert.js" type="text/javascript" ></script>
+
 <style>
 .follow  {float:right;margin-right:50px;margin-top:-20px; border-radius:3px; font-family:Verdana, Geneva, sans-serif }
 .follow button {width:80px}
@@ -82,12 +94,41 @@ var base_url = "<?php echo base_url(); ?>";
 						$user_id = $this->session->userdata('user_id');
 						$company_id = $this->uri->segment(3);
 						 ?>
-                        <div class="follow"><a href="<?php echo base_url();?>user/<?php if(!$this->model_users->is_follow($company_id,$user_id)){ echo 'follow';}else{ echo 'unfollow';}?>/<?php echo $user_id;?>/<?php echo $company_id; ?>" class="stdbtn <?php if(!$this->model_users->is_follow($company_id,$user_id)){ echo 'btn_blue';}else{ echo 'btn_red';}?>"><?php if(!$this->model_users->is_follow($company_id,$user_id)){ echo 'Follow';}else{ echo 'Unfollow';}?></a>&nbsp;&nbsp;&nbsp;<button class="stdbtn btn_yellow">Contact</button></div>
+                        <div class="follow">
+                        <a href="<?php echo base_url();?>user/<?php if(!$this->model_users->is_follow($company_id,$user_id)){ echo 'follow';}else{ echo 'unfollow';}?>/<?php echo $user_id;?>/<?php echo $company_id; ?>" class="stdbtn <?php if(!$this->model_users->is_follow($company_id,$user_id)){ echo 'btn_blue';}else{ echo 'btn_red';}?>"><?php if(!$this->model_users->is_follow($company_id,$user_id)){ echo 'Follow';}else{ echo 'Unfollow';}?></a>&nbsp;&nbsp;&nbsp;
+                        <a href="#contact" id="contact" class="stdbtn btn_red">Contact</a>
+                        </div>
                         <?php  } ?>
-                        <br />
+                        <div id="modal_message" style="margin:auto;margin-top:5px;display:none;">
+	<div id="heading">
+		Enter Your Message.
+	</div>
+
+	<div id="content">
+	  <?php echo form_open('#',array('id'=>'form','class'=>'stdform stdform',));  ?>
+                    	<p>
+                        	
+                          
+                          
+                          <textarea name="message" style="width:90%;height:80px;float:left;padding:0px;margin-left:5%;resize:none;"  id="message_content"></textarea>
+                          <div id="response"></div>
+                           <ul class="buttonlist"  style="margin-bottom:15px;margin-right:3%;float:right"> 
+                  <li style="border:none;"><a href="#"  id="send_message" class="btn  btn_mail"><span>Send Message</span></a></li>
+                  </ul>
+                          
+                         </p>
+                     
+                        
+                        
+                    </form>
+	</div>
+</div>
+<br clear="all" />
+                        
                     	<p><img src="<?php echo base_url();?>images/campanies_logo/<?php echo $logo; ?>" height="200" width="270" style="float:left ; border:1px solid #c1c1c1 ; margin:10px ; padding:3px "/><p style="margin-right:5px"><?php if(isset($about)){echo $about; }else { ?>
+                        <?php if($this->session->userdata('company_logged_in')){?>
                             <center style="margin:10px"><span> There is not <a href="<?php echo base_url(); ?>edit">Update</a> Yet.</span></center>
-								<?php } ?></p>
+								<?php }} ?></p>
                     </div>
                     
                     <br clear="all" /><br />
@@ -96,8 +137,9 @@ var base_url = "<?php echo base_url(); ?>";
                     	<h1><?php echo $name; ?>'s Products </h1>
                         <br />
                     	<p><?php if(isset($about_product)){echo $about_product; }else { ?>
+                        <?php if($this->session->userdata('company_logged_in')){?>
                             <span> There is not <a href="<?php echo base_url(); ?>edit">Update</a> Yet.</span>
-								<?php } ?> </p>
+								<?php } }?> </p>
                     </div>
                     
                      <div class="one_half last">
@@ -167,8 +209,9 @@ var base_url = "<?php echo base_url(); ?>";
                         <br />
                     	 <p>
                            <?php if(isset($website)){echo $website; }else { ?>
+                           <?php if($this->session->userdata('company_logged_in')){?>
                             <span> There is not <a href="<?php echo base_url(); ?>edit">Update</a> Yet.</span>
-								<?php } ?></p>
+								<?php } } ?></p>
                     </div>
                                   
                                   <br clear="all" />     
@@ -270,6 +313,23 @@ var base_url = "<?php echo base_url(); ?>";
      	</div><!--mainwrapperinner-->
     </div><!--mainwrapper-->
 	<!-- END OF MAIN CONTENT -->
+    
+    
+    
+
+
+
+
+    
+    <script type="text/javascript">
+    jQuery('#contact').click(function(){
+		jQuery('#modal_message').fadeIn(3000);
+		
+	});
+	
+    </script>
+
+
     <script>var flash = [[0, 2], [1, 6], [2,3], [3, 8], [4, 5], [5, 13], [6, 8]];
 		
 		function showTooltip(x, y, contents) {
@@ -326,6 +386,7 @@ var base_url = "<?php echo base_url(); ?>";
 		});
 		
 		</script>
+
 
 </body>
 </html>
